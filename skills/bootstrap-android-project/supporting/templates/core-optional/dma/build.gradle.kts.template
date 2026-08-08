@@ -1,0 +1,14 @@
+plugins {
+    alias(libs.plugins.app.library.noresources)
+    alias(libs.plugins.app.hilt)
+}
+
+android {
+    namespace = "{{PACKAGE_BASE}}.core.dma"
+}
+
+dependencies {
+    implementation(projects.core.config)
+    implementation(projects.core.analytics)
+    implementation(libs.user.messaging.platform)
+}

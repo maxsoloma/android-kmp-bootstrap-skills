@@ -1,0 +1,18 @@
+plugins {
+    id("{{PACKAGE_BASE}}.convention.kmp-library")
+    id("{{PACKAGE_BASE}}.convention.koin")
+    id("{{PACKAGE_BASE}}.convention.detekt")
+    id("{{PACKAGE_BASE}}.convention.test")
+}
+
+kotlin {
+    androidLibrary {
+        namespace = "{{PACKAGE_BASE}}.core.sync"
+    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(":core:database"))
+            implementation(libs.kotlinx.coroutines.core)
+        }
+    }
+}

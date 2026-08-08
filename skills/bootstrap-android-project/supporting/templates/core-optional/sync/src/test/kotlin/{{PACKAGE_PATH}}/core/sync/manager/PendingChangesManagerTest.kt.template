@@ -1,0 +1,40 @@
+package {{PACKAGE_BASE}}.core.sync.manager
+
+import {{PACKAGE_BASE}}.core.sync.handler.ChangeHandler
+import {{PACKAGE_BASE}}.core.sync.model.PendingChange
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
+class PendingChangesManagerTest {
+
+    private class RecordingHandler(override val key: String) : ChangeHandler {
+        val handled = mutableListOf<PendingChange>()
+        override suspend fun handle(change: PendingChange): Boolean {
+            handled.add(change)
+            return true
+        }
+    }
+
+    @Test
+    fun `flush routes change to handler matching its key`() = runBlocking {
+        val handler = RecordingHandler("profile")
+        val manager = PendingChangesManager(setOf(handler))
+        val change = PendingChange(key = "profile", payload = "{}", createdAtMillis = 0L)
+        manager.enqueue(change)
+        val processed = manager.flush()
+
+        assertEquals(1, processed)
+        assertEquals(listOf(change), handler.handled)
+    }
+
+    @Test
+    fun `flush keeps change with no matching handler`() = runBlocking {
+        val manager = PendingChangesManager(emptySet())
+        manager.enqueue(PendingChange(key = "unknown", payload = "{}", createdAtMillis = 0L))
+
+        val processed = manager.flush()
+
+        assertEquals(0, processed)
+    }
+}

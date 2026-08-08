@@ -1,0 +1,32 @@
+plugins {
+    alias(libs.plugins.app.library.noresources)
+    alias(libs.plugins.app.hilt)
+}
+
+android {
+    namespace = "{{PACKAGE_BASE}}.core.config"
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    buildTypes {
+        getByName("debug") {
+            buildConfigField("String", "BASE_URL", "\"https://api-stage.example.com/\"")
+            buildConfigField("String", "TERMS_OF_USE_URL", "\"https://example.com/terms/\"")
+            buildConfigField("String", "PRIVACY_POLICY_URL", "\"https://example.com/privacy/\"")
+            buildConfigField("String", "SUPPORT_URL", "\"https://example.com/support/\"")
+        }
+        getByName("release") {
+            buildConfigField("String", "BASE_URL", "\"https://api.example.com/\"")
+            buildConfigField("String", "TERMS_OF_USE_URL", "\"https://example.com/terms/\"")
+            buildConfigField("String", "PRIVACY_POLICY_URL", "\"https://example.com/privacy/\"")
+            buildConfigField("String", "SUPPORT_URL", "\"https://example.com/support/\"")
+        }
+    }
+}
+
+dependencies {
+    implementation(libs.androidx.startup.runtime)
+    implementation(libs.datastore.preferences)
+}

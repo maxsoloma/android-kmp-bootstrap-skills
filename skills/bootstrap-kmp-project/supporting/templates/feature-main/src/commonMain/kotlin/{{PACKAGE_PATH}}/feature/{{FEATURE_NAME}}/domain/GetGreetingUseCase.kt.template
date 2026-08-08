@@ -1,0 +1,5 @@
+package {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.domain
+
+class GetGreetingUseCase(private val repository: GreetingRepository) {
+    suspend operator fun invoke(name: String): Greeting = repository.loadGreeting(name)
+}

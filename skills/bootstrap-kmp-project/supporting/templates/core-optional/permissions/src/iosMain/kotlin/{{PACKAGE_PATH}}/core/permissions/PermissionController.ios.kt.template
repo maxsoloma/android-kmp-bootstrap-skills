@@ -1,0 +1,18 @@
+package {{PACKAGE_BASE}}.core.permissions
+
+import platform.AVFoundation.AVAuthorizationStatusAuthorized
+import platform.AVFoundation.AVCaptureDevice
+import platform.AVFoundation.AVMediaTypeVideo
+import platform.AVFoundation.authorizationStatusForMediaType
+
+actual class PermissionController {
+    actual suspend fun status(permission: AppPermission): PermissionStatus = when (permission) {
+        AppPermission.CAMERA -> {
+            val raw = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+            if (raw == AVAuthorizationStatusAuthorized) PermissionStatus.GRANTED else PermissionStatus.NOT_DETERMINED
+        }
+        AppPermission.NOTIFICATIONS -> PermissionStatus.NOT_DETERMINED
+    }
+
+    actual suspend fun request(permission: AppPermission): PermissionStatus = status(permission)
+}

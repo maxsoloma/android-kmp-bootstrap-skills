@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.di
+
+import {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.data.GreetingRepositoryImpl
+import {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.domain.GetGreetingUseCase
+import {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.domain.GreetingRepository
+import {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.presentation.{{FEATURE_NAME}}ViewModel
+import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
+
+val feature{{FEATURE_NAME}}Module: Module = module {
+    singleOf(::GreetingRepositoryImpl) bind GreetingRepository::class
+    factoryOf(::GetGreetingUseCase)
+    factoryOf(::{{FEATURE_NAME}}ViewModel)
+}

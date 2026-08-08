@@ -1,0 +1,4 @@
+# Deliberately minimal. Broader patterns (build/, .gradle/, *.jar) would silently
+# swallow files inside skills/*/supporting/templates/ — those ARE the deliverable.
+.DS_Store
+*.log

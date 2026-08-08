@@ -1,0 +1,18 @@
+package {{PACKAGE_BASE}}.architecture
+
+import com.lemonappdev.konsist.api.ext.list.withNameEndingWith
+import com.lemonappdev.konsist.api.verify.assertTrue
+import org.junit.jupiter.api.Test
+
+class Rule05ViewModelSizeTest {
+
+    @Test
+    fun `ViewModel constructor parameter count does not exceed configured maximum`() {
+        val max = ArchitectureConfig.viewModelMaxParams
+        ArchitectureScope.project.classes()
+            .withNameEndingWith("ViewModel")
+            .assertTrue { vm ->
+                (vm.primaryConstructor?.parameters?.size ?: 0) <= max
+            }
+    }
+}

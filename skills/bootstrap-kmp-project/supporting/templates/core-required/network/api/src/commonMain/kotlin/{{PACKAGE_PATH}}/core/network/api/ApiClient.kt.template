@@ -1,0 +1,11 @@
+package {{PACKAGE_BASE}}.core.network.api
+
+/**
+ * Transport-agnostic read surface used by feature/data layers. No Ktor type appears
+ * here on purpose: api stays free of any concrete HTTP engine, so consumers depend
+ * only on this contract while [{{PACKAGE_BASE}}.core.network.impl] supplies the
+ * Ktor-backed implementation.
+ */
+interface ApiClient {
+    suspend fun getUser(id: Long): UserDto
+}

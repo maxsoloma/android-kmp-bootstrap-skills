@@ -1,0 +1,35 @@
+package {{PACKAGE_BASE}}.konsist
+
+import com.lemonappdev.konsist.api.ext.list.imports
+import com.lemonappdev.konsist.api.verify.assertFalse
+import org.junit.jupiter.api.Test
+import java.io.File
+
+class Rule10CommonMainPlatformIsolationTest {
+
+    private val allowlist: List<String> by lazy {
+        val configFile = File("config.yml")
+        check(configFile.exists()) { "config.yml not found in ${File(".").absolutePath}" }
+        configFile.readLines()
+            .dropWhile { !it.trim().startsWith("commonMainImportAllowlist:") }
+            .drop(1)
+            .takeWhile { it.startsWith("  - ") || it.startsWith("- ") }
+            .map { it.substringAfter("-").trim().trim('"') }
+            .filter { it.isNotEmpty() }
+    }
+
+    private val forbiddenPrefixes =
+        listOf("android.", "platform.", "java.", "javax.", "kotlinx.cinterop")
+
+    @Test
+    fun `rule 10 - commonMain imports no android, ios-native, or jvm-only platform APIs`() {
+        ProjectScope.commonMain.files
+            .imports
+            .assertFalse { import ->
+                val name = import.name
+                val forbidden = forbiddenPrefixes.any { name.startsWith(it) }
+                val allowed = allowlist.any { name.startsWith(it) }
+                forbidden && !allowed
+            }
+    }
+}

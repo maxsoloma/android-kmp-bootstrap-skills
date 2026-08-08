@@ -1,0 +1,38 @@
+package {{PACKAGE_BASE}}.architecture
+
+import com.lemonappdev.konsist.api.ext.list.withNameEndingWith
+import com.lemonappdev.konsist.api.verify.assertTrue
+import org.junit.jupiter.api.Test
+
+class Rule04RepositoryPairingTest {
+
+    @Test
+    fun `each domain Repository interface has exactly one implementation`() {
+        val implNames = ArchitectureScope.project.classes()
+            .withNameEndingWith("RepositoryImpl")
+            .filter { it.resideInPackage("..data.repository..") }
+            .map { it.name.removeSuffix("Impl") }
+
+        ArchitectureScope.project.interfaces()
+            .withNameEndingWith("Repository")
+            .filter { it.resideInPackage("..domain.repository..") }
+            .assertTrue { iface ->
+                implNames.count { it == iface.name } == 1
+            }
+    }
+
+    @Test
+    fun `each RepositoryImpl has a matching domain Repository interface`() {
+        val ifaceNames = ArchitectureScope.project.interfaces()
+            .withNameEndingWith("Repository")
+            .filter { it.resideInPackage("..domain.repository..") }
+            .map { it.name }
+
+        ArchitectureScope.project.classes()
+            .withNameEndingWith("RepositoryImpl")
+            .filter { it.resideInPackage("..data.repository..") }
+            .assertTrue { impl ->
+                ifaceNames.contains(impl.name.removeSuffix("Impl"))
+            }
+    }
+}

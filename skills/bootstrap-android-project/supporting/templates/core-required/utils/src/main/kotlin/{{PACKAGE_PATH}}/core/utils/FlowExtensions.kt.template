@@ -1,0 +1,6 @@
+package {{PACKAGE_BASE}}.core.utils
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onStart
+
+fun <T> Flow<T>.startWith(value: T): Flow<T> = onStart { emit(value) }

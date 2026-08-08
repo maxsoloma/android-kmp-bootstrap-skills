@@ -1,0 +1,24 @@
+{
+  "name": "android-kmp-bootstrap-skills",
+  "description": "Agent Skills that scaffold hardened Android and Kotlin Multiplatform projects with Clean Architecture and build-time architecture tests.",
+  "owner": {
+    "name": "Maksim Salankevich",
+    "url": "https://github.com/maxsoloma"
+  },
+  "plugins": [
+    {
+      "name": "bootstrap-projects",
+      "source": "./",
+      "description": "Scaffolds a hardened Android or Kotlin Multiplatform project: multi-module Gradle with convention plugins, Clean Architecture, MVI, Compose, and Konsist tests that fail the build on layer-boundary violations.",
+      "category": "scaffolding",
+      "tags": [
+        "android",
+        "kmp",
+        "kotlin",
+        "compose",
+        "clean-architecture",
+        "scaffold"
+      ]
+    }
+  ]
+}

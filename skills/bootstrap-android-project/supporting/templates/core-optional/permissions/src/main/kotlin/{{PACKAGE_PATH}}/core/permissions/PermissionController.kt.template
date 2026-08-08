@@ -1,0 +1,28 @@
+package {{PACKAGE_BASE}}.core.permissions
+
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+
+class PermissionController internal constructor(
+    private val request: (String) -> Unit,
+) {
+    fun request(permission: String) = request.invoke(permission)
+}
+
+@Composable
+fun rememberPermissionController(
+    onResult: (permission: String, granted: Boolean) -> Unit,
+): PermissionController {
+    var pending = ""
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted -> onResult(pending, granted) }
+    return remember {
+        PermissionController { permission ->
+            pending = permission
+            launcher.launch(permission)
+        }
+    }
+}

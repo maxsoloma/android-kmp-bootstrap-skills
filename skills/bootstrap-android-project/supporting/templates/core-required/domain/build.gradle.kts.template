@@ -1,0 +1,7 @@
+plugins {
+    alias(libs.plugins.app.library.noresources)
+}
+
+android {
+    namespace = "{{PACKAGE_BASE}}.core.domain"
+}

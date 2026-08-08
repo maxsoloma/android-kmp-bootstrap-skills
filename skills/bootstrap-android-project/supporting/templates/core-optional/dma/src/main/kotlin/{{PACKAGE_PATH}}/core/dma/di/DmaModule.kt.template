@@ -1,0 +1,16 @@
+package {{PACKAGE_BASE}}.core.dma.di
+
+import {{PACKAGE_BASE}}.core.dma.DmaManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal object DmaModule {
+    @Provides
+    @Singleton
+    fun provideDmaManager(): DmaManager = DmaManager()
+}

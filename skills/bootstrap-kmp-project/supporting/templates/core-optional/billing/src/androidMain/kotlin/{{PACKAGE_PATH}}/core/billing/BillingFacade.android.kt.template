@@ -1,0 +1,10 @@
+package {{PACKAGE_BASE}}.core.billing
+
+actual class BillingFacade {
+    // SUPPRESS-RATIONALE: ACME-101 — Google Play Billing client wired in androidApp at integration time
+    actual suspend fun products(ids: List<String>): List<Product> =
+        ids.map { Product(it, "—") }
+
+    actual suspend fun purchase(productId: String): PurchaseResult =
+        PurchaseResult.Failed("billing not configured")
+}

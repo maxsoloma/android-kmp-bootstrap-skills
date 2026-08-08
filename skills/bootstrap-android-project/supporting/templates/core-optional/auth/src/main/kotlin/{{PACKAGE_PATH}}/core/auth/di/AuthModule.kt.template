@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}.core.auth.di
+
+import {{PACKAGE_BASE}}.core.auth.interceptor.AuthInterceptor
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal interface AuthModule {
+    @Binds
+    @Singleton
+    fun bindAuthInterceptor(impl: AuthInterceptor): Interceptor
+}

@@ -1,0 +1,15 @@
+package {{PACKAGE_BASE}}.core.remote.config.impl
+
+import {{PACKAGE_BASE}}.core.remote.config.RemoteConfigKey
+import {{PACKAGE_BASE}}.core.remote.config.RemoteConfigProvider
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import javax.inject.Inject
+
+internal class FirebaseRemoteConfigProvider @Inject constructor(
+    private val remoteConfig: FirebaseRemoteConfig,
+) : RemoteConfigProvider {
+    override fun getString(key: RemoteConfigKey): String {
+        val value = remoteConfig.getString(key.key)
+        return value.ifEmpty { key.default }
+    }
+}

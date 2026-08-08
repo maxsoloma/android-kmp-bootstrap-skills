@@ -1,0 +1,15 @@
+plugins {
+    alias(libs.plugins.app.feature)
+    alias(libs.plugins.app.test)
+}
+
+android {
+    namespace = "{{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}"
+}
+
+dependencies {
+    implementation(projects.core.design)
+    implementation(projects.core.domain)
+    implementation(projects.core.navigation)
+    implementation(projects.core.resources.strings)
+}

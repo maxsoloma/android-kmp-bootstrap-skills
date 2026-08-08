@@ -1,0 +1,16 @@
+package {{PACKAGE_BASE}}.core.dma
+
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class DataManipulationAdapterTest {
+    @Test
+    fun adaptMapsEachElement() = runTest {
+        val adapter = DataManipulationAdapter<Int, String> { "n$it" }
+        val result = adapter.adapt(flowOf(listOf(1, 2))).first()
+        assertEquals(listOf("n1", "n2"), result)
+    }
+}

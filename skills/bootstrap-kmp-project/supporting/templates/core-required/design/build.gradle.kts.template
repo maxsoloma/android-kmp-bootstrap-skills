@@ -1,0 +1,23 @@
+plugins {
+    id("{{PACKAGE_BASE}}.convention.kmp-library")
+    id("{{PACKAGE_BASE}}.convention.compose-multiplatform")
+    id("{{PACKAGE_BASE}}.convention.detekt")
+    id("{{PACKAGE_BASE}}.convention.test")
+}
+
+kotlin {
+    androidLibrary {
+        namespace = "{{PACKAGE_BASE}}.core.design"
+    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.kotlinx.coroutines.core)
+        }
+        // lifecycle-viewmodel-compose has no iOS klib — scope to androidMain only
+        androidMain.dependencies {
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+        }
+    }
+}

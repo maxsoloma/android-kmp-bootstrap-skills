@@ -1,0 +1,16 @@
+package {{PACKAGE_BASE}}.core.utils.network
+
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlin.test.Test
+import kotlin.test.assertTrue
+
+class InternetConnectionManagerTest {
+
+    @Test
+    fun fakeManagerEmitsConfiguredState() {
+        val fake = object : InternetConnectionManager {
+            override val isOnline = MutableStateFlow(true)
+        }
+        assertTrue(fake.isOnline.value)
+    }
+}

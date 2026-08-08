@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}.core.sync
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class PendingChangesManagerTest {
+    @Test
+    fun enqueueThenMarkSyncedReturnsToZero() {
+        val manager = PendingChangesManager()
+        manager.enqueue()
+        manager.enqueue()
+        manager.markSynced()
+        assertEquals(1, manager.pendingCount.value)
+        manager.markSynced()
+        assertEquals(0, manager.pendingCount.value)
+    }
+}

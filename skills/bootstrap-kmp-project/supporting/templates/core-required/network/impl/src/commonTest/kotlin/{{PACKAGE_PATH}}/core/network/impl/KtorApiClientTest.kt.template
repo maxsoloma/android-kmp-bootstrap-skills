@@ -1,0 +1,34 @@
+package {{PACKAGE_BASE}}.core.network.impl
+
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
+import io.ktor.utils.io.ByteReadChannel
+import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class KtorApiClientTest {
+
+    @Test
+    fun getUserDeserializesJsonViaContentNegotiation() = runTest {
+        val engine = MockEngine { request ->
+            assertEquals("https://api.acme.io/users/42", request.url.toString())
+            respond(
+                content = ByteReadChannel("""{"id":42,"display_name":"Zoe","email":null}"""),
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json"),
+            )
+        }
+        val httpClient: HttpClient = buildHttpClient(engine)
+        val apiClient = KtorApiClient(httpClient, baseUrl = "https://api.acme.io")
+
+        val user = apiClient.getUser(42)
+
+        assertEquals(42L, user.id)
+        assertEquals("Zoe", user.displayName)
+    }
+}

@@ -1,0 +1,27 @@
+package {{PACKAGE_BASE}}.konsist
+
+import com.lemonappdev.konsist.api.ext.list.functions
+import com.lemonappdev.konsist.api.verify.assertFalse
+import org.junit.jupiter.api.Test
+
+class Rule02RepositorySignaturePurityTest {
+
+    private val forbiddenSuffixes =
+        listOf("Entity", "Dto", "Ui", "StateUi", "ActionUi", "EventUi")
+
+    private fun String?.isForbidden(): Boolean =
+        this != null && forbiddenSuffixes.any { this.endsWith(it) }
+
+    @Test
+    fun `rule 02 - public Repository methods neither return nor accept Entity, Dto or Ui types`() {
+        ProjectScope.commonMain
+            .interfaces()
+            .filter { it.name.endsWith("Repository") }
+            .functions()
+            .filter { it.hasPublicOrDefaultModifier }
+            .assertFalse { function ->
+                function.returnType?.name.isForbidden() ||
+                    function.parameters.any { it.type.name.isForbidden() }
+            }
+    }
+}

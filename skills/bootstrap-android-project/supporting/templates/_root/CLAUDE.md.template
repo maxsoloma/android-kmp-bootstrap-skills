@@ -1,0 +1,25 @@
+# Project Contract
+
+## Project Overview
+
+Android project **{{PROJECT_NAME}}** (`{{PACKAGE_BASE}}`). Key config files: `.mcp.json`,
+`.claude/settings.json`, `CLAUDE.md`.
+
+## Code Quality Baseline — ZERO TOLERANCE
+
+- **Zero detekt baseline.** Do NOT generate a `detekt-baseline.xml` to silence violations.
+  Fix violations at the source. Every `@Suppress` requires a `// SUPPRESS-RATIONALE:` comment
+  on the immediately-preceding line explaining why suppression is justified. Rule 8 of the
+  architecture tests enforces this at build time.
+
+## Verification
+
+```bash
+./gradlew detekt
+./gradlew :core:architecture-test:test --rerun-tasks
+./gradlew :app:assembleDebug
+./gradlew test
+```
+
+Run these after any Kotlin change. The architecture-test requires `--rerun-tasks` because
+Konsist uses `scopeFromProduction()` which Gradle may otherwise skip.

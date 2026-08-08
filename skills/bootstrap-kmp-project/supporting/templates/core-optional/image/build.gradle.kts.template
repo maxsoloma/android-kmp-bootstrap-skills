@@ -1,0 +1,17 @@
+plugins {
+    id("{{PACKAGE_BASE}}.convention.compose-multiplatform")
+    id("{{PACKAGE_BASE}}.convention.detekt")
+}
+
+kotlin {
+    androidLibrary {
+        namespace = "{{PACKAGE_BASE}}.core.image"
+    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
+            implementation(libs.ktor.client.core)
+        }
+    }
+}

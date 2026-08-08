@@ -1,0 +1,5 @@
+package {{PACKAGE_BASE}}.core.remote.config
+
+enum class RemoteConfigKey(val key: String, val default: String) {
+    WELCOME_TITLE("welcome_title", "Welcome"),
+}

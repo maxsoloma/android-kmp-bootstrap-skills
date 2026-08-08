@@ -1,0 +1,5 @@
+# Detekt rule names that may be @Suppress-ed WITHOUT a rationale comment.
+# Keyed on rule name ONLY (never file paths) so a category cannot be silenced project-wide via an obscure file.
+allowedWithoutRationale:
+  - UnusedPrivateMember   # @Preview-named functions
+  - Filename              # RString shadow typealias file

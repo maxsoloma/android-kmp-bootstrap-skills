@@ -1,0 +1,23 @@
+package {{PACKAGE_BASE}}
+
+import android.app.Application
+import {{PACKAGE_BASE}}.core.di.initKoin
+import {{PACKAGE_BASE}}.core.utils.network.AndroidInternetConnectionManager
+import {{PACKAGE_BASE}}.core.utils.network.InternetConnectionManager
+import {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.di.feature{{FEATURE_NAME}}Module
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.dsl.module
+
+class {{PROJECT_NAME}}Application : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        val androidModule = module {
+            single<InternetConnectionManager> { AndroidInternetConnectionManager(androidContext()) }
+        }
+        initKoin(extraModules = listOf(androidModule, feature{{FEATURE_NAME}}Module)) {
+            androidLogger()
+            androidContext(this@{{PROJECT_NAME}}Application)
+        }
+    }
+}

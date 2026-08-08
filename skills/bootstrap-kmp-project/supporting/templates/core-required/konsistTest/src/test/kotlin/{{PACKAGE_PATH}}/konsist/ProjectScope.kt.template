@@ -1,0 +1,37 @@
+package {{PACKAGE_BASE}}.konsist
+
+import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.container.KoScope
+import java.io.File
+
+object ProjectScope {
+    val project: KoScope by lazy { Konsist.scopeFromProject() }
+
+    // scopeFromProject(sourceSetName = "commonMain") returns 0 files for KMP AGP 9 projects.
+    // Konsist.scopeFromProject() correctly assigns sourceSetName on every file via PSI path parsing;
+    // slice() re-packages those files as a KoScope so all assertion APIs remain unchanged.
+    val commonMain: KoScope by lazy {
+        Konsist.scopeFromProject().slice { it.sourceSetName == "commonMain" }
+    }
+
+    val production: KoScope by lazy { Konsist.scopeFromProduction() }
+
+    // scopeFromProject(sourceSetName = "androidMain/iosMain") also returns 0 files under AGP 9 KMP.
+    // Same slice-based workaround as commonMain: PSI assigns sourceSetName correctly on every file.
+    val androidMain: KoScope by lazy {
+        Konsist.scopeFromProject().slice { it.sourceSetName == "androidMain" }
+    }
+    val iosMain: KoScope by lazy {
+        Konsist.scopeFromProject().slice { it.sourceSetName == "iosMain" }
+    }
+
+    val viewModelMaxParams: Int by lazy {
+        val configFile = File("config.yml")
+        check(configFile.exists()) { "config.yml not found in ${File(".").absolutePath}" }
+        configFile.readLines()
+            .first { it.trim().startsWith("viewModelMaxParams:") }
+            .substringAfter(":")
+            .trim()
+            .toInt()
+    }
+}

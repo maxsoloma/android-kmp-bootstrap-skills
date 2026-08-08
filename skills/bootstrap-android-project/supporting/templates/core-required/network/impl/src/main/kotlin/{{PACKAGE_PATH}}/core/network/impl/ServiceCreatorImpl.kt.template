@@ -1,0 +1,15 @@
+package {{PACKAGE_BASE}}.core.network.impl
+
+import {{PACKAGE_BASE}}.core.network.api.ServiceCreator
+import retrofit2.Retrofit
+import javax.inject.Inject
+import kotlin.reflect.KClass
+
+internal class ServiceCreatorImpl @Inject constructor(
+    private val retrofit: Retrofit
+) : ServiceCreator {
+
+    override fun <T : Any> create(service: KClass<T>): T {
+        return retrofit.create(service.java)
+    }
+}

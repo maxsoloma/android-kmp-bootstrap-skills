@@ -1,0 +1,17 @@
+plugins {
+    id("{{PACKAGE_BASE}}.convention.kmp-library")
+    id("{{PACKAGE_BASE}}.convention.detekt")
+    id("{{PACKAGE_BASE}}.convention.test")
+    alias(libs.plugins.kotlinxSerialization)
+}
+
+kotlin {
+    androidLibrary {
+        namespace = "{{PACKAGE_BASE}}.core.network.api"
+    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+        }
+    }
+}

@@ -1,0 +1,5 @@
+package {{PACKAGE_BASE}}.core.analytics
+
+expect class PlatformAnalyticsSink() : AnalyticsTracker {
+    override fun track(event: AnalyticsEvent)
+}

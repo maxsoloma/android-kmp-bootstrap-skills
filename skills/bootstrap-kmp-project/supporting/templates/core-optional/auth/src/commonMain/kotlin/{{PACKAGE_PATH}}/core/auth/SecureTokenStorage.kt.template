@@ -1,0 +1,6 @@
+package {{PACKAGE_BASE}}.core.auth
+
+expect class SecureTokenStorage {
+    fun readToken(): String?
+    fun writeToken(token: String?)
+}

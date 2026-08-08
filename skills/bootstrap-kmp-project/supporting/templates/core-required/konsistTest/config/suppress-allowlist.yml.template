@@ -1,0 +1,5 @@
+# @Suppress values that do NOT require a // SUPPRESS-RATIONALE: comment.
+# Keyed on the suppressed rule/inspection name.
+allowed:
+  - "UnusedPrivateMember"   # @Preview functions are flagged unused but are intentional
+  - "KotlinNoActualForExpect" # Room @ConstructedBy expect object — generated actual

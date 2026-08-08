@@ -1,0 +1,11 @@
+package {{PACKAGE_BASE}}.core.di
+
+import org.koin.dsl.module
+
+/**
+ * Root Koin module wiring cross-cutting infrastructure every feature depends on.
+ * Feature/optional modules contribute their own `module { }`, aggregated in [initKoin].
+ */
+val coreModule = module {
+    single<AppDispatchers> { DefaultAppDispatchers }
+}

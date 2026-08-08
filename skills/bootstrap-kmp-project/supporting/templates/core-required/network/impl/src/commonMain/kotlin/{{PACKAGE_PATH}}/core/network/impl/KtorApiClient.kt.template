@@ -1,0 +1,21 @@
+package {{PACKAGE_BASE}}.core.network.impl
+
+import {{PACKAGE_BASE}}.core.network.api.ApiClient
+import {{PACKAGE_BASE}}.core.network.api.UserDto
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+
+/**
+ * Ktor-backed [ApiClient]. The ONLY place that references a concrete HTTP engine.
+ * Constructed via a plain factory so the di module can bind it without this module
+ * knowing Koin.
+ */
+class KtorApiClient(
+    private val httpClient: HttpClient,
+    private val baseUrl: String,
+) : ApiClient {
+
+    override suspend fun getUser(id: Long): UserDto =
+        httpClient.get("$baseUrl/users/$id").body()
+}

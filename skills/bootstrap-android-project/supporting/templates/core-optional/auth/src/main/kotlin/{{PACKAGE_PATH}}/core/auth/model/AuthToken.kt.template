@@ -1,0 +1,10 @@
+package {{PACKAGE_BASE}}.core.auth.model
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class AuthToken(
+    val accessToken: String,
+    val refreshToken: String,
+    val expiresAtMillis: Long,
+)

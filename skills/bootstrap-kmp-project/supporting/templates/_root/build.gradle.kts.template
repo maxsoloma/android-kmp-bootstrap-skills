@@ -1,0 +1,38 @@
+import java.io.File
+
+plugins {
+    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.androidKmpLibrary) apply false
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.kotlinAndroid) apply false
+    alias(libs.plugins.composeMultiplatform) apply false
+    alias(libs.plugins.composeCompiler) apply false
+    alias(libs.plugins.kotlinxSerialization) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.kotlinJvm) apply false
+    alias(libs.plugins.room) apply false
+    alias(libs.plugins.skie) apply false
+    alias(libs.plugins.buildkonfig) apply false
+}
+
+tasks.register("failIfDetektBaselineExists") {
+    group = "verification"
+    description = "Fails if any detekt-baseline.xml exists — zero-baseline policy."
+    doLast {
+        val baselines = rootProject.rootDir
+            .walkTopDown()
+            .filter { it.isFile && it.name == "detekt-baseline.xml" }
+            .filterNot { it.path.contains("${File.separator}build${File.separator}") }
+            .toList()
+        if (baselines.isNotEmpty()) {
+            throw org.gradle.api.GradleException(
+                "Detekt baseline files are forbidden (zero-baseline policy). Found:\n" +
+                    baselines.joinToString("\n") { " - ${it.relativeTo(rootProject.rootDir)}" } +
+                    "\nDo not generate a baseline to silence violations. Add // SUPPRESS-RATIONALE: instead.",
+            )
+        }
+    }
+}
+
+tasks.matching { it.name == "check" }.configureEach { dependsOn("failIfDetektBaselineExists") }

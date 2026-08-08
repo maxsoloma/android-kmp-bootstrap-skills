@@ -1,0 +1,5 @@
+package {{PACKAGE_BASE}}.core.dma
+
+fun interface ConsentListener {
+    fun onConsentChanged(consent: ConsentData)
+}

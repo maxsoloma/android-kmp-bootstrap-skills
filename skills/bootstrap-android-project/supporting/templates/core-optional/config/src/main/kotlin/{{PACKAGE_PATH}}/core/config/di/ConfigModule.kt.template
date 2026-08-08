@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}.core.config.di
+
+import {{PACKAGE_BASE}}.core.config.ConfigProvider
+import {{PACKAGE_BASE}}.core.config.impl.DefaultConfigProvider
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal interface ConfigModule {
+    @Binds
+    @Singleton
+    fun bindConfigProvider(impl: DefaultConfigProvider): ConfigProvider
+}

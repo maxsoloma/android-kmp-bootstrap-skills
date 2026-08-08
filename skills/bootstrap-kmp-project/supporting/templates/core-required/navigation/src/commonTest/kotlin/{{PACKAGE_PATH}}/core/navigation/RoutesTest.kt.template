@@ -1,0 +1,30 @@
+package {{PACKAGE_BASE}}.core.navigation
+
+import kotlinx.serialization.json.Json
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class RoutesTest {
+
+    private val json = Json
+
+    @Test
+    fun mainRouteRoundTripsThroughSerialization() {
+        val encoded = json.encodeToString(Routes.{{FEATURE_NAME}}.serializer(), Routes.{{FEATURE_NAME}})
+        val decoded = json.decodeFromString(Routes.{{FEATURE_NAME}}.serializer(), encoded)
+        assertEquals(Routes.{{FEATURE_NAME}}, decoded)
+    }
+
+    @Test
+    fun detailRoutePreservesItsIdArgument() {
+        val original = Routes.Detail(id = 99)
+        val encoded = json.encodeToString(Routes.Detail.serializer(), original)
+        val decoded = json.decodeFromString(Routes.Detail.serializer(), encoded)
+        assertEquals(99L, decoded.id)
+    }
+
+    @Test
+    fun mainIsTheOnlyTopLevelDestination() {
+        assertEquals(listOf(TopLevelDestination.MAIN), TopLevelDestination.entries.toList())
+    }
+}

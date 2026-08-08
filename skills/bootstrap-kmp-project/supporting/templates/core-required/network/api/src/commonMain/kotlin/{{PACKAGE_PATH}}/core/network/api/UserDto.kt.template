@@ -1,0 +1,11 @@
+package {{PACKAGE_BASE}}.core.network.api
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserDto(
+    val id: Long,
+    @SerialName("display_name") val displayName: String,
+    val email: String? = null,
+)

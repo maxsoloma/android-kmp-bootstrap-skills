@@ -1,0 +1,67 @@
+package {{PACKAGE_BASE}}.core.design.mvi
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class MviViewModelTest {
+
+    private val dispatcher = StandardTestDispatcher()
+
+    @BeforeTest
+    fun setUp() = Dispatchers.setMain(dispatcher)
+
+    @AfterTest
+    fun tearDown() = Dispatchers.resetMain()
+
+    private data class CounterState(val count: Int = 0) : UiState
+    private sealed interface CounterIntent : Intent {
+        data object Increment : CounterIntent
+    }
+    private sealed interface CounterEffect : UiEffect {
+        data object Bumped : CounterEffect
+    }
+
+    private class CounterViewModel :
+        MviViewModel<CounterState, CounterIntent, CounterEffect>(CounterState()) {
+        override fun handleIntent(intent: CounterIntent) {
+            when (intent) {
+                CounterIntent.Increment -> {
+                    updateState { it.copy(count = it.count + 1) }
+                    emitEffect(CounterEffect.Bumped)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun intentUpdatesStateViaReducer() = runTest {
+        val vm = CounterViewModel()
+        assertEquals(0, vm.state.value.count)
+        vm.onIntent(CounterIntent.Increment)
+        advanceUntilIdle()
+        assertEquals(1, vm.state.value.count)
+    }
+
+    @Test
+    fun intentEmitsOneShotEffect() = runTest {
+        val vm = CounterViewModel()
+        val effects = mutableListOf<CounterEffect>()
+        val job = launch(dispatcher) { vm.effects.toList(effects) }
+        vm.onIntent(CounterIntent.Increment)
+        advanceUntilIdle()
+        assertEquals(listOf<CounterEffect>(CounterEffect.Bumped), effects)
+        job.cancel()
+    }
+}

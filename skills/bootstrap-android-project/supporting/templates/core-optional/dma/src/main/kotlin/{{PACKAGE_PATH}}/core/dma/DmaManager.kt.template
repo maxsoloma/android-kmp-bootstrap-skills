@@ -1,0 +1,18 @@
+package {{PACKAGE_BASE}}.core.dma
+
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class DmaManager @Inject constructor() {
+
+    private val listeners = mutableSetOf<ConsentListener>()
+
+    fun addListener(listener: ConsentListener) {
+        listeners.add(listener)
+    }
+
+    fun publish(consent: ConsentData) {
+        listeners.forEach { it.onConsentChanged(consent) }
+    }
+}

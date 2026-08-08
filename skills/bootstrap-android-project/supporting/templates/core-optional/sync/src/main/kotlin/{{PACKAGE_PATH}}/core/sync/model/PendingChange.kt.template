@@ -1,0 +1,10 @@
+package {{PACKAGE_BASE}}.core.sync.model
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class PendingChange(
+    val key: String,
+    val payload: String,
+    val createdAtMillis: Long,
+)

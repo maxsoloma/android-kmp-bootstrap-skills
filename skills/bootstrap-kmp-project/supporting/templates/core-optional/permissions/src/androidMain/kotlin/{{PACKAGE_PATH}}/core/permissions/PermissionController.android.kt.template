@@ -1,0 +1,20 @@
+package {{PACKAGE_BASE}}.core.permissions
+
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
+
+actual class PermissionController(private val context: Context) {
+    actual suspend fun status(permission: AppPermission): PermissionStatus {
+        val manifestPermission = when (permission) {
+            AppPermission.CAMERA -> android.Manifest.permission.CAMERA
+            AppPermission.NOTIFICATIONS -> android.Manifest.permission.POST_NOTIFICATIONS
+        }
+        val granted = ContextCompat.checkSelfPermission(context, manifestPermission) ==
+            PackageManager.PERMISSION_GRANTED
+        return if (granted) PermissionStatus.GRANTED else PermissionStatus.NOT_DETERMINED
+    }
+
+    actual suspend fun request(permission: AppPermission): PermissionStatus =
+        status(permission)
+}

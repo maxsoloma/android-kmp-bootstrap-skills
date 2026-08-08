@@ -1,0 +1,9 @@
+.gradle/
+build/
+/build-logic/build/
+local.properties
+*.iml
+.idea/
+captures/
+.cxx/
+core/*/schemas/

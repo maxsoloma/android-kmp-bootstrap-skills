@@ -1,0 +1,4 @@
+module: billing
+requires:
+  - analytics
+  - config

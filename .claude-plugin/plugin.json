@@ -1,0 +1,24 @@
+{
+  "name": "bootstrap-projects",
+  "displayName": "Android & KMP Project Bootstrap",
+  "description": "Scaffolds a hardened Android or Kotlin Multiplatform project: multi-module Gradle with convention plugins, Clean Architecture, MVI, Compose, and Konsist tests that fail the build on layer-boundary violations.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Maksim Salankevich",
+    "url": "https://github.com/maxsoloma"
+  },
+  "homepage": "https://github.com/maxsoloma/android-kmp-bootstrap-skills",
+  "repository": "https://github.com/maxsoloma/android-kmp-bootstrap-skills",
+  "license": "MIT",
+  "keywords": [
+    "android",
+    "kotlin",
+    "kmp",
+    "kotlin-multiplatform",
+    "compose",
+    "clean-architecture",
+    "gradle",
+    "scaffold",
+    "konsist"
+  ]
+}

@@ -1,0 +1,111 @@
+package {{PACKAGE_BASE}}.core.network.impl.internet
+
+import android.Manifest
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import androidx.annotation.RequiresPermission
+import androidx.lifecycle.LifecycleOwner
+import {{PACKAGE_BASE}}.core.network.api.InternetConnectionManager
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
+import timber.log.Timber
+import javax.inject.Inject
+
+class InternetConnectionManagerImpl @Inject constructor(
+    @param:ApplicationContext private val context: Context
+) : InternetConnectionManager {
+
+    private val _currentNetwork = MutableStateFlow(CurrentNetwork())
+
+    override val isInternetAvailableFlow: Flow<Boolean> = _currentNetwork.asStateFlow().map {
+        it.isConnected()
+    }
+
+    override val isInternetAvailable: Boolean
+        get() = _currentNetwork.value.isConnected()
+
+    private val connectivityManager by lazy {
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            Timber.d("network connection: onAvailable() network:${network.networkHandle}")
+            _currentNetwork.update { it.copy(isAvailable = true) }
+        }
+
+        override fun onLost(network: Network) {
+            Timber.d("network connection: onLost() network:${network.networkHandle}")
+            _currentNetwork.update {
+                it.copy(
+                    isAvailable = false,
+                    networkCapabilities = null,
+                )
+            }
+        }
+
+        override fun onUnavailable() {
+            Timber.d("network connection: onUnavailable()")
+            _currentNetwork.update {
+                it.copy(
+                    isAvailable = false,
+                    networkCapabilities = null,
+                )
+            }
+        }
+
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities
+        ) {
+            Timber.d("network connection: onCapabilitiesChanged()")
+            _currentNetwork.update { it.copy(networkCapabilities = networkCapabilities) }
+        }
+
+        override fun onBlockedStatusChanged(network: Network, blocked: Boolean) {
+            Timber.d("network connection: onBlockedStatusChanged()")
+            _currentNetwork.update { it.copy(isBlocked = blocked) }
+        }
+    }
+
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    override fun onCreate(owner: LifecycleOwner) {
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        connectivityManager.unregisterNetworkCallback(networkCallback)
+    }
+
+    private data class CurrentNetwork(
+        val networkCapabilities: NetworkCapabilities? = null,
+        val isAvailable: Boolean = false,
+        val isBlocked: Boolean = false,
+    )
+
+    private fun CurrentNetwork.isConnected(): Boolean {
+        return isAvailable &&
+            !isBlocked &&
+            networkCapabilities.isNetworkCapabilitiesValid()
+    }
+
+    private fun NetworkCapabilities?.isNetworkCapabilitiesValid(): Boolean = when {
+        this == null -> false
+        hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) &&
+            (
+                hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_VPN) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+                ) -> true
+
+        else -> false
+    }
+}

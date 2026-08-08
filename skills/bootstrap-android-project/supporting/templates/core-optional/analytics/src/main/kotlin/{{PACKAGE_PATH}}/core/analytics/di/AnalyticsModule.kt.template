@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}.core.analytics.di
+
+import {{PACKAGE_BASE}}.core.analytics.AnalyticsTracker
+import {{PACKAGE_BASE}}.core.analytics.impl.LogcatAnalyticsTracker
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal interface AnalyticsModule {
+    @Binds
+    @Singleton
+    fun bindAnalyticsTracker(impl: LogcatAnalyticsTracker): AnalyticsTracker
+}

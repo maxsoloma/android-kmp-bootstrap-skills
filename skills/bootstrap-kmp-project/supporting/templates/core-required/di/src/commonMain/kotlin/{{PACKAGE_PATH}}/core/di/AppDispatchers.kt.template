@@ -1,0 +1,23 @@
+package {{PACKAGE_BASE}}.core.di
+
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+
+/**
+ * Abstraction over coroutine dispatchers so call sites depend on an injected
+ * contract rather than hard-coded [Dispatchers]. Injectable + swappable in tests.
+ */
+interface AppDispatchers {
+    val main: CoroutineDispatcher
+    val default: CoroutineDispatcher
+    val io: CoroutineDispatcher
+}
+
+/** `Dispatchers.IO` is not in commonMain, so it is provided per-platform via [ioDispatcher]. */
+internal expect fun ioDispatcher(): CoroutineDispatcher
+
+object DefaultAppDispatchers : AppDispatchers {
+    override val main: CoroutineDispatcher = Dispatchers.Main
+    override val default: CoroutineDispatcher = Dispatchers.Default
+    override val io: CoroutineDispatcher = ioDispatcher()
+}

@@ -1,0 +1,18 @@
+package {{PACKAGE_BASE}}.architecture
+
+import org.yaml.snakeyaml.Yaml
+import java.io.File
+
+internal object ArchitectureConfig {
+
+    private const val DEFAULT_VIEWMODEL_MAX_PARAMS = 8
+
+    val viewModelMaxParams: Int by lazy { read()["viewModelMaxParams"] as? Int ?: DEFAULT_VIEWMODEL_MAX_PARAMS }
+
+    private fun read(): Map<String, Any> {
+        val file = File("config.yml")
+        if (!file.exists()) return emptyMap()
+        @Suppress("UNCHECKED_CAST")
+        return Yaml().load<Map<String, Any>>(file.readText()) ?: emptyMap()
+    }
+}

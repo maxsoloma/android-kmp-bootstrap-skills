@@ -1,0 +1,36 @@
+package {{PACKAGE_BASE}}.core.billing
+
+import android.content.Context
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.PendingPurchasesParams
+import com.android.billingclient.api.PurchasesUpdatedListener
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class BillingManager @Inject constructor(
+    context: Context,
+    premiumStateRepository: PremiumStateRepository,
+) {
+    // SUPPRESS-RATIONALE: billing scaffold — repository will be read once purchase verification is wired
+    @Suppress("UnusedPrivateProperty")
+    private val repository: PremiumStateRepository = premiumStateRepository
+
+    private val listener = PurchasesUpdatedListener { _, _ ->
+        // TODO: wire purchase flow — verify purchases and call repository.setPremium
+    }
+
+    // SUPPRESS-RATIONALE: billing scaffold — billingClient will be connected once purchase flow is wired
+    @Suppress("UnusedPrivateProperty")
+    private val billingClient: BillingClient = BillingClient.newBuilder(context)
+        .setListener(listener)
+        .enablePendingPurchases(
+            PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()
+        )
+        .build()
+
+    fun connect() {
+        // Placeholder: start a connection and query purchases.
+        // repository drives the premium gate from confirmed purchases.
+    }
+}

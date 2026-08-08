@@ -1,0 +1,6 @@
+package {{PACKAGE_BASE}}.core.auth
+
+class AuthTokenProvider(private val storage: SecureTokenStorage) {
+    fun bearerToken(): String? = storage.readToken()
+    fun setToken(token: String?) = storage.writeToken(token)
+}

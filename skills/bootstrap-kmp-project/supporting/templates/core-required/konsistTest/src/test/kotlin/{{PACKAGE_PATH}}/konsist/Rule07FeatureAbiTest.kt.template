@@ -1,0 +1,26 @@
+package {{PACKAGE_BASE}}.konsist
+
+import com.lemonappdev.konsist.api.verify.assertFalse
+import org.junit.jupiter.api.Test
+
+class Rule07FeatureAbiTest {
+
+    private val featureImportRegex =
+        Regex("""\.feature\.([a-z0-9]+)\.(data|presentation|domain\.repository)\.""")
+
+    @Test
+    fun `rule 07 - a feature only imports another feature's api package, never its internals`() {
+        ProjectScope.commonMain.files
+            .filter { it.packagee?.name?.contains(".feature.") == true }
+            .assertFalse { file ->
+                val ownFeature = Regex("""\.feature\.([a-z0-9]+)""")
+                    .find(file.packagee?.name.orEmpty())?.groupValues?.get(1)
+                file.imports.any { import ->
+                    val match = featureImportRegex.find("." + import.name) ?: return@any false
+                    val importedFeature = match.groupValues[1]
+                    importedFeature != ownFeature &&
+                        !import.name.contains(".feature.$importedFeature.api.")
+                }
+            }
+    }
+}

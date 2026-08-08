@@ -1,0 +1,107 @@
+[versions]
+# Room / SQLite
+room = "2.8.4"
+sqlite = "2.6.2"
+# DataStore / Okio
+datastore = "1.2.1"
+okio = "3.9.1"
+# SKIE
+skie = "0.10.12"
+# BuildKonfig
+buildkonfig = "0.17.1"
+# Coil
+coil = "3.1.0"
+# AndroidX Core
+androidxCoreKtx = "1.15.0"
+# Toolchain
+kotlin = "2.3.21"
+agp = "9.0.1"
+ksp = "2.3.9"
+# Compose Multiplatform
+composeMultiplatform = "1.11.1"
+# AndroidX / lifecycle / nav
+lifecycle = "2.10.0"
+navigationCompose = "2.9.2"
+# DI
+koin = "4.2.1"
+# Networking
+ktor = "3.5.0"
+kotlinxSerialization = "1.11.0"
+kotlinxCoroutines = "1.10.2"
+# Quality
+detekt = "1.23.8"
+detektComposeRules = "0.5.7"
+konsist = "0.17.3"
+junit5 = "5.11.4"
+# SDK levels
+compileSdk = "36"
+minSdk = "{{MIN_SDK}}"
+targetSdk = "{{TARGET_SDK}}"
+
+[plugins]
+kotlinMultiplatform   = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+androidKmpLibrary     = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+androidApplication    = { id = "com.android.application", version.ref = "agp" }
+kotlinAndroid         = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlinxSerialization  = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+composeMultiplatform  = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+composeCompiler       = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp                   = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+detekt                = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kotlinJvm             = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+room                  = { id = "androidx.room", version.ref = "room" }
+skie                  = { id = "co.touchlab.skie", version.ref = "skie" }
+buildkonfig           = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
+
+[libraries]
+# Gradle plugin marker artifacts for build-logic classpath (apply-by-id from precompiled scripts)
+kotlin-gradlePlugin   = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+android-gradlePlugin  = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+ksp-gradlePlugin      = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "ksp" }
+compose-gradlePlugin  = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "composeMultiplatform" }
+composeCompiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+detekt-gradlePlugin   = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+
+# Lifecycle / ViewModel (KMP)
+androidx-lifecycle-viewmodel        = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+androidx-lifecycle-runtime-compose  = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-activity-compose           = { module = "androidx.activity:activity-compose", version = "1.10.1" }
+# Navigation (KMP — org.jetbrains.androidx group)
+androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+# Koin
+koin-core                 = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android              = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose-viewmodel    = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+# Ktor
+ktor-client-core              = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-logging           = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-okhttp            = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin            = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-mock              = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+# Serialization / coroutines
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-coroutines-core    = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test    = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+# Quality / test
+detekt-compose-rules = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektComposeRules" }
+konsist              = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
+kotlin-test          = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+junit-bom            = { module = "org.junit:junit-bom", version.ref = "junit5" }
+junit-jupiter        = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+# Room / SQLite
+room-gradlePlugin       = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
+androidx-room-runtime   = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler  = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+# DataStore / Okio
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+# Coil
+coil-compose      = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+# AndroidX Core
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCoreKtx" }

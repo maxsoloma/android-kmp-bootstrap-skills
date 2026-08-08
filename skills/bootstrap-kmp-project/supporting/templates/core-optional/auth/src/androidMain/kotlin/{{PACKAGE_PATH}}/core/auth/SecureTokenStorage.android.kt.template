@@ -1,0 +1,16 @@
+package {{PACKAGE_BASE}}.core.auth
+
+import android.content.SharedPreferences
+
+actual class SecureTokenStorage(private val prefs: SharedPreferences) {
+    actual fun readToken(): String? = prefs.getString(KEY, null)
+    actual fun writeToken(token: String?) {
+        prefs.edit().apply {
+            if (token == null) remove(KEY) else putString(KEY, token)
+        }.apply()
+    }
+
+    private companion object {
+        const val KEY = "auth_token"
+    }
+}

@@ -1,0 +1,59 @@
+plugins {
+    `kotlin-dsl`
+}
+
+group = "{{PACKAGE_BASE}}.buildlogic"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
+dependencies {
+    compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
+    compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.composeCompiler.gradlePlugin)
+    compileOnly(libs.detekt.gradlePlugin)
+    compileOnly(libs.room.gradlePlugin)
+}
+
+gradlePlugin {
+    plugins {
+        register("kmpLibrary") {
+            id = "{{PACKAGE_BASE}}.convention.kmp-library"
+            implementationClass = "{{PACKAGE_BASE}}.convention.KmpLibraryConventionPlugin"
+        }
+        register("composeMultiplatform") {
+            id = "{{PACKAGE_BASE}}.convention.compose-multiplatform"
+            implementationClass = "{{PACKAGE_BASE}}.convention.ComposeMultiplatformConventionPlugin"
+        }
+        register("koin") {
+            id = "{{PACKAGE_BASE}}.convention.koin"
+            implementationClass = "{{PACKAGE_BASE}}.convention.KoinConventionPlugin"
+        }
+        register("room") {
+            id = "{{PACKAGE_BASE}}.convention.room"
+            implementationClass = "{{PACKAGE_BASE}}.convention.RoomConventionPlugin"
+        }
+        register("detekt") {
+            id = "{{PACKAGE_BASE}}.convention.detekt"
+            implementationClass = "{{PACKAGE_BASE}}.convention.DetektConventionPlugin"
+        }
+        register("test") {
+            id = "{{PACKAGE_BASE}}.convention.test"
+            implementationClass = "{{PACKAGE_BASE}}.convention.TestConventionPlugin"
+        }
+        register("androidApplication") {
+            id = "{{PACKAGE_BASE}}.convention.android-application"
+            implementationClass = "{{PACKAGE_BASE}}.convention.AndroidApplicationConventionPlugin"
+        }
+    }
+}

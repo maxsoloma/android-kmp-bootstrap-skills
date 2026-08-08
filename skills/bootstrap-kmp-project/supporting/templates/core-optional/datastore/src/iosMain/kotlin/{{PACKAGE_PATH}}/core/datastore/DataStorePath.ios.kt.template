@@ -1,0 +1,18 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+
+package {{PACKAGE_BASE}}.core.datastore
+
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSUserDomainMask
+
+fun dataStorePath(): String {
+    val dir = NSFileManager.defaultManager.URLForDirectory(
+        directory = NSDocumentDirectory,
+        inDomain = NSUserDomainMask,
+        appropriateForURL = null,
+        create = false,
+        error = null,
+    )!!.path!!
+    return "$dir/$DATA_STORE_FILE_NAME"
+}

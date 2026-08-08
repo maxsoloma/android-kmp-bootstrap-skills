@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}.core.network.impl
+
+import {{PACKAGE_BASE}}.core.network.api.ApiClient
+import {{PACKAGE_BASE}}.core.network.api.ServiceCreator
+import io.ktor.client.HttpClient
+
+/**
+ * Default [ServiceCreator]. The di module binds this and supplies [httpClient] +
+ * [baseUrl]; impl stays Koin-agnostic.
+ */
+class KtorServiceCreator(
+    private val httpClient: HttpClient,
+    private val baseUrl: String,
+) : ServiceCreator {
+
+    override fun apiClient(): ApiClient = KtorApiClient(httpClient, baseUrl)
+}

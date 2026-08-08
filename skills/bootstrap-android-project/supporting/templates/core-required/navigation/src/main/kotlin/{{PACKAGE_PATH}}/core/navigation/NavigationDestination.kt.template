@@ -1,0 +1,28 @@
+package {{PACKAGE_BASE}}.core.navigation
+
+import androidx.annotation.Keep
+import androidx.compose.runtime.Immutable
+import kotlinx.serialization.Serializable
+
+@Immutable
+interface NavigationDestination
+
+@Keep
+sealed interface TopLevelDestination : NavigationDestination {
+
+    @Serializable
+    @Keep
+    data object {{FEATURE_NAME}} : TopLevelDestination
+
+    companion object {
+        val default: TopLevelDestination = {{FEATURE_NAME}}
+    }
+}
+
+fun getAllTopLevelDestinations(): List<TopLevelDestination> = listOf(
+    TopLevelDestination.{{FEATURE_NAME}},
+)
+
+@Serializable
+@Keep
+data object {{FEATURE_NAME}}RootDestination : NavigationDestination

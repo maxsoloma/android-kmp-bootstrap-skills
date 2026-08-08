@@ -1,0 +1,7 @@
+package {{PACKAGE_BASE}}.core.network.api
+
+import kotlin.reflect.KClass
+
+interface ServiceCreator {
+    fun <T : Any> create(service: KClass<T>): T
+}

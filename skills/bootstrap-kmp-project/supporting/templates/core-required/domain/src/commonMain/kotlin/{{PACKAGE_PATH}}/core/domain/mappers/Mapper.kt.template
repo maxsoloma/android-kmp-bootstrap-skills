@@ -1,0 +1,14 @@
+package {{PACKAGE_BASE}}.core.domain.mappers
+
+/**
+ * Maps an instance of [FROM] into an instance of [TO].
+ *
+ * Konsist rule #6 enforces that every class whose name ends with `Mapper`
+ * implements this interface. Lives in commonMain so mappers are shared.
+ */
+interface Mapper<in FROM, out TO> {
+
+    fun map(from: FROM): TO
+
+    fun mapList(from: List<FROM>): List<TO> = from.map(::map)
+}

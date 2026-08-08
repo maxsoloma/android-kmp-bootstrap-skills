@@ -1,0 +1,11 @@
+package {{PACKAGE_BASE}}.core.navigation
+
+import androidx.compose.runtime.Stable
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+
+@Stable
+interface FeatureNavGraphBuilder {
+
+    fun NavGraphBuilder.registerGraph(navController: NavHostController)
+}

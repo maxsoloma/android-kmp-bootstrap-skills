@@ -1,0 +1,8 @@
+package {{PACKAGE_BASE}}.core.sync.handler
+
+import {{PACKAGE_BASE}}.core.sync.model.PendingChange
+
+interface ChangeHandler {
+    val key: String
+    suspend fun handle(change: PendingChange): Boolean
+}

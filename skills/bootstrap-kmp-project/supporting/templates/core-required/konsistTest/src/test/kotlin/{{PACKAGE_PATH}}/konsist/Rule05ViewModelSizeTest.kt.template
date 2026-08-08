@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}.konsist
+
+import com.lemonappdev.konsist.api.verify.assertTrue
+import org.junit.jupiter.api.Test
+
+class Rule05ViewModelSizeTest {
+
+    @Test
+    fun `rule 05 - ViewModel primary constructor parameter count does not exceed the configured max`() {
+        ProjectScope.project
+            .classes()
+            .filter { it.name.endsWith("ViewModel") }
+            .assertTrue { vm ->
+                (vm.primaryConstructor?.parameters?.size ?: 0) <= ProjectScope.viewModelMaxParams
+            }
+    }
+}

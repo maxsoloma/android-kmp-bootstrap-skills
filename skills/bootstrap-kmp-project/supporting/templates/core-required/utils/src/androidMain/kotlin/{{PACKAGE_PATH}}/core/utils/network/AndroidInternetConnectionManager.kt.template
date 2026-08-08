@@ -1,0 +1,45 @@
+package {{PACKAGE_BASE}}.core.utils.network
+
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+/**
+ * Android reachability via [ConnectivityManager.NetworkCallback].
+ * Constructed with the Application [Context] supplied by Koin's androidContext.
+ */
+class AndroidInternetConnectionManager(
+    context: Context,
+) : InternetConnectionManager {
+
+    private val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    private val mutableIsOnline = MutableStateFlow(currentlyOnline())
+    override val isOnline: StateFlow<Boolean> = mutableIsOnline.asStateFlow()
+
+    private val callback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            mutableIsOnline.value = true
+        }
+
+        override fun onLost(network: Network) {
+            mutableIsOnline.value = currentlyOnline()
+        }
+    }
+
+    init {
+        connectivityManager.registerDefaultNetworkCallback(callback)
+    }
+
+    private fun currentlyOnline(): Boolean {
+        val caps = connectivityManager.getNetworkCapabilities(
+            connectivityManager.activeNetwork,
+        ) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+}

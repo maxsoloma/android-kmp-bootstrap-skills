@@ -1,0 +1,31 @@
+package {{PACKAGE_BASE}}.core.remote.config.impl
+
+import {{PACKAGE_BASE}}.core.remote.config.RemoteConfigKey
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
+class FirebaseRemoteConfigProviderTest {
+    private val remoteConfig = mockk<FirebaseRemoteConfig>()
+    private val provider = FirebaseRemoteConfigProvider(remoteConfig)
+
+    @Test
+    fun `getString returns default when remote value is empty`() {
+        every { remoteConfig.getString(RemoteConfigKey.WELCOME_TITLE.key) } returns ""
+
+        val result = provider.getString(RemoteConfigKey.WELCOME_TITLE)
+
+        assertEquals(RemoteConfigKey.WELCOME_TITLE.default, result)
+    }
+
+    @Test
+    fun `getString returns remote value when present`() {
+        every { remoteConfig.getString(RemoteConfigKey.WELCOME_TITLE.key) } returns "Hi"
+
+        val result = provider.getString(RemoteConfigKey.WELCOME_TITLE)
+
+        assertEquals("Hi", result)
+    }
+}

@@ -1,0 +1,60 @@
+package {{PACKAGE_BASE}}.core.auth.interceptor
+
+import {{PACKAGE_BASE}}.core.auth.model.AuthToken
+import {{PACKAGE_BASE}}.core.auth.storage.TokenStorage
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
+import okhttp3.Interceptor
+import okhttp3.Protocol
+import okhttp3.Request
+import okhttp3.Response
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
+class AuthInterceptorTest {
+
+    private val tokenStorage = mockk<TokenStorage>()
+    private val interceptor = AuthInterceptor(tokenStorage)
+
+    @Test
+    fun `adds bearer header when token present`() {
+        coEvery { tokenStorage.current() } returns AuthToken("access-1", "refresh-1", Long.MAX_VALUE)
+        val chain = mockk<Interceptor.Chain>()
+        val requestSlot = slot<Request>()
+        every { chain.request() } returns Request.Builder().url("https://api.example.com/").build()
+        every { chain.proceed(capture(requestSlot)) } answers {
+            Response.Builder()
+                .request(requestSlot.captured)
+                .protocol(Protocol.HTTP_1_1)
+                .code(200)
+                .message("OK")
+                .build()
+        }
+
+        interceptor.intercept(chain)
+
+        assertEquals("Bearer access-1", requestSlot.captured.header("Authorization"))
+    }
+
+    @Test
+    fun `no header when token absent`() {
+        coEvery { tokenStorage.current() } returns null
+        val chain = mockk<Interceptor.Chain>()
+        val requestSlot = slot<Request>()
+        every { chain.request() } returns Request.Builder().url("https://api.example.com/").build()
+        every { chain.proceed(capture(requestSlot)) } answers {
+            Response.Builder()
+                .request(requestSlot.captured)
+                .protocol(Protocol.HTTP_1_1)
+                .code(200)
+                .message("OK")
+                .build()
+        }
+
+        interceptor.intercept(chain)
+
+        assertEquals(null, requestSlot.captured.header("Authorization"))
+    }
+}

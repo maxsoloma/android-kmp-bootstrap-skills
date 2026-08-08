@@ -1,0 +1,12 @@
+package {{PACKAGE_BASE}}.core.network.api
+
+import androidx.lifecycle.DefaultLifecycleObserver
+import kotlinx.coroutines.flow.Flow
+
+/**
+ * Serves to provide current internet connection state.
+ */
+interface InternetConnectionManager : DefaultLifecycleObserver {
+    val isInternetAvailable: Boolean
+    val isInternetAvailableFlow: Flow<Boolean>
+}

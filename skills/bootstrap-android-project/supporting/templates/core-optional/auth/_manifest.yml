@@ -1,0 +1,2 @@
+module: auth
+requires: [config, sync, analytics]

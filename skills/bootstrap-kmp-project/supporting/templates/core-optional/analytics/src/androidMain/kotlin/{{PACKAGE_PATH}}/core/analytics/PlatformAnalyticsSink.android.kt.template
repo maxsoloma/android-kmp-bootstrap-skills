@@ -1,0 +1,9 @@
+package {{PACKAGE_BASE}}.core.analytics
+
+import android.util.Log
+
+actual class PlatformAnalyticsSink actual constructor() : AnalyticsTracker {
+    actual override fun track(event: AnalyticsEvent) {
+        Log.d("Analytics", "${event.name} ${event.params}")
+    }
+}

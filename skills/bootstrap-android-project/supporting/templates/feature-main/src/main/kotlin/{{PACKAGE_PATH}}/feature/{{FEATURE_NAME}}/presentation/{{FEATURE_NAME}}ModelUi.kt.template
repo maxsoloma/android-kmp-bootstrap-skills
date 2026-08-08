@@ -1,0 +1,19 @@
+package {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.presentation
+
+import {{PACKAGE_BASE}}.core.design.mvi.ActionUi
+import {{PACKAGE_BASE}}.core.design.mvi.EventUi
+import {{PACKAGE_BASE}}.core.design.mvi.StateUi
+
+internal data class {{FEATURE_NAME}}StateUi(
+    val title: String = "",
+    val clickCount: Int = 0,
+) : StateUi
+
+internal sealed interface {{FEATURE_NAME}}ActionUi : ActionUi {
+    data object ScreenViewed : {{FEATURE_NAME}}ActionUi
+    data object GreetClicked : {{FEATURE_NAME}}ActionUi
+}
+
+internal sealed interface {{FEATURE_NAME}}EventUi : EventUi {
+    data class ShowGreeting(val message: String) : {{FEATURE_NAME}}EventUi
+}

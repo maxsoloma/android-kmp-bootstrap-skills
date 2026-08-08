@@ -1,0 +1,68 @@
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.withType
+
+abstract class CheckNoDetektBaselineTask : org.gradle.api.DefaultTask() {
+    @get:Internal
+    abstract val moduleDir: DirectoryProperty
+
+    @TaskAction
+    fun check() {
+        val offenders = moduleDir.asFileTree.matching {
+            include("**/detekt-baseline.xml")
+            exclude("**/build/**")
+        }.files
+        check(offenders.isEmpty()) {
+            "detekt-baseline.xml is forbidden (zero-baseline policy). Found: " +
+                offenders.joinToString { it.absolutePath } +
+                ". Fix violations instead of baselining; run detektBaseline --update only with explicit team approval."
+        }
+    }
+}
+
+class DetektConventionPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply("io.gitlab.arturbosch.detekt")
+
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
+            extensions.configure<DetektExtension> {
+                config.setFrom(rootProject.files("config/detekt.yml"))
+                buildUponDefaultConfig = true
+                parallel = true
+                autoCorrect = true
+            }
+
+            dependencies {
+                add("detektPlugins", libs.findLibrary("detekt.formatting").get())
+                add("detektPlugins", libs.findLibrary("detekt.compose.rules").get())
+                add("detektPlugins", libs.findLibrary("detekt.vkompose").get())
+            }
+
+            tasks.withType<Detekt>().configureEach {
+                reports {
+                    html.required.set(true)
+                    xml.required.set(true)
+                    sarif.required.set(true)
+                }
+            }
+
+            val checkNoBaseline = tasks.register<CheckNoDetektBaselineTask>("checkNoDetektBaseline") {
+                group = "verification"
+                moduleDir.set(layout.projectDirectory)
+            }
+            tasks.named("detekt").configure { dependsOn(checkNoBaseline) }
+        }
+    }
+}

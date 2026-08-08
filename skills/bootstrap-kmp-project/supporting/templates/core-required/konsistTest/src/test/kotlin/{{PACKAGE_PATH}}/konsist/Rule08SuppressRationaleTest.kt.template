@@ -1,0 +1,43 @@
+package {{PACKAGE_BASE}}.konsist
+
+import com.lemonappdev.konsist.api.verify.assertTrue
+import org.junit.jupiter.api.Test
+import java.io.File
+
+class Rule08SuppressRationaleTest {
+
+    private val allowedSuppressNames: Set<String> by lazy {
+        val f = File("config/suppress-allowlist.yml")
+        if (!f.exists()) emptySet()
+        else f.readLines()
+            .map { it.trim() }
+            .filter { it.startsWith("- ") }
+            .map { it.removePrefix("- ").substringBefore('#').trim().trim('"') }
+            .filter { it.isNotEmpty() }
+            .toSet()
+    }
+
+    @Test
+    fun `rule 08 - every non-allowlisted @Suppress is preceded by a SUPPRESS-RATIONALE comment`() {
+        ProjectScope.production.files
+            .filter { !it.path.contains("/build/") }
+            .filter { it.text.contains("@Suppress") || it.text.contains("@file:Suppress") }
+            .assertTrue { file ->
+                val lines = file.text.lines()
+                lines.withIndex().all { (idx, line) ->
+                    val trimmed = line.trim()
+                    if (!trimmed.contains("Suppress(")) return@all true
+
+                    val names = Regex("\"([A-Za-z0-9_]+)\"")
+                        .findAll(trimmed.substringAfter("Suppress("))
+                        .map { it.groupValues[1] }
+                        .toList()
+                    if (names.isNotEmpty() && names.all { it in allowedSuppressNames }) return@all true
+
+                    val prev = lines.getOrNull(idx - 1)?.trim().orEmpty()
+                    val sameLine = trimmed.contains("// SUPPRESS-RATIONALE:")
+                    prev.startsWith("// SUPPRESS-RATIONALE:") || sameLine
+                }
+            }
+    }
+}

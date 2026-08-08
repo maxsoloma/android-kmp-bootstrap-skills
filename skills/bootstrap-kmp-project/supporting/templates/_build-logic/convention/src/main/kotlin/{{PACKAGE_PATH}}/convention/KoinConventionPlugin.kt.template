@@ -1,0 +1,31 @@
+package {{PACKAGE_BASE}}.convention
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+
+/**
+ * Koin DI wiring. Templates use hand-written Koin DSL (no KSP/compiler plugin),
+ * so this plugin only adds the runtime artifacts on top of kmp-library.
+ */
+class KoinConventionPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply("{{PACKAGE_BASE}}.convention.kmp-library")
+
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
+            extensions.configure<KotlinMultiplatformExtension> {
+                sourceSets.getByName("commonMain").dependencies {
+                    implementation(libs.findLibrary("koin-core").get())
+                }
+                sourceSets.getByName("androidMain").dependencies {
+                    implementation(libs.findLibrary("koin-android").get())
+                }
+            }
+        }
+    }
+}

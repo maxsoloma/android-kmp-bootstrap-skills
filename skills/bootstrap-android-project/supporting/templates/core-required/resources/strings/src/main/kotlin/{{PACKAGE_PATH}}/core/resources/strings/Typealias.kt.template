@@ -1,0 +1,5 @@
+@file:Suppress("Filename")
+
+package {{PACKAGE_BASE}}.core.resources.strings
+
+typealias RString = R.string

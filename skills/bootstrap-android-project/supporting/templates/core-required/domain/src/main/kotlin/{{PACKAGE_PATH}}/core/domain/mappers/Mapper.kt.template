@@ -1,0 +1,5 @@
+package {{PACKAGE_BASE}}.core.domain.mappers
+
+interface Mapper<FROM, TO> {
+    operator fun invoke(from: FROM): TO
+}

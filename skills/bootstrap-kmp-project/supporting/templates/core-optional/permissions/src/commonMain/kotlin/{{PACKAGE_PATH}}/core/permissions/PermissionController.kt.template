@@ -1,0 +1,10 @@
+package {{PACKAGE_BASE}}.core.permissions
+
+enum class AppPermission { CAMERA, NOTIFICATIONS }
+
+enum class PermissionStatus { GRANTED, DENIED, NOT_DETERMINED }
+
+expect class PermissionController {
+    suspend fun status(permission: AppPermission): PermissionStatus
+    suspend fun request(permission: AppPermission): PermissionStatus
+}

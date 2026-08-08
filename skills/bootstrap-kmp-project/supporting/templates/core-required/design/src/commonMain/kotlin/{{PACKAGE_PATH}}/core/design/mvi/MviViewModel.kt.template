@@ -1,0 +1,50 @@
+package {{PACKAGE_BASE}}.core.design.mvi
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+/**
+ * Base Unidirectional-Data-Flow ViewModel shared across Android + iOS. Extends the
+ * commonMain `androidx.lifecycle.ViewModel` (KMP artifact), exposing [state]
+ * (hot [StateFlow]), [effects] (one-shot [Flow], no replay), and [onIntent].
+ * Subclasses implement [handleIntent] and mutate via [updateState] / [emitEffect].
+ */
+abstract class MviViewModel<S : UiState, I : Intent, E : UiEffect>(
+    initialState: S,
+) : ViewModel() {
+
+    private val mutableState = MutableStateFlow(initialState)
+    val state: StateFlow<S> = mutableState.asStateFlow()
+
+    private val mutableEffects = MutableSharedFlow<E>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+    val effects: Flow<E> = mutableEffects.asSharedFlow()
+
+    val currentState: S get() = mutableState.value
+
+    fun onIntent(intent: I) {
+        handleIntent(intent)
+    }
+
+    protected abstract fun handleIntent(intent: I)
+
+    protected fun updateState(reducer: (S) -> S) {
+        mutableState.update(reducer)
+    }
+
+    protected fun emitEffect(effect: E) {
+        viewModelScope.launch { mutableEffects.emit(effect) }
+    }
+}

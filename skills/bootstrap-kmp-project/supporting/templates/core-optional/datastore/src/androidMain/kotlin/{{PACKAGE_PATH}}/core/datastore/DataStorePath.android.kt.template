@@ -1,0 +1,6 @@
+package {{PACKAGE_BASE}}.core.datastore
+
+import android.content.Context
+
+fun dataStorePath(context: Context): String =
+    context.filesDir.resolve(DATA_STORE_FILE_NAME).absolutePath

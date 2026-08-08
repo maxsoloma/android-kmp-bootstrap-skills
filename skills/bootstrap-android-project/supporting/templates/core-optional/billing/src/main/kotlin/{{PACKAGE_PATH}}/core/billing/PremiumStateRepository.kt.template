@@ -1,0 +1,8 @@
+package {{PACKAGE_BASE}}.core.billing
+
+import kotlinx.coroutines.flow.Flow
+
+interface PremiumStateRepository {
+    val isPremium: Flow<Boolean>
+    suspend fun setPremium(premium: Boolean)
+}
