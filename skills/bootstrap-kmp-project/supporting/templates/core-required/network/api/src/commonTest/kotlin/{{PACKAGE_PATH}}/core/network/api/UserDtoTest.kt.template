@@ -10,9 +10,9 @@ class UserDtoTest {
 
     @Test
     fun decodesSnakeCasePayloadIntoUserDto() {
-        val payload = """{"id":7,"display_name":"Ann","email":"ann@acme.io"}"""
+        val payload = """{"id":7,"display_name":"Ann","email":"ann@example.com"}"""
         val decoded = json.decodeFromString(UserDto.serializer(), payload)
-        assertEquals(UserDto(id = 7, displayName = "Ann", email = "ann@acme.io"), decoded)
+        assertEquals(UserDto(id = 7, displayName = "Ann", email = "ann@example.com"), decoded)
     }
 
     @Test

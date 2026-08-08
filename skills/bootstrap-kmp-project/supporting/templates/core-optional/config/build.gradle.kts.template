@@ -17,7 +17,7 @@ kotlin {
 buildkonfig {
     packageName = "{{PACKAGE_BASE}}.core.config"
     defaultConfigs {
-        buildConfigField(STRING, "BASE_URL", "https://api.acme.com")
+        buildConfigField(STRING, "BASE_URL", "https://api.example.com")
         buildConfigField(BOOLEAN, "DEBUG", "true")
     }
 }

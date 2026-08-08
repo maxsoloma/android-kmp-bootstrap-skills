@@ -1,7 +1,7 @@
 package {{PACKAGE_BASE}}.core.billing
 
 actual class BillingFacade {
-    // SUPPRESS-RATIONALE: ACME-101 — StoreKit 2 product fetch wired in iosApp at integration time
+    // SUPPRESS-RATIONALE: billing scaffold — StoreKit 2 product fetch wired in iosApp at integration time
     actual suspend fun products(ids: List<String>): List<Product> =
         ids.map { Product(it, "—") }
 

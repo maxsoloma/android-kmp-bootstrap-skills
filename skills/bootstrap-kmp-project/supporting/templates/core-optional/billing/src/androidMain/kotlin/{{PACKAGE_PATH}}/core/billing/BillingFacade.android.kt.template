@@ -1,7 +1,7 @@
 package {{PACKAGE_BASE}}.core.billing
 
 actual class BillingFacade {
-    // SUPPRESS-RATIONALE: ACME-101 — Google Play Billing client wired in androidApp at integration time
+    // SUPPRESS-RATIONALE: billing scaffold — Google Play Billing client wired in androidApp at integration time
     actual suspend fun products(ids: List<String>): List<Product> =
         ids.map { Product(it, "—") }
 

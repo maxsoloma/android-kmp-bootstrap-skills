@@ -16,7 +16,7 @@ class KtorApiClientTest {
     @Test
     fun getUserDeserializesJsonViaContentNegotiation() = runTest {
         val engine = MockEngine { request ->
-            assertEquals("https://api.acme.io/users/42", request.url.toString())
+            assertEquals("https://api.example.com/users/42", request.url.toString())
             respond(
                 content = ByteReadChannel("""{"id":42,"display_name":"Zoe","email":null}"""),
                 status = HttpStatusCode.OK,
@@ -24,7 +24,7 @@ class KtorApiClientTest {
             )
         }
         val httpClient: HttpClient = buildHttpClient(engine)
-        val apiClient = KtorApiClient(httpClient, baseUrl = "https://api.acme.io")
+        val apiClient = KtorApiClient(httpClient, baseUrl = "https://api.example.com")
 
         val user = apiClient.getUser(42)
 

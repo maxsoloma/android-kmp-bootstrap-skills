@@ -18,7 +18,7 @@ compatibility: >
   and network access for Gradle dependency resolution. iOS link verification is
   skipped unless run on macOS with Xcode installed.
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
   repository: https://github.com/maxsoloma/android-kmp-bootstrap-skills
 ---
 
