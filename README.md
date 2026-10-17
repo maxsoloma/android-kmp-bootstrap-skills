@@ -26,114 +26,110 @@ codex plugin add bootstrap-projects@android-kmp-bootstrap-skills
 /plugin install bootstrap-projects@android-kmp-bootstrap-skills
 ```
 
+## Start the step-by-step wizard
+
 Open a **new conversation** in the workspace where you want to create the app.
-You can select **Android & KMP Bootstrap** in Codex or invoke the skill directly:
+Select **Android & KMP Bootstrap** in Codex or send just the skill invocation:
 
 | Agent | Send in chat |
 |---|---|
 | Codex | `$bootstrap-projects:bootstrap-project` |
 | Claude Code | `/bootstrap-projects:bootstrap-project` |
 
-The skill asks for project basics. You can also include your complete request
-after the invocation, or use the examples below in ordinary chat.
+**No project description or arguments are required.** The skill starts a guided
+conversation. You type only the project name and package; platforms, UI and
+components are selected from the offered options.
+
+The agent uses native question forms when they are available in its current
+mode. Otherwise, it shows the same choices as numbered chat menus: reply with
+option numbers, including several numbers for platforms. The wizard stays in
+chat; it does not require opening a terminal. Questions follow your language.
+
 See [installation details and troubleshooting](docs/INSTALL.md) for terminal
 installation in Claude Code and manual portable installation.
 
-## Examples to paste into chat
+## What the wizard asks
 
-Requests can be written in your usual language. Include the project name,
-package, platforms and destination to avoid follow-up questions about basics.
-All destinations below are new directories relative to the agent's workspace.
+| Step | Your input |
+|---|---|
+| 1. Name and package | Type e.g. `Aurora` and `com.example.aurora`. |
+| 2. Platforms | Select one or more: Android, iOS, Desktop JVM, Browser Wasm. |
+| 3. UI | Select a compatible option: native Android Compose, shared Compose, or SwiftUI on iOS with shared Kotlin logic. |
+| 4. DI | Select Manual wiring or Koin. |
+| 5. Navigation | Select None or Navigation 3; SwiftUI offers None or native navigation. |
+| 6. Networking | Select None or Ktor. |
+| 7. Local storage | Select None or Settings key-value storage. |
+| 8. Review | Select Create project, Change choices or Cancel. |
 
-### Start with the defaults
+Only compatible UI/navigation options are offered. When shared Compose is the
+only UI compatible with your platforms, the wizard explains the selection and
+continues. Single-select question tools collect platforms through Include/Exclude
+choices rather than forcing a preset combination.
 
-```text
-Use bootstrap-project to create Aurora in ./Aurora for Android and iOS.
-Package: com.example.aurora. Use the default shared Compose setup.
-```
+The destination defaults to `./<ProjectName>` in the calling workspace; the
+application ID defaults to the package. SDK versions and additional agent
+instructions use the generator defaults. Native SwiftUI navigation raises an
+unspecified iOS minimum to 16.0 and shows it in review. With Ktor, the sample
+HTTPS endpoint is supplied automatically. None of these fields requires typing
+in the normal wizard. You can request advanced settings explicitly.
 
-This creates a minimal shared UI starter with manual dependency wiring and no
-optional navigation, networking or storage. If you are still choosing a stack:
+Each choice waits for your answer. A recommendation is not selected on your
+behalf. Before generation, review shows the destination, selected stack, SDKs,
+modules and file plan. Change choices revisits a step while retaining other
+answers. Cancel creates no project. Existing project files are never overwritten;
+an occupied default destination prompts a choice of an unused sibling directory.
 
-```text
-Use bootstrap-project to help me choose a setup for a new mobile app.
-Ask me about the project basics and explain shared Compose versus SwiftUI.
-```
+## Example: create an Android and iOS app
 
-### Android only
+Invoke the skill without arguments, then enter/select:
 
-```text
-Use bootstrap-project to create Notes in ./Notes, package com.example.notes.
-Use the native Android recipe with Jetpack Compose, Koin and Navigation 3.
-No networking or local storage.
-```
+| Step | Example answer |
+|---|---|
+| Name and package | Type `AuroraMobile` and `com.example.auroramobile`. |
+| Platforms | Android + iOS |
+| UI | Shared Compose UI |
+| DI | Koin |
+| Navigation | Navigation 3 |
+| Networking | Ktor |
+| Local storage | Settings |
+| Review | Create project |
 
-### Android and iOS with shared UI and data
+The result is `./AuroraMobile` with shared Compose UI, a sample HTTPS action and
+a persistent counter. These are starter integrations to adapt to your product.
 
-```text
-Use bootstrap-project to create AuroraMobile in ./AuroraMobile,
-package com.example.auroramobile. Target Android and iOS with shared Compose UI,
-Koin, Navigation 3, Ktor networking and Settings key-value storage.
-```
+Other examples use the same menus:
 
-Ktor includes a sample HTTPS action; Settings includes a persistent counter.
-These are starter integrations to adapt to your product.
+| App | Platforms | UI | DI / navigation / network / storage |
+|---|---|---|---|
+| Minimal mobile starter | Android + iOS | Shared Compose | Manual / None / None / None |
+| Android starter | Android | Native Android Compose | Koin / Navigation 3 / None / None |
+| Native mobile UI | Android + iOS | SwiftUI + Android Compose | Koin / Native navigation / None / None |
+| iOS-only app | iOS | SwiftUI | Manual / None / None / None |
+| Desktop and browser | Desktop JVM + Browser Wasm | Shared Compose | Manual / None / None / Settings |
+| All four platforms | Android + iOS + Desktop JVM + Browser Wasm | Shared Compose | Koin / Navigation 3 / Ktor / Settings |
 
-### SwiftUI on iOS, Compose on Android
+You can also supply choices in your initial request. The wizard keeps those
+answers and asks only the remaining steps. Explicitly asking for defaults skips
+the corresponding menus; JSON/config replay remains available for automation.
 
-```text
-Use bootstrap-project to create NativeMobile in ./NativeMobile,
-package com.example.nativemobile. Share Kotlin logic between Android and iOS.
-Use SwiftUI on iOS and native Compose on Android, Koin and platform-native
-navigation. Set the iOS minimum to 16.0. No networking or storage.
-```
-
-This selects SwiftUI NavigationStack on iOS and Navigation 3 on Android.
-You can also request iOS alone. SwiftUI recipes support iOS and optional Android;
-desktop and web use the shared Compose recipe.
-
-### Desktop and browser
-
-```text
-Use bootstrap-project to create Workbench in ./Workbench,
-package com.example.workbench. Target desktop JVM and browser Wasm with shared
-Compose UI and Settings storage. Keep manual DI and no navigation or networking.
-```
-
-### All four platforms
-
-```text
-Use bootstrap-project to create Everywhere in ./Everywhere,
-package com.example.everywhere. Target Android, iOS, desktop and web with shared
-Compose UI, Koin, Navigation 3, Ktor and Settings.
-```
-
-The skill generates project scaffolding and sample functionality. A project name
-such as Notes does not generate a complete notes product or its backend.
-
-## What happens after the request
-
-1. The agent resolves the project basics and the components you requested.
-   Unspecified optional components use the generator's defaults.
-2. It validates compatibility and shows the selected stack, modules, file plan
-   and build requirements. You can adjust choices before generation.
-3. It generates the app in an absent or empty destination. Existing project
-   files are never overwritten or merged.
-4. It runs build/test checks when requested and reports their actual results.
-   File generation alone does not establish that the app builds or runs.
-
-For example, follow up with:
+The skill generates project scaffolding and sample functionality, not a complete
+product or its backend. Build/test checks run when requested, with actual
+results reported separately from file generation. For example, after creating
+a desktop+browser app named Workbench:
 
 ```text
 Build and test the desktop and browser targets of Workbench.
 Report which checks passed, failed or were skipped, with their logs.
 ```
 
-The agent handles CLI paths and configuration files. Direct terminal and CI
-usage is documented in [installation](docs/INSTALL.md#terminal-wizard-and-ci)
-and [configuration](docs/CLI-CONFIG.md).
+The agent handles CLI paths and JSON. Direct terminal and CI usage is documented
+in [installation](docs/INSTALL.md#terminal-wizard-and-ci) and
+[configuration](docs/CLI-CONFIG.md).
 
 ## Supported choices and defaults
+
+These are the generator defaults. The chat wizard asks you to confirm component
+choices instead of silently applying their defaults.
 
 | Choice | Supported options | Default |
 |---|---|---|
@@ -228,7 +224,7 @@ README for Xcode-specific commands.
 | Guide | Contents |
 |---|---|
 | [Install and start](docs/INSTALL.md) | Agent installation, discovery troubleshooting, portable copy, direct JAR usage |
-| [Terminal wizard](docs/BOOTSTRAP-WIZARD.md) | Recipes, review, editing choices, saving and cancellation |
+| [Chat and terminal wizards](docs/BOOTSTRAP-WIZARD.md) | Menu flow, review, editing choices, saving and cancellation |
 | [Configuration and CLI](docs/CLI-CONFIG.md) | JSON fields, defaults, plan/generate commands and locked replay |
 | [Application stacks](docs/STACKS.md) | UI, platforms, DI, navigation and compatibility |
 | [Networking and storage](docs/DATA.md) | Ktor engines, Settings adapters and runtime behavior |

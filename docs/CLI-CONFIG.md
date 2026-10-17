@@ -1,7 +1,7 @@
 # Configuration and CLI
 
-Agent users can describe their app in chat; the skill writes the configuration
-and runs these commands. This guide covers direct terminal use, CI and replay.
+Agent users normally invoke the skill and choose platforms, UI and components
+from its chat menus; the skill writes the configuration and runs these commands. This guide covers direct terminal use, CI and replay.
 Use the standalone JAR bundled in the installed skill with Java 17+.
 
 ## Locate the CLI

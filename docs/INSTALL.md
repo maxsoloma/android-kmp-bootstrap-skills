@@ -18,7 +18,7 @@ codex plugin add bootstrap-projects@android-kmp-bootstrap-skills
 Start a new conversation and select **Android & KMP Bootstrap**, or send:
 
 ```text
-$bootstrap-projects:bootstrap-project Create Aurora for Android and iOS in ./Aurora.
+$bootstrap-projects:bootstrap-project
 ```
 
 These native commands were exercised with `codex-cli 0.163.0`. To inspect the
@@ -52,7 +52,7 @@ Or run the equivalent commands inside Claude Code:
 Start a new conversation and send:
 
 ```text
-/bootstrap-projects:bootstrap-project Create Aurora for Android and iOS in ./Aurora.
+/bootstrap-projects:bootstrap-project
 ```
 
 The [Claude Code skills documentation](https://code.claude.com/docs/en/skills)
@@ -60,21 +60,29 @@ explains the plugin prefix and automatic invocation.
 
 ## Start in chat
 
-In a new conversation in your workspace, send:
+Invoke the skill without arguments using the command above, or select
+**Android & KMP Bootstrap** in Codex. The wizard begins in the conversation:
 
-> Use bootstrap-project to create an Android and iOS app called Aurora in ./Aurora.
+1. Type the project name and package.
+2. Select platforms, then a compatible UI.
+3. Select DI, navigation, networking and local storage from the offered options.
+4. Review the file plan and choose Create project, Change choices or Cancel.
 
-You can also select **Android & KMP Bootstrap** in Codex, or use the explicit
-invocations above. Invoking the skill without project details starts a guided
-conversation. The agent asks for missing basics, handles CLI paths and config,
-uses defaults for unspecified optional components and shows the plan before
-creating files.
+The agent uses its available native question forms, or numbered chat menus when
+forms are unavailable. It waits for each answer; you do not need to write a
+specification or find a JAR. Output defaults to `./<ProjectName>` in the workspace,
+and the package is also used as the application ID. The SDKs and other advanced
+fields are derived automatically and shown in review.
+
+See [the README walkthrough](../README.md#example-create-an-android-and-ios-app)
+and [wizard behavior](BOOTSTRAP-WIZARD.md) for the menu choices and editing flow.
 
 ## Troubleshooting installation and startup
 
 | Symptom | What to check |
 |---|---|
 | Skill is missing after installation | Start a new conversation in your destination workspace. Check that `bootstrap-projects` is installed and enabled. |
+| Questions appear as text instead of buttons | This agent/mode has no callable native question form. Choose the numbered chat options; the same wizard remains available. |
 | Short skill name does not work | Plugin installations use `$bootstrap-projects:bootstrap-project` in Codex and `/bootstrap-projects:bootstrap-project` in Claude Code. Manual copies use the short name. |
 | Codex does not recognize `plugin` | Use a Codex version with plugin support, or install the portable skill manually below. The recorded plugin flow used codex-cli 0.163.0. |
 | `java` is missing or the JAR reports an unsupported class version | Run `java -version`; expose a Java 17+ JDK on your terminal/agent's PATH. An IDE-bundled JDK can be used if its `bin` directory is on PATH. |

@@ -1,6 +1,6 @@
 ---
 name: bootstrap-project
-description: Create Android and Kotlin Multiplatform projects for iOS, desktop and browser Wasm with Kotlin Toolchain, an interactive wizard or reproducible agent config flow.
+description: Create Android and Kotlin Multiplatform projects through step-by-step chat menus for platforms, UI and components, backed by a standalone Kotlin Toolchain generator.
 ---
 
 # Bootstrap Kotlin Toolchain projects
@@ -10,23 +10,28 @@ relative to this skill directory; do not require repository sources or sibling
 skills. No Python or global Kotlin CLI is needed. Claude and Codex use the same
 CLI contract. Discover supported choices instead of inventing integrations.
 
-## Quick start in chat
+## Start the chat wizard on invocation
 
-Accept an ordinary request such as "Create an Android and iOS app called Aurora
-in ./Aurora"; explicit skill invocation without details starts the same flow.
-Handle CLI paths and config files for the user. Ask for missing project basics
-(name, package/application ID, destination and platforms) together. Use defaults
-reported by the catalog for unspecified optional choices; do not turn DI,
-navigation, networking, storage, SDK versions or agent adapters into a mandatory
-questionnaire. Show the resolved choices in the plan so users can adjust them.
-Honor requests for a guided walkthrough or specific components.
+A bare skill invocation starts the guided menus immediately; do not ask the user
+to write a project specification or run the terminal wizard. Read
+[the chat wizard](references/chat-wizard.md) and follow it for interactive creation.
+Only project name and package require free-text input. Default the destination
+to `<calling workspace>/<project name>` and the application ID to the package.
+Use the agent's available native question/choice tool in its current mode;
+otherwise present one numbered menu at a time in chat. Wait for each answer.
+
+Offer explicit choices for platforms, UI, DI, navigation, networking and storage;
+recommendations are not submitted answers. Do not silently default these steps.
+Honor choices already supplied in the request, and skip only answered steps or
+choices the user explicitly delegated to defaults. Config/replay/CI requests can
+use the direct CLI flow without an interactive wizard.
 
 ## Agent flow
 
 1. Run `java -jar <skill>/bin/bootstrap.jar catalog --json`.
-2. Resolve project basics and requested components using the quick-start rules
-   above. Show compatibility reasons returned by plan. MCP tools such as Context7
-   are optional per agent; use official vendor docs if unavailable.
+2. Collect the chat wizard's answers, derive the destination and compatible
+   config, and show compatibility reasons returned by plan. MCP tools such as
+   Context7 are optional per agent; use official vendor docs if unavailable.
 3. Save a strict JSON config outside the destination. Run
    `java -jar <skill>/bin/bootstrap.jar plan --config CONFIG --output OUTPUT`.
 4. Resolve reported issues without silently replacing explicit choices. Present
@@ -37,7 +42,7 @@ Honor requests for a guided walkthrough or specific components.
    logs and limitations separately from generation. Never claim skipped checks pass.
 
 Humans can run `java -jar <skill>/bin/bootstrap.jar init OUTPUT` in a real terminal.
-Non-TTY agents use catalog → config → plan → generate. Wizard review supports
+Non-TTY agents use catalog → config → plan → generate. Terminal review supports
 `edit ui`, `edit di`, `edit navigation`, `edit network`, `edit storage` and
 `edit endpoint`. Disabling Ktor requires explicitly clearing a retained endpoint.
 Cancellation/EOF and review never create a project.
@@ -49,7 +54,8 @@ Cancellation/EOF and review never create a project.
 - Shared Compose supports Android/iOS/desktop/Wasm. Native Android is Android only.
   SwiftUI shares UI-free Kotlin logic and supports iOS, optionally Android.
 - Manual/Koin DI; none/Navigation 3 for Compose; none/platform-native for SwiftUI.
-  SwiftUI NavigationStack needs an explicit iOS minimum of 16.0+.
+  SwiftUI NavigationStack needs iOS 16.0+; the chat wizard derives this minimum
+  when the user has not explicitly set one.
 - Optional Ktor HTTPS request with platform engines, loading/result/error,
   timeout/cancellation and owned client. No live request at generation/startup/tests.
 - Optional Settings-backed counter: Android application-context SharedPreferences,
@@ -70,5 +76,6 @@ full Xcode and simulator setup; app-store signing is separate. Browser tests use
 Toolchain's Chromium/Playwright runner. SDK/network/browser/Xcode limitations must
 be reported. Use the generated plan's commands and logs as evidence.
 
-References: [configuration](references/stacks.md), [data](references/data.md),
+References: [chat wizard](references/chat-wizard.md),
+[configuration](references/stacks.md), [data](references/data.md),
 [toolchain](references/toolchain.md), [verification](references/verification.md).

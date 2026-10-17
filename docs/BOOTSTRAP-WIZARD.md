@@ -1,10 +1,45 @@
-# Terminal wizard
+# Chat and terminal wizards
 
-For a conversation in Codex or Claude Code, invoke the installed skill and
-describe your app; the agent uses the configuration flow. The terminal wizard
-is an alternative for choosing the same settings yourself.
+## Chat wizard: the default skill entry point
 
-## Start
+Invoke `$bootstrap-projects:bootstrap-project` in Codex or
+`/bootstrap-projects:bootstrap-project` in Claude Code without arguments. The
+skill starts a step-by-step conversation. Only the project name and package are
+free-text inputs; it proposes `./<ProjectName>` as the destination.
+
+Choose platforms, compatible UI, DI, navigation, networking and local storage
+from the menus, then review and choose Create project, Change choices or Cancel.
+Platforms support any nonempty subset of Android, iOS, desktop and web. The UI
+menu offers only compatible choices. Each step waits for an answer; default
+recommendations do not skip the component choices.
+
+Native question tools display forms when available in the current agent/mode.
+Multi-select forms collect platforms together; single-select forms offer an
+Include/Exclude choice per platform. Otherwise, the agent displays numbered chat
+menus, accepting multiple numbers for platforms and one for other choices.
+The agent follows your language and handles the CLI/config behind the menus.
+
+Review displays the derived SDK settings, package/application ID, destination,
+selected components and modules/file plan. Native SwiftUI navigation sets an
+unspecified iOS minimum to 16.0. Ktor uses the demo HTTPS endpoint unless supplied
+explicitly. Advanced settings can be requested, but are not mandatory inputs.
+
+Change choices lets you revisit a step without resetting unrelated answers.
+Conflicting dependent choices are explained and corrected through menus. Cancel
+creates no project. Existing output is never overwritten; an occupied proposed
+directory offers a new destination choice.
+
+Choices already supplied in the invocation are preserved, and the wizard skips
+those answered steps. Explicit default/config/replay requests can bypass menus.
+See [the README example](../README.md#example-create-an-android-and-ios-app).
+
+## Terminal wizard: an optional alternative
+
+The standalone terminal wizard uses the same generator and compatibility rules.
+Its terminal prompts include advanced settings; its six-step flow below is
+separate from the default in-chat menu flow.
+
+### Start
 
 Use the JAR inside your installed skill, as described in [installation](INSTALL.md):
 
@@ -17,7 +52,7 @@ Run this in a real terminal. `./Aurora` must be absent or empty. Omitting the
 output argument starts with the current directory as the proposed destination;
 you can change it at the first step.
 
-## Choose a recipe
+### Choose a recipe
 
 The wizard has six steps:
 
@@ -40,7 +75,7 @@ Press Enter to accept a shown value. `back` returns to the preceding step;
 The component menus explain incompatible options, including integrations that
 are not implemented. Resolve those conflicts before creating or saving.
 
-## Review and edit
+### Review and edit
 
 Review summarizes modules, dependency pins, platform adapters, requirements and
 verification commands. Build checks are still `NOT_RUN` at this stage.
@@ -66,7 +101,7 @@ enter `clear` to remove the retained URL. With Ktor enabled, clearing the explic
 URL restores its default demo endpoint. Network requests run only on the sample
 app's Fetch action, and browser endpoints must permit CORS.
 
-## Save for later
+### Save for later
 
 At review, enter `save` and a config path outside the destination. Its parent
 must already exist and the file must not exist. The wizard saves only JSON;
@@ -82,7 +117,7 @@ java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" generate --config ./aurora-re
 Generation includes the resolved spec and lock in the new project. See
 [configuration and replay](CLI-CONFIG.md) for preserving and reusing them.
 
-## Without a terminal
+### Without a terminal
 
 `init` returns a structured `interactive_required` error outside a TTY. Agents
 and CI use `catalog --json`, a JSON config, `plan` and `generate`. The same

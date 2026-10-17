@@ -36,8 +36,8 @@
     "logo": "./assets/icon.png",
     "brandColor": "#352255",
     "defaultPrompt": [
-      "Start a Kotlin Multiplatform app for Android and iOS.",
-      "Create a Compose app for desktop and web."
+      "Start the step-by-step wizard to create a Kotlin app.",
+      "Help me choose platforms, UI and components for a new app."
     ]
   }
 }
