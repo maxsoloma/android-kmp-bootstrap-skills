@@ -10,14 +10,23 @@ relative to this skill directory; do not require repository sources or sibling
 skills. No Python or global Kotlin CLI is needed. Claude and Codex use the same
 CLI contract. Discover supported choices instead of inventing integrations.
 
+## Quick start in chat
+
+Accept an ordinary request such as "Create an Android and iOS app called Aurora
+in ./Aurora"; explicit skill invocation without details starts the same flow.
+Handle CLI paths and config files for the user. Ask for missing project basics
+(name, package/application ID, destination and platforms) together. Use defaults
+reported by the catalog for unspecified optional choices; do not turn DI,
+navigation, networking, storage, SDK versions or agent adapters into a mandatory
+questionnaire. Show the resolved choices in the plan so users can adjust them.
+Honor requests for a guided walkthrough or specific components.
+
 ## Agent flow
 
 1. Run `java -jar <skill>/bin/bootstrap.jar catalog --json`.
-2. Collect project name, dotted package/application ID, empty destination,
-   platforms, UI, DI, navigation, network/storage and agent preferences. Ask only
-   for missing decisions; infer defaults when appropriate. Show compatibility
-   reasons returned by plan. MCP tools such as Context7 are optional per agent;
-   use official vendor docs if unavailable.
+2. Resolve project basics and requested components using the quick-start rules
+   above. Show compatibility reasons returned by plan. MCP tools such as Context7
+   are optional per agent; use official vendor docs if unavailable.
 3. Save a strict JSON config outside the destination. Run
    `java -jar <skill>/bin/bootstrap.jar plan --config CONFIG --output OUTPUT`.
 4. Resolve reported issues without silently replacing explicit choices. Present

@@ -1,88 +1,157 @@
-# Install
+# Install and start
 
-The Claude Code and Codex plugin manifests expose the portable
-`skills/bootstrap-project` skill. No sibling skill or repository runtime is
-required after installation.
+Install through Codex or Claude Code's built-in plugin manager. You need Git
+and a Java 17+ JDK to run the generator. The plugin contains the portable skill,
+its compiled `bin/bootstrap.jar` and all assets.
 
-## Codex plugin
+## Install the plugin
 
-From a local checkout, register its marketplace and install the plugin:
+### Codex
+
+Run in a terminal, from any directory:
 
 ```sh
-cd /path/to/android-kmp-bootstrap-skills
-codex plugin marketplace add .
-codex plugin add bootstrap-projects@android-kmp-bootstrap-skills --json
+codex plugin marketplace add maxsoloma/android-kmp-bootstrap-skills
+codex plugin add bootstrap-projects@android-kmp-bootstrap-skills
+```
+
+Start a new conversation and select **Android & KMP Bootstrap**, or send:
+
+```text
+$bootstrap-projects:bootstrap-project Create Aurora for Android and iOS in ./Aurora.
+```
+
+These native commands were exercised with `codex-cli 0.163.0`. To inspect the
+installation and its `installedPath`:
+
+```sh
 codex plugin list --marketplace android-kmp-bootstrap-skills --json
 ```
 
-These commands were exercised with `codex-cli 0.163.0`. The install response's
-`installedPath` identifies the cached plugin directory. The list response should
-show `installed: true`, `enabled: true` and version `3.0.0`.
-Marketplace layout and cached local installs are described in the
-[official plugin packaging documentation](https://developers.openai.com/plugins/build/plugins).
+The plugin should be installed and enabled at version `3.0.0`. If the skill is
+missing, open a new conversation so discovery reloads the installed plugin. For
+local plugin development, replace the GitHub source with the checkout path in
+the marketplace command. See [official plugin packaging documentation](https://developers.openai.com/plugins/build/plugins).
 
-Start a fresh Codex conversation in your destination workspace. Invoke the skill
-as `$bootstrap-projects:bootstrap-project`, or select **Android & KMP Bootstrap**
-from the skills picker. For example:
+### Claude Code
 
-> Use $bootstrap-projects:bootstrap-project to create Aurora in a new Aurora
-> directory: Android and iOS, shared Compose, Koin, Navigation 3, Ktor and Settings.
-
-Codex collects missing choices in chat and runs catalog → config → plan → generate
-using the installed skill's JAR. The current conversation's skill inventory may
-predate installation; verify discovery in a fresh conversation. The plugin does
-not add a separate native Codex form or a slash command named `/init`: its terminal
-wizard and its agent conversation use the same Kotlin CLI.
-
-## Terminal wizard from the installed plugin
-
-Use the `skills/bootstrap-project` folder under the returned `installedPath`.
-For the tested installation:
+Run in a terminal:
 
 ```sh
-bootstrap_skill_dir="$HOME/.codex/plugins/cache/android-kmp-bootstrap-skills/bootstrap-projects/3.0.0/skills/bootstrap-project"
+claude plugin marketplace add maxsoloma/android-kmp-bootstrap-skills
+claude plugin install bootstrap-projects@android-kmp-bootstrap-skills
+```
+
+Or run the equivalent commands inside Claude Code:
+
+```text
+/plugin marketplace add maxsoloma/android-kmp-bootstrap-skills
+/plugin install bootstrap-projects@android-kmp-bootstrap-skills
+```
+
+Start a new conversation and send:
+
+```text
+/bootstrap-projects:bootstrap-project Create Aurora for Android and iOS in ./Aurora.
+```
+
+The [Claude Code skills documentation](https://code.claude.com/docs/en/skills)
+explains the plugin prefix and automatic invocation.
+
+## Start in chat
+
+In a new conversation in your workspace, send:
+
+> Use bootstrap-project to create an Android and iOS app called Aurora in ./Aurora.
+
+You can also select **Android & KMP Bootstrap** in Codex, or use the explicit
+invocations above. Invoking the skill without project details starts a guided
+conversation. The agent asks for missing basics, handles CLI paths and config,
+uses defaults for unspecified optional components and shows the plan before
+creating files.
+
+## Troubleshooting installation and startup
+
+| Symptom | What to check |
+|---|---|
+| Skill is missing after installation | Start a new conversation in your destination workspace. Check that `bootstrap-projects` is installed and enabled. |
+| Short skill name does not work | Plugin installations use `$bootstrap-projects:bootstrap-project` in Codex and `/bootstrap-projects:bootstrap-project` in Claude Code. Manual copies use the short name. |
+| Codex does not recognize `plugin` | Use a Codex version with plugin support, or install the portable skill manually below. The recorded plugin flow used codex-cli 0.163.0. |
+| `java` is missing or the JAR reports an unsupported class version | Run `java -version`; expose a Java 17+ JDK on your terminal/agent's PATH. An IDE-bundled JDK can be used if its `bin` directory is on PATH. |
+| Destination is not empty | Choose a new directory or an existing empty one. The skill does not add its scaffold to an existing app. |
+| `init` reports `interactive_required` | Run the wizard in a real terminal, or use the chat/JSON configuration flow. |
+
+Inspect the installed plugins from a terminal:
+
+```sh
+# Codex
+codex plugin list --marketplace android-kmp-bootstrap-skills --json
+
+# Claude Code
+claude plugin list --json
+```
+
+## Terminal wizard and CI
+
+Agent users can skip this section. To run the terminal wizard yourself, use
+`skills/bootstrap-project` under the installed plugin directory. In Codex,
+`installedPath` from the plugin list identifies that directory. Set the skill
+path once, then run:
+
+```sh
+bootstrap_skill_dir="/path/to/installed/skills/bootstrap-project"
 java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" init /path/to/NewApp
 ```
 
-Run init in a real terminal. Review supports `details`, `edit <choice>`, `create`,
-`save` and `cancel`. `save` writes the config outside the destination and exits;
-it does not create the project. Replay that config when ready:
+`init` needs a real terminal. Review supports `details`, `edit <choice>`, `create`,
+`save` and `cancel`. `save` writes only a config outside the destination.
+Agents and CI without a TTY use the reproducible config flow:
 
 ```sh
+java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" catalog --json
 java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" plan --config /path/to/recipe.json --output /path/to/NewApp
 java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" generate --config /path/to/recipe.json --output /path/to/NewApp
 java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" verify /path/to/NewApp
 ```
 
-Generation refuses a populated destination. Agents/CI without a terminal use the
-config flow; `init` returns structured `interactive_required` feedback there.
+See [configuration](CLI-CONFIG.md) for JSON examples and
+[the wizard guide](BOOTSTRAP-WIZARD.md) for editing choices. Generation refuses a
+populated destination; existing projects are never overwritten. Non-TTY `init`
+returns structured `interactive_required` feedback.
 
-## Portable skill
+## Manual portable installation
 
-Copy `skills/bootstrap-project` into your agent's skills directory when installing
-the skill independently. Keep all of its bundled files intact.
+From a downloaded repository, copy the complete `skills/bootstrap-project`
+directory into your agent's skills directory: `~/.agents/skills/` for Codex or
+`~/.claude/skills/` for Claude Code. With this method, invoke `$bootstrap-project`
+in Codex or `/bootstrap-project` in Claude Code. Use either the plugin or the
+manual copy to avoid duplicate skill entries. Keep all bundled files intact.
+The skill is self-contained: Java 17+ runs the JAR without repository sources or
+sibling skills. Generated instruction files for other agents are selected
+independently of which agent runs the skill.
 
-The skill includes `bin/bootstrap.jar`; run it with Java 17+. Keep the JAR intact.
-Claude, Codex, Gemini, Copilot and Cursor can follow the same catalog/config/plan
-flow; additional generated instruction files are selected independently.
+## Build requirements
 
-```sh
-java -jar /path/to/bootstrap-project/bin/bootstrap.jar catalog --json
-java -jar /path/to/bootstrap-project/bin/bootstrap.jar init /path/to/NewApp
-```
+The generator can create files offline after plugin installation. The first
+application build needs network access for Toolchain, dependencies and SDK tools.
+Generated apps include pinned `kotlin` and `kotlin.bat` wrappers.
 
-A global Kotlin CLI is not needed: generated apps include pinned `kotlin` and
-`kotlin.bat` wrappers. First app builds provision Toolchain/dependencies/SDK tools.
-iOS needs macOS, full Xcode, accepted license and first-launch components; native
-tests need an installed simulator runtime. Configure a signing team for devices.
-When Command Line Tools is active, set `DEVELOPER_DIR` to your Xcode developer
-folder for the build command instead of assuming Xcode is absent.
+| Target | Additional requirements |
+|---|---|
+| Android | SDK tooling is provisioned by Toolchain; running the app needs a connected device or running emulator. |
+| iOS | macOS, full Xcode, first-launch setup and an installed simulator runtime; generated simulator/device targets are ARM64. |
+| Desktop JVM | Toolchain provisions its build JDK; running the Compose app needs a graphical desktop session. |
+| Browser Wasm | A browser with WasmGC support; Toolchain provisions its browser test runner. |
+
+Complete Xcode license acceptance and first-launch setup before iOS builds,
+and configure a signing team for physical devices. When Command Line Tools is
+active, set `DEVELOPER_DIR` to your Xcode developer folder for the build command:
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" verify /path/to/NewApp
 ```
 
-Version 3 includes only the modern Kotlin Toolchain skill. The two hardened skills
-and Gradle backend were removed. Existing generated applications stay unchanged;
-use their corresponding old release to replay old locks or build instructions.
+Version 3 includes only the modern Kotlin Toolchain skill. Hardened skills and
+the Gradle backend were removed. Use an existing application's corresponding
+old release to replay old locks or build instructions.
