@@ -1,0 +1,13 @@
+    ╭─ WEAK WARNING: It is recommended to sort the `modules` list alphabetically. This reduces the chance of Git conflicts and makes it easier to visually locate a module in the list.
+    │ → /private/tmp/bootstrap-ui-acceptance/native-fixed/project.yaml:2:3
+    │
+    │   ⌄⌄⌄⌄⌄⌄⌄⌄
+  2 │   - shared
+  3 │   - androidApp
+  4 │   - iosApp
+    │ ⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃
+    ╰─
+Running xcodebuild with xcbeautify 3.2.1
+Build Succeeded
+Starting the app
+dev.bootstrap.ui.nativeapp: 92938

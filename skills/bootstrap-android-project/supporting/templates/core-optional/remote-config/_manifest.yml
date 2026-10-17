@@ -1,2 +1,0 @@
-module: remote-config
-requires: [config, analytics]

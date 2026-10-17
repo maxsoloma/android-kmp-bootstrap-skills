@@ -1,0 +1,29 @@
+{
+  "schema_version": 2,
+  "build_system": "kotlin-toolchain",
+  "name": "CodexWizard",
+  "package": "dev.bootstrap.codex.wizard",
+  "app_id": "dev.bootstrap.codex.wizard",
+  "kind": "kmp",
+  "ui": "shared-compose",
+  "di": "koin",
+  "navigation": "navigation3",
+  "network": "ktor",
+  "storage": "settings",
+  "targets": [
+    "android",
+    "ios",
+    "desktop",
+    "web"
+  ],
+  "agents": [
+    "codex"
+  ],
+  "sdk": {
+    "min": 26,
+    "target": 37,
+    "compile": 37
+  },
+  "ios_deployment_target": "16.0",
+  "network_url": "https://httpbin.org/uuid"
+}

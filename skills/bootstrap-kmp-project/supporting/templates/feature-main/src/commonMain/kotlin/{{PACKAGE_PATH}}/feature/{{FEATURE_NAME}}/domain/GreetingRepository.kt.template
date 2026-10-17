@@ -1,5 +1,0 @@
-package {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.domain
-
-interface GreetingRepository {
-    suspend fun loadGreeting(name: String): Greeting
-}

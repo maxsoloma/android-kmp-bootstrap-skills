@@ -1,0 +1,37 @@
+    ╭─ WEAK WARNING: It is recommended to sort the `modules` list alphabetically. This reduces the chance of Git conflicts and makes it easier to visually locate a module in the list.
+    │ → /private/tmp/bootstrap-codex-flow/Wizard App/project.yaml:2:3
+    │
+    │   ⌄⌄⌄⌄⌄⌄⌄⌄
+  2 │   - shared
+  3 │   - androidApp
+  4 │   - iosApp
+  5 │   - desktopApp
+  6 │   - webApp
+    │ ⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃
+    ╰─
+Started dev.bootstrap.codex.wizard.CounterTest
+Started ownedGraphResolvesAndIndependentCountersRemainIndependent
+Passed ownedGraphResolvesAndIndependentCountersRemainIndependent
+Started failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Passed failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Completed dev.bootstrap.codex.wizard.CounterTest
+Started dev.bootstrap.codex.wizard.NetworkTest
+Started responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Passed responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Started closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Passed closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Started transportFailuresAndTimeoutsAreErrors
+Passed transportFailuresAndTimeoutsAreErrors
+Completed dev.bootstrap.codex.wizard.NetworkTest
+Started dev.bootstrap.codex.wizard.PersistenceTest
+Started reopeningTheSameSettingsRestoresTheCounter
+Passed reopeningTheSameSettingsRestoresTheCounter
+Completed dev.bootstrap.codex.wizard.PersistenceTest
+Started dev.bootstrap.codex.wizard.RoutesTest
+Started destinationKeysRoundTripWithoutJvmReflection
+Passed destinationKeysRoundTripWithoutJvmReflection
+Completed dev.bootstrap.codex.wizard.RoutesTest
+Started dev.bootstrap.codex.wizard.IosPersistenceTest
+Started aNewNSUserDefaultsAdapterRestoresTheCounter
+Passed aNewNSUserDefaultsAdapterRestoresTheCounter
+Completed dev.bootstrap.codex.wizard.IosPersistenceTest

@@ -1,0 +1,87 @@
+name: Validate bootstrap bundle
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generator:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Bundle and test the standalone CLI
+        if: runner.os != 'Windows'
+        run: |
+          ./kotlin do bundle
+          ./kotlin test
+      - name: Bundle and test the standalone CLI on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          ./kotlin.bat do bundle
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./kotlin.bat test
+          exit $LASTEXITCODE
+      - name: Check the committed skill bundle
+        shell: bash
+        run: git diff --exit-code -- skills/bootstrap-project/bin/bootstrap.jar
+
+  generated-matrix:
+    if: github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [android, shared, native]
+    runs-on: macos-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Inspect Xcode and simulator runtimes
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+      - name: Build and test every supported stack
+        run: >-
+          scripts/verify-matrix.sh
+          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap.jar"
+          "$RUNNER_TEMP/matrix-${{ matrix.group }}"
+          '${{ matrix.group }}'
+      - name: Build and test platform-only projects
+        if: matrix.group == 'shared'
+        run: >-
+          scripts/verify-platform-subsets.sh
+          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap.jar"
+          "$RUNNER_TEMP/subsets"
+      - name: Preserve matrix results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: matrix-${{ matrix.group }}
+          include-hidden-files: true
+          path: |
+            ${{ runner.temp }}/matrix-${{ matrix.group }}/*.tsv
+            ${{ runner.temp }}/matrix-${{ matrix.group }}/*.log
+            ${{ runner.temp }}/matrix-${{ matrix.group }}/**/.bootstrap/**
+            ${{ runner.temp }}/subsets/*.tsv
+            ${{ runner.temp }}/subsets/*.log
+            ${{ runner.temp }}/subsets/**/.bootstrap/**

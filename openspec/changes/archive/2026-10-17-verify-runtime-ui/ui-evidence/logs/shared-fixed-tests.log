@@ -1,0 +1,136 @@
+    ╭─ WEAK WARNING: It is recommended to sort the `modules` list alphabetically. This reduces the chance of Git conflicts and makes it easier to visually locate a module in the list.
+    │ → /private/tmp/bootstrap-ui-acceptance/shared-fixed/project.yaml:2:3
+    │
+    │   ⌄⌄⌄⌄⌄⌄⌄⌄
+  2 │   - shared
+  3 │   - androidApp
+  4 │   - iosApp
+  5 │   - desktopApp
+  6 │   - webApp
+    │ ⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃
+    ╰─
+✓ Compilation successful for 'shared' [android tests]
+✓ Compilation successful for 'shared' [jvm]
+KLIB loader: Not a Kotlin library, or a library with invalid format: /Users/maxsolonkevich/Library/Caches/JetBrains/Kotlin/.m2.cache/io/ktor/ktor-client-js-wasm-js/3.6.0/ktor-client-js-wasm-js-3.6.0.klib
+✓ Compilation successful for 'shared' [wasmJs]
+✓ Compilation successful for 'desktopApp' [jvm]
+Started PersistenceTest
+Started reopeningTheSameSettingsRestoresTheCounter
+Passed reopeningTheSameSettingsRestoresTheCounter
+Completed PersistenceTest
+Started NetworkTest
+Started transportFailuresAndTimeoutsAreErrors
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Passed transportFailuresAndTimeoutsAreErrors
+Started responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Passed responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Started closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Passed closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Completed NetworkTest
+Started CounterTest
+Started failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Passed failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Started ownedGraphResolvesAndIndependentCountersRemainIndependent
+Passed ownedGraphResolvesAndIndependentCountersRemainIndependent
+Completed CounterTest
+Started RoutesTest
+Started destinationKeysRoundTripWithoutJvmReflection
+Passed destinationKeysRoundTripWithoutJvmReflection
+Completed RoutesTest
+
+Test run finished after 303 ms
+[         7 containers found      ]
+[         0 containers skipped    ]
+[         7 containers started    ]
+[         0 containers aborted    ]
+[         7 containers successful ]
+[         0 containers failed     ]
+[         7 tests found           ]
+[         0 tests skipped         ]
+[         7 tests started         ]
+[         0 tests aborted         ]
+[         7 tests successful      ]
+[         0 tests failed          ]
+
+✓ Compilation successful for 'shared' [jvm tests]
+Started FilePersistenceTest
+Started aFreshFileAdapterReadsTheValueWrittenByItsPreviousOwner
+Passed aFreshFileAdapterReadsTheValueWrittenByItsPreviousOwner
+Completed FilePersistenceTest
+Started PersistenceTest
+Started reopeningTheSameSettingsRestoresTheCounter
+Passed reopeningTheSameSettingsRestoresTheCounter
+Completed PersistenceTest
+Started NetworkTest
+Started transportFailuresAndTimeoutsAreErrors
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Passed transportFailuresAndTimeoutsAreErrors
+Started responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Passed responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Started closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Passed closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Completed NetworkTest
+Started CounterTest
+Started failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Passed failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Started ownedGraphResolvesAndIndependentCountersRemainIndependent
+Passed ownedGraphResolvesAndIndependentCountersRemainIndependent
+Completed CounterTest
+Started RoutesTest
+Started destinationKeysRoundTripWithoutJvmReflection
+Passed destinationKeysRoundTripWithoutJvmReflection
+Completed RoutesTest
+
+Test run finished after 290 ms
+[         8 containers found      ]
+[         0 containers skipped    ]
+[         8 containers started    ]
+[         0 containers aborted    ]
+[         8 containers successful ]
+[         0 containers failed     ]
+[         8 tests found           ]
+[         0 tests skipped         ]
+[         8 tests started         ]
+[         0 tests aborted         ]
+[         8 tests successful      ]
+[         0 tests failed          ]
+
+✓ Compilation successful for 'webApp' [wasmJs]
+KLIB loader: Not a Kotlin library, or a library with invalid format: /Users/maxsolonkevich/Library/Caches/JetBrains/Kotlin/.m2.cache/io/ktor/ktor-client-js-wasm-js/3.6.0/ktor-client-js-wasm-js-3.6.0.klib
+✓ Compilation successful for 'shared' [wasmJs tests]
+KLIB loader: Not a Kotlin library, or a library with invalid format: /Users/maxsolonkevich/Library/Caches/JetBrains/Kotlin/.m2.cache/io/ktor/ktor-client-js-wasm-js/3.6.0/ktor-client-js-wasm-js-3.6.0.klib
+Autoreload is disabled because the development mode is off.
+Application started in 0.026 seconds.
+Responding at http://127.0.0.1:51426
+Started dev.bootstrap.ui.shared
+Started CounterTest
+Started ownedGraphResolvesAndIndependentCountersRemainIndependent
+Passed ownedGraphResolvesAndIndependentCountersRemainIndependent
+Started failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Passed failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Completed CounterTest
+Started NetworkTest
+Started responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Passed responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Started closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Passed closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Started transportFailuresAndTimeoutsAreErrors
+Passed transportFailuresAndTimeoutsAreErrors
+Completed NetworkTest
+Started PersistenceTest
+Started reopeningTheSameSettingsRestoresTheCounter
+Passed reopeningTheSameSettingsRestoresTheCounter
+Completed PersistenceTest
+Started RoutesTest
+Started destinationKeysRoundTripWithoutJvmReflection
+Passed destinationKeysRoundTripWithoutJvmReflection
+Completed RoutesTest
+Started BrowserPersistenceTest
+Started aNewLocalStorageAdapterRestoresTheCounter
+Passed aNewLocalStorageAdapterRestoresTheCounter
+Completed BrowserPersistenceTest
+Completed dev.bootstrap.ui.shared

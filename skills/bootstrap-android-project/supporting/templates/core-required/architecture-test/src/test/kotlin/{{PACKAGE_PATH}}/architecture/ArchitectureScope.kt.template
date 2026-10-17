@@ -1,8 +1,0 @@
-package {{PACKAGE_BASE}}.architecture
-
-import com.lemonappdev.konsist.api.Konsist
-import com.lemonappdev.konsist.api.container.KoScope
-
-internal object ArchitectureScope {
-    val project: KoScope get() = Konsist.scopeFromProduction()
-}

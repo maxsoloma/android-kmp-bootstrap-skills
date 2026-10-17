@@ -1,0 +1,8 @@
+KLIB loader: Not a Kotlin library, or a library with invalid format: /Users/maxsolonkevich/Library/Caches/JetBrains/Kotlin/.m2.cache/io/ktor/ktor-client-js-wasm-js/3.6.0/ktor-client-js-wasm-js-3.6.0.klib
+✓ Compilation successful for 'shared' [wasmJs]
+✓ Compilation successful for 'webApp' [wasmJs]
+KLIB loader: Not a Kotlin library, or a library with invalid format: /Users/maxsolonkevich/Library/Caches/JetBrains/Kotlin/.m2.cache/io/ktor/ktor-client-js-wasm-js/3.6.0/ktor-client-js-wasm-js-3.6.0.klib
+✓ Compilation successful for 'shared' [wasmJs tests]
+KLIB loader: Not a Kotlin library, or a library with invalid format: /Users/maxsolonkevich/Library/Caches/JetBrains/Kotlin/.m2.cache/io/ktor/ktor-client-js-wasm-js/3.6.0/ktor-client-js-wasm-js-3.6.0.klib
+KLIB loader: Not a Kotlin library, or a library with invalid format: /Users/maxsolonkevich/Library/Caches/JetBrains/Kotlin/.m2.cache/io/ktor/ktor-client-js-wasm-js/3.6.0/ktor-client-js-wasm-js-3.6.0.klib
+Build successful

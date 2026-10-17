@@ -1,0 +1,31 @@
+    ╭─ WEAK WARNING: It is recommended to sort the `modules` list alphabetically. This reduces the chance of Git conflicts and makes it easier to visually locate a module in the list.
+    │ → /private/tmp/bootstrap-ui-acceptance/native-fixed/project.yaml:2:3
+    │
+    │   ⌄⌄⌄⌄⌄⌄⌄⌄
+  2 │   - shared
+  3 │   - androidApp
+  4 │   - iosApp
+    │ ⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃
+    ╰─
+Started dev.bootstrap.ui.nativeapp.CounterTest
+Started ownedGraphResolvesAndIndependentCountersRemainIndependent
+Passed ownedGraphResolvesAndIndependentCountersRemainIndependent
+Started failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Passed failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Completed dev.bootstrap.ui.nativeapp.CounterTest
+Started dev.bootstrap.ui.nativeapp.NetworkTest
+Started responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Passed responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Started closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Passed closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Started transportFailuresAndTimeoutsAreErrors
+Passed transportFailuresAndTimeoutsAreErrors
+Completed dev.bootstrap.ui.nativeapp.NetworkTest
+Started dev.bootstrap.ui.nativeapp.PersistenceTest
+Started reopeningTheSameSettingsRestoresTheCounter
+Passed reopeningTheSameSettingsRestoresTheCounter
+Completed dev.bootstrap.ui.nativeapp.PersistenceTest
+Started dev.bootstrap.ui.nativeapp.IosPersistenceTest
+Started aNewNSUserDefaultsAdapterRestoresTheCounter
+Passed aNewNSUserDefaultsAdapterRestoresTheCounter
+Completed dev.bootstrap.ui.nativeapp.IosPersistenceTest

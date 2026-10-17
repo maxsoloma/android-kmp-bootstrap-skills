@@ -1,5 +1,0 @@
-package {{PACKAGE_BASE}}.core.remote.config
-
-interface RemoteConfigProvider {
-    fun getString(key: RemoteConfigKey): String
-}

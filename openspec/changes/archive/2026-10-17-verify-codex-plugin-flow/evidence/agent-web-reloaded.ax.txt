@@ -1,0 +1,11 @@
+Browser tab: 869086722, Title: "webApp", URL: "http://127.0.0.1:8439/".
+1 AXWebArea webApp, URL: 127.0.0.1:8439/
+	2 container
+		3 container
+			4 container
+				5 text CodexAgent: 3
+				6 button Fetch response
+				7 button Increment
+				8 button Details
+
+The focused UI element is 1 AXWebArea webApp, URL: 127.0.0.1:8439/

@@ -1,0 +1,40 @@
+Started CounterTest
+Started failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Passed failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Started ownedGraphResolvesAndIndependentCountersRemainIndependent
+Passed ownedGraphResolvesAndIndependentCountersRemainIndependent
+Completed CounterTest
+Started PersistenceTest
+Started reopeningTheSameSettingsRestoresTheCounter
+Passed reopeningTheSameSettingsRestoresTheCounter
+Completed PersistenceTest
+Started NetworkTest
+Started transportFailuresAndTimeoutsAreErrors
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Passed transportFailuresAndTimeoutsAreErrors
+Started responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Passed responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Started closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Passed closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Completed NetworkTest
+Started RoutesTest
+Started destinationKeysRoundTripWithoutJvmReflection
+Passed destinationKeysRoundTripWithoutJvmReflection
+Completed RoutesTest
+
+Test run finished after 264 ms
+[         7 containers found      ]
+[         0 containers skipped    ]
+[         7 containers started    ]
+[         0 containers aborted    ]
+[         7 containers successful ]
+[         0 containers failed     ]
+[         7 tests found           ]
+[         0 tests skipped         ]
+[         7 tests started         ]
+[         0 tests aborted         ]
+[         7 tests successful      ]
+[         0 tests failed          ]
+

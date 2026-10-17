@@ -1,0 +1,14 @@
+{
+  "schema_version": 2,
+  "name": "CodexAgent",
+  "package": "dev.bootstrap.codex.agent",
+  "app_id": "dev.bootstrap.codex.agent",
+  "kind": "kmp",
+  "targets": ["web"],
+  "ui": "shared-compose",
+  "di": "koin",
+  "navigation": "navigation3",
+  "network": "ktor",
+  "storage": "settings",
+  "agents": ["codex"]
+}

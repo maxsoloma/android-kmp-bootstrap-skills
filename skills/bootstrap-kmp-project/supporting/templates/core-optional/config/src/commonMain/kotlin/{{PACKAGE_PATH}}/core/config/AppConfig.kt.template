@@ -1,6 +1,0 @@
-package {{PACKAGE_BASE}}.core.config
-
-object AppConfig {
-    val baseUrl: String get() = BuildKonfig.BASE_URL
-    val isDebug: Boolean get() = BuildKonfig.DEBUG
-}

@@ -1,6 +1,6 @@
 {
   "name": "android-kmp-bootstrap-skills",
-  "description": "Agent Skills that scaffold hardened Android and Kotlin Multiplatform projects with Clean Architecture and build-time architecture tests.",
+  "description": "Portable Android and KMP bootstrap workflows for Claude Code and Codex.",
   "owner": {
     "name": "Maksim Salankevich",
     "url": "https://github.com/maxsoloma"
@@ -9,7 +9,7 @@
     {
       "name": "bootstrap-projects",
       "source": "./",
-      "description": "Scaffolds a hardened Android or Kotlin Multiplatform project: multi-module Gradle with convention plugins, Clean Architecture, MVI, Compose, and Konsist tests that fail the build on layer-boundary violations.",
+      "description": "Kotlin Toolchain starters for Android, iOS, desktop and web.",
       "category": "scaffolding",
       "tags": [
         "android",

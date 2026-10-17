@@ -1,0 +1,14 @@
+Use $bootstrap-project to create a project through the installed Codex plugin.
+This is an end-to-end acceptance test of that plugin, not repository development.
+All decisions are provided and generation is authorized. Do not ask questions.
+Name CodexAgent, package/application ID dev.bootstrap.codex.agent, output
+/tmp/bootstrap-codex-flow/Agent App. KMP, web target only, shared-compose UI,
+Koin DI, navigation3, Ktor with the default demo HTTPS endpoint, Settings storage,
+Codex instructions only. Keep other catalog defaults.
+Follow the installed skill: inspect its actual SKILL.md and cached JAR, run catalog,
+save config outside output at /tmp/bootstrap-codex-flow/agent.json, run plan and
+summarize the concrete file/stack scope, then generate. Use the installed plugin's
+cached JAR only, with quoted absolute paths, not the author's source checkout.
+Do not write application source yourself. Do not run builds or fetch the demo URL;
+the calling acceptance harness will build/test/run the generated app separately.
+Return actual generator outcomes, paths and build status. Do not delegate.

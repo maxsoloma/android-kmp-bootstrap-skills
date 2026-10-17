@@ -1,8 +1,0 @@
-package {{PACKAGE_BASE}}.core.analytics
-
-import {{PACKAGE_BASE}}.core.analytics.model.AnalyticsEvent
-
-interface AnalyticsTracker {
-    fun trackEvent(event: AnalyticsEvent)
-    fun setUserProperty(key: String, value: String)
-}

@@ -1,176 +1,88 @@
-# Installing
+# Install
 
-These skills follow the [Agent Skills](https://agentskills.io) open standard, so they work
-unmodified in any agent that implements it. What differs between agents is only *where* the
-files go.
+The Claude Code and Codex plugin manifests expose the portable
+`skills/bootstrap-project` skill. No sibling skill or repository runtime is
+required after installation.
 
-## The short version
+## Codex plugin
 
-Most agents — Codex, GitHub Copilot, Gemini CLI, Cursor, Firebender — read a shared
-`~/.agents/skills/` directory. One copy covers all of them:
+From a local checkout, register its marketplace and install the plugin:
 
-```bash
-git clone https://github.com/maxsoloma/android-kmp-bootstrap-skills.git
-mkdir -p ~/.agents/skills
-cp -R android-kmp-bootstrap-skills/skills/* ~/.agents/skills/
+```sh
+cd /path/to/android-kmp-bootstrap-skills
+codex plugin marketplace add .
+codex plugin add bootstrap-projects@android-kmp-bootstrap-skills --json
+codex plugin list --marketplace android-kmp-bootstrap-skills --json
 ```
 
-**Claude Code is the exception**: it does not read `~/.agents/skills/`. Use the plugin
-install below, or copy into `~/.claude/skills/`.
+These commands were exercised with `codex-cli 0.163.0`. The install response's
+`installedPath` identifies the cached plugin directory. The list response should
+show `installed: true`, `enabled: true` and version `3.0.0`.
+Marketplace layout and cached local installs are described in the
+[official plugin packaging documentation](https://developers.openai.com/plugins/build/plugins).
 
-After copying, restart the agent if the new skills don't show up — most detect changes live,
-but not all do.
+Start a fresh Codex conversation in your destination workspace. Invoke the skill
+as `$bootstrap-projects:bootstrap-project`, or select **Android & KMP Bootstrap**
+from the skills picker. For example:
 
-## Claude Code
+> Use $bootstrap-projects:bootstrap-project to create Aurora in a new Aurora
+> directory: Android and iOS, shared Compose, Koin, Navigation 3, Ktor and Settings.
 
-Installing as a plugin is preferred: you get a pinned version and `/plugin update`.
+Codex collects missing choices in chat and runs catalog → config → plan → generate
+using the installed skill's JAR. The current conversation's skill inventory may
+predate installation; verify discovery in a fresh conversation. The plugin does
+not add a separate native Codex form or a slash command named `/init`: its terminal
+wizard and its agent conversation use the same Kotlin CLI.
 
-```
-/plugin marketplace add maxsoloma/android-kmp-bootstrap-skills
-/plugin install bootstrap-projects@android-kmp-bootstrap-skills
-```
+## Terminal wizard from the installed plugin
 
-If the install summary says `Run /reload-plugins to activate.`, run that.
+Use the `skills/bootstrap-project` folder under the returned `installedPath`.
+For the tested installation:
 
-Plugin skills are namespaced, so both of these work:
-
-```
-/bootstrap-projects:bootstrap-android-project
-/bootstrap-android-project
-```
-
-The bare name resolves unless another installed skill already claims it.
-
-To update later: `/plugin marketplace update` then `/plugin update bootstrap-projects`.
-To remove: `/plugin uninstall bootstrap-projects`.
-
-<details>
-<summary>Without the plugin system</summary>
-
-```bash
-mkdir -p ~/.claude/skills
-cp -R android-kmp-bootstrap-skills/skills/* ~/.claude/skills/
+```sh
+bootstrap_skill_dir="$HOME/.codex/plugins/cache/android-kmp-bootstrap-skills/bootstrap-projects/3.0.0/skills/bootstrap-project"
+java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" init /path/to/NewApp
 ```
 
-Or project-scoped, committed to the repo so your whole team gets them:
+Run init in a real terminal. Review supports `details`, `edit <choice>`, `create`,
+`save` and `cancel`. `save` writes the config outside the destination and exits;
+it does not create the project. Replay that config when ready:
 
-```bash
-mkdir -p .claude/skills
-cp -R /path/to/android-kmp-bootstrap-skills/skills/* .claude/skills/
+```sh
+java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" plan --config /path/to/recipe.json --output /path/to/NewApp
+java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" generate --config /path/to/recipe.json --output /path/to/NewApp
+java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" verify /path/to/NewApp
 ```
 
-</details>
+Generation refuses a populated destination. Agents/CI without a terminal use the
+config flow; `init` returns structured `interactive_required` feedback there.
 
-Docs: [code.claude.com/docs/en/skills](https://code.claude.com/docs/en/skills)
+## Portable skill
 
-## Codex
+Copy `skills/bootstrap-project` into your agent's skills directory when installing
+the skill independently. Keep all of its bundled files intact.
 
-```bash
-mkdir -p ~/.agents/skills
-cp -R android-kmp-bootstrap-skills/skills/* ~/.agents/skills/
+The skill includes `bin/bootstrap.jar`; run it with Java 17+. Keep the JAR intact.
+Claude, Codex, Gemini, Copilot and Cursor can follow the same catalog/config/plan
+flow; additional generated instruction files are selected independently.
+
+```sh
+java -jar /path/to/bootstrap-project/bin/bootstrap.jar catalog --json
+java -jar /path/to/bootstrap-project/bin/bootstrap.jar init /path/to/NewApp
 ```
 
-Codex also reads `.agents/skills/` from the current directory and from the repository root,
-so committing the skills into a repo makes them available to everyone working in it.
+A global Kotlin CLI is not needed: generated apps include pinned `kotlin` and
+`kotlin.bat` wrappers. First app builds provision Toolchain/dependencies/SDK tools.
+iOS needs macOS, full Xcode, accepted license and first-launch components; native
+tests need an installed simulator runtime. Configure a signing team for devices.
+When Command Line Tools is active, set `DEVELOPER_DIR` to your Xcode developer
+folder for the build command instead of assuming Xcode is absent.
 
-Docs: [learn.chatgpt.com/docs/build-skills](https://learn.chatgpt.com/docs/build-skills)
-
-## GitHub Copilot
-
-Personal — either location works:
-
-```bash
-mkdir -p ~/.copilot/skills          # or ~/.agents/skills
-cp -R android-kmp-bootstrap-skills/skills/* ~/.copilot/skills/
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+  java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" verify /path/to/NewApp
 ```
 
-Repository-scoped — Copilot reads `.github/skills/`, `.claude/skills/`, and `.agents/skills/`:
-
-```bash
-mkdir -p .github/skills
-cp -R /path/to/android-kmp-bootstrap-skills/skills/* .github/skills/
-```
-
-This covers the Copilot CLI, the Copilot app, agent mode in VS Code and JetBrains IDEs, the
-cloud agent, and Copilot code review.
-
-Docs: [docs.github.com — About agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
-
-## Gemini CLI
-
-Gemini CLI can install straight from a git URL:
-
-```bash
-gemini skills install https://github.com/maxsoloma/android-kmp-bootstrap-skills.git \
-  --path skills/bootstrap-android-project --consent
-
-gemini skills install https://github.com/maxsoloma/android-kmp-bootstrap-skills.git \
-  --path skills/bootstrap-kmp-project --consent
-```
-
-`--path` selects a skill directory inside the repository; `--consent` skips the interactive
-security confirmation; add `--scope workspace` to install into the project instead of your
-user profile. If your Gemini CLI version handles these flags differently, fall back to
-copying into `~/.gemini/skills/` or `~/.agents/skills/`.
-
-Docs: [geminicli.com/docs/cli/skills](https://geminicli.com/docs/cli/skills/)
-
-## Cursor
-
-```bash
-mkdir -p ~/.agents/skills          # or ~/.cursor/skills
-cp -R android-kmp-bootstrap-skills/skills/* ~/.agents/skills/
-```
-
-Project-scoped: `.agents/skills/` or `.cursor/skills/`. Cursor also reads `.claude/skills/`
-and `.codex/skills/` for compatibility, so an existing install elsewhere is likely already
-visible to it.
-
-Docs: [cursor.com/docs/context/skills](https://cursor.com/docs/context/skills)
-
-## Firebender
-
-Firebender is Android-native, which makes it a natural fit for these skills.
-
-```bash
-mkdir -p ~/.firebender/skills      # or ~/.agents/skills
-cp -R android-kmp-bootstrap-skills/skills/* ~/.firebender/skills/
-```
-
-Team-scoped: `.firebender/skills/`. Firebender additionally reads `~/.claude/skills/`,
-`~/.codex/skills/`, `~/.cursor/skills/`, `~/.goose/skills/`, and `~/.agents/skills/`.
-
-Docs: [docs.firebender.com/multi-agent/skills](https://docs.firebender.com/multi-agent/skills)
-
-## Other agents
-
-Around 45 products implement the standard, including Junie, OpenCode, Amp, Goose, Factory,
-Kiro, Roo Code, VS Code, Letta, and Trae. The current list with each vendor's own setup
-instructions is at [agentskills.io/clients](https://agentskills.io/clients).
-
-The pattern is the same everywhere: find the agent's skills directory and copy the two
-directories from `skills/` into it.
-
-## Verifying the install
-
-Ask the agent to list its available skills, or type `/` and look for
-`bootstrap-android-project` and `bootstrap-kmp-project` in the completion menu.
-
-If they don't appear:
-
-1. Confirm the layout is `<skills-dir>/bootstrap-android-project/SKILL.md` — one directory
-   per skill, `SKILL.md` directly inside it. A common mistake is copying the `skills/`
-   directory itself, which nests everything one level too deep.
-2. Restart the agent.
-3. Check that `supporting/` came along with `SKILL.md`. Without it the skill loads but
-   cannot generate anything.
-
-## Uninstalling
-
-Claude Code plugin: `/plugin uninstall bootstrap-projects`.
-
-Copied install: delete the two directories from wherever you put them.
-
-```bash
-rm -rf ~/.agents/skills/bootstrap-android-project ~/.agents/skills/bootstrap-kmp-project
-```
+Version 3 includes only the modern Kotlin Toolchain skill. The two hardened skills
+and Gradle backend were removed. Existing generated applications stay unchanged;
+use their corresponding old release to replay old locks or build instructions.

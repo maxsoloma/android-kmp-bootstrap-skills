@@ -1,9 +1,0 @@
-package {{PACKAGE_BASE}}.core.analytics
-
-import platform.Foundation.NSLog
-
-actual class PlatformAnalyticsSink actual constructor() : AnalyticsTracker {
-    actual override fun track(event: AnalyticsEvent) {
-        NSLog("Analytics %@ %@", event.name, event.params.toString())
-    }
-}

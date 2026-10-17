@@ -1,0 +1,51 @@
+    ╭─ WEAK WARNING: It is recommended to sort the `modules` list alphabetically. This reduces the chance of Git conflicts and makes it easier to visually locate a module in the list.
+    │ → /private/tmp/bootstrap-codex-flow/Wizard App/project.yaml:2:3
+    │
+    │   ⌄⌄⌄⌄⌄⌄⌄⌄
+  2 │   - shared
+  3 │   - androidApp
+  4 │   - iosApp
+  5 │   - desktopApp
+  6 │   - webApp
+    │ ⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃
+    ╰─
+Started NetworkTest
+Started transportFailuresAndTimeoutsAreErrors
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Passed transportFailuresAndTimeoutsAreErrors
+Started responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Passed responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Started closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Passed closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Completed NetworkTest
+Started CounterTest
+Started failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Passed failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Started ownedGraphResolvesAndIndependentCountersRemainIndependent
+Passed ownedGraphResolvesAndIndependentCountersRemainIndependent
+Completed CounterTest
+Started RoutesTest
+Started destinationKeysRoundTripWithoutJvmReflection
+Passed destinationKeysRoundTripWithoutJvmReflection
+Completed RoutesTest
+Started PersistenceTest
+Started reopeningTheSameSettingsRestoresTheCounter
+Passed reopeningTheSameSettingsRestoresTheCounter
+Completed PersistenceTest
+
+Test run finished after 275 ms
+[         7 containers found      ]
+[         0 containers skipped    ]
+[         7 containers started    ]
+[         0 containers aborted    ]
+[         7 containers successful ]
+[         0 containers failed     ]
+[         7 tests found           ]
+[         0 tests skipped         ]
+[         7 tests started         ]
+[         0 tests aborted         ]
+[         7 tests successful      ]
+[         0 tests failed          ]
+

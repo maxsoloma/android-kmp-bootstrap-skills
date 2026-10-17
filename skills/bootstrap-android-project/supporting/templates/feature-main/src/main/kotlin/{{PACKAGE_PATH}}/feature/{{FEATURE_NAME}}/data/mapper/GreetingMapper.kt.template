@@ -1,8 +1,0 @@
-package {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.data.mapper
-
-import {{PACKAGE_BASE}}.core.domain.mappers.Mapper
-import javax.inject.Inject
-
-internal class GreetingMapper @Inject constructor() : Mapper<String, String> {
-    override fun invoke(from: String): String = "Hello, $from"
-}

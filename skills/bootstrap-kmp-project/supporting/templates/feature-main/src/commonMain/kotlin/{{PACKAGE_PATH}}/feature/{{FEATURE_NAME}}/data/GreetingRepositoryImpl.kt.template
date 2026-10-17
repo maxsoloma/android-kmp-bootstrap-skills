@@ -1,9 +1,0 @@
-package {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.data
-
-import {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.domain.Greeting
-import {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.domain.GreetingRepository
-
-class GreetingRepositoryImpl : GreetingRepository {
-    override suspend fun loadGreeting(name: String): Greeting =
-        Greeting(text = "Hello, $name!")
-}

@@ -1,0 +1,20 @@
+{
+  "name": "android-kmp-bootstrap-skills",
+  "interface": {
+    "displayName": "Android & KMP Bootstrap"
+  },
+  "plugins": [
+    {
+      "name": "bootstrap-projects",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

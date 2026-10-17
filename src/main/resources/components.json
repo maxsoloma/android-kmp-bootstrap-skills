@@ -1,0 +1,9 @@
+{
+  "reviewed": "2026-10-17",
+  "koin": "4.2.2",
+  "navigation3": "1.1.2",
+  "serialization": "1.11.0",
+  "ktor": "3.6.0",
+  "settings": "1.3.0",
+  "coroutines": "1.11.0"
+}

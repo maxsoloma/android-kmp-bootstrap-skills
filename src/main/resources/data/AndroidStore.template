@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}
+
+private var storageContext: android.content.Context? = null
+
+/** Keep the application context, never an Activity. Call before creating shared UI. */
+fun initializeStorage(context: android.content.Context) { storageContext = context.applicationContext }
+
+internal actual fun platformCounterStore(): CounterStore {
+    val context = checkNotNull(storageContext) { "Call initializeStorage(applicationContext) before creating UI" }
+    val prefs = context.getSharedPreferences("{{APP_ID}}.counter", android.content.Context.MODE_PRIVATE)
+    val settings = object : com.russhwolf.settings.Settings by com.russhwolf.settings.SharedPreferencesSettings(prefs) {
+        override fun putInt(key: String, value: Int) {
+            check(prefs.edit().putInt(key, value).commit()) { "SharedPreferences commit failed" }
+        }
+    }
+    return SettingsCounterStore(settings)
+}

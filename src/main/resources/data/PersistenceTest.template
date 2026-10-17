@@ -1,0 +1,18 @@
+package {{PACKAGE_BASE}}
+
+import com.russhwolf.settings.MapSettings
+import kotlinx.coroutines.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class PersistenceTest {
+    @Test fun reopeningTheSameSettingsRestoresTheCounter() = runTest {
+        val settings = MapSettings()
+        val first = CounterController({ AppGraph(SettingsCounterStore(settings)) }, StandardTestDispatcher(testScheduler))
+        first.increment(); first.increment(); first.close()
+        val reopened = CounterController({ AppGraph(SettingsCounterStore(settings)) }, StandardTestDispatcher(testScheduler))
+        try { assertEquals(2, reopened.count); assertEquals(3, reopened.increment()) }
+        finally { reopened.close() }
+        assertEquals(3, settings.getInt(counterKey, 0))
+    }
+}

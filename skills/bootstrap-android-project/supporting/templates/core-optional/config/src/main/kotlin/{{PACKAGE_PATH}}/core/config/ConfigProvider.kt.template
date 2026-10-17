@@ -1,8 +1,0 @@
-package {{PACKAGE_BASE}}.core.config
-
-interface ConfigProvider {
-    val baseUrl: String
-    val termsOfUseUrl: String
-    val privacyPolicyUrl: String
-    val supportUrl: String
-}

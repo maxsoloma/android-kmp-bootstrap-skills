@@ -1,0 +1,15 @@
+    ╭─ WEAK WARNING: It is recommended to sort the `modules` list alphabetically. This reduces the chance of Git conflicts and makes it easier to visually locate a module in the list.
+    │ → /private/tmp/bootstrap-ui-acceptance/shared-fixed/project.yaml:2:3
+    │
+    │   ⌄⌄⌄⌄⌄⌄⌄⌄
+  2 │   - shared
+  3 │   - androidApp
+  4 │   - iosApp
+  5 │   - desktopApp
+  6 │   - webApp
+    │ ⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃
+    ╰─
+Running xcodebuild with xcbeautify 3.2.1
+Build Succeeded
+KLIB loader: Not a Kotlin library, or a library with invalid format: /Users/maxsolonkevich/Library/Caches/JetBrains/Kotlin/.m2.cache/io/ktor/ktor-client-js-wasm-js/3.6.0/ktor-client-js-wasm-js-3.6.0.klib
+Build successful

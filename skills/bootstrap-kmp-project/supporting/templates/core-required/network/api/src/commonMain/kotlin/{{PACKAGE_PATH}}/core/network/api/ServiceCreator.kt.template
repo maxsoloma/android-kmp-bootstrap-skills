@@ -1,9 +1,0 @@
-package {{PACKAGE_BASE}}.core.network.api
-
-/**
- * Factory seam for building service contracts (e.g. [ApiClient]).
- * impl provides the concrete creator; api never references the engine.
- */
-interface ServiceCreator {
-    fun apiClient(): ApiClient
-}

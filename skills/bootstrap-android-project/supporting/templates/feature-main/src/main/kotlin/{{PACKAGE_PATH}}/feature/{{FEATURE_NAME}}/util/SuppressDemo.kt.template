@@ -1,5 +1,0 @@
-package {{PACKAGE_BASE}}.feature.{{FEATURE_NAME}}.util
-
-// SUPPRESS-RATIONALE: 42 is the documented sentinel answer, not a magic number
-@Suppress("MagicNumber")
-internal fun scaledAnswer(factor: Int): Int = 42 * factor

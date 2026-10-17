@@ -1,0 +1,37 @@
+    ╭─ WEAK WARNING: It is recommended to sort the `modules` list alphabetically. This reduces the chance of Git conflicts and makes it easier to visually locate a module in the list.
+    │ → /private/tmp/bootstrap-ui-acceptance/shared-fixed/project.yaml:2:3
+    │
+    │   ⌄⌄⌄⌄⌄⌄⌄⌄
+  2 │   - shared
+  3 │   - androidApp
+  4 │   - iosApp
+  5 │   - desktopApp
+  6 │   - webApp
+    │ ⌃⌃⌃⌃⌃⌃⌃⌃⌃⌃
+    ╰─
+Started dev.bootstrap.ui.shared.CounterTest
+Started ownedGraphResolvesAndIndependentCountersRemainIndependent
+Passed ownedGraphResolvesAndIndependentCountersRemainIndependent
+Started failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Passed failedOpenAndWriteAreVisibleWithoutClaimingSavedState
+Completed dev.bootstrap.ui.shared.CounterTest
+Started dev.bootstrap.ui.shared.NetworkTest
+Started responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Passed responseAndHttpErrorsReachTheUiWithoutAnyLiveService
+Started closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Passed closingTheOwnerCancelsInFlightWorkWithoutALateCallback
+Started transportFailuresAndTimeoutsAreErrors
+Passed transportFailuresAndTimeoutsAreErrors
+Completed dev.bootstrap.ui.shared.NetworkTest
+Started dev.bootstrap.ui.shared.PersistenceTest
+Started reopeningTheSameSettingsRestoresTheCounter
+Passed reopeningTheSameSettingsRestoresTheCounter
+Completed dev.bootstrap.ui.shared.PersistenceTest
+Started dev.bootstrap.ui.shared.RoutesTest
+Started destinationKeysRoundTripWithoutJvmReflection
+Passed destinationKeysRoundTripWithoutJvmReflection
+Completed dev.bootstrap.ui.shared.RoutesTest
+Started dev.bootstrap.ui.shared.IosPersistenceTest
+Started aNewNSUserDefaultsAdapterRestoresTheCounter
+Passed aNewNSUserDefaultsAdapterRestoresTheCounter
+Completed dev.bootstrap.ui.shared.IosPersistenceTest

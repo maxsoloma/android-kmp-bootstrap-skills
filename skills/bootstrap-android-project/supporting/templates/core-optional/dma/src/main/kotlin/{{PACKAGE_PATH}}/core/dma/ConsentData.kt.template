@@ -1,8 +1,0 @@
-package {{PACKAGE_BASE}}.core.dma
-
-data class ConsentData(
-    val adStorage: Boolean,
-    val adUserData: Boolean,
-    val adPersonalization: Boolean,
-    val analyticsStorage: Boolean,
-)

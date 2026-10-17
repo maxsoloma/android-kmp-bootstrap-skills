@@ -1,7 +1,0 @@
-package {{PACKAGE_BASE}}.core.permissions
-
-enum class PermissionState {
-    GRANTED,
-    DENIED,
-    PERMANENTLY_DENIED,
-}

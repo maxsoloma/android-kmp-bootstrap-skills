@@ -1,114 +1,97 @@
-# android-kmp-bootstrap-skills
+# Android & KMP Bootstrap
 
-Two [Agent Skills](https://agentskills.io) that scaffold a hardened Kotlin project — native
-Android or Kotlin Multiplatform (Android + iOS) — with Clean Architecture, a multi-module
-Gradle setup, and architecture tests that **fail the build** when a layer boundary is crossed.
+A Kotlin/JVM bootstrap CLI with a terminal wizard and portable agent workflow.
+Creates Kotlin Toolchain projects for Android, iOS, desktop JVM and browser Wasm.
+Claude Code and Codex plugins discover the same `bootstrap-project` skill.
 
-These are not file templates. They are procedures an agent follows: it interviews you about
-the project, expands the module dependency closure from your choices, generates the tree,
-runs the verification build, and reports per-rule status.
+## Start
 
-| Skill | Target | Stack |
-|---|---|---|
-| `bootstrap-android-project` | Native Android | Hilt · Compose Material 3 · Room/DataStore · Retrofit · MVI Delegate |
-| `bootstrap-kmp-project` | Android + iOS | Koin · Compose Multiplatform · Room KMP · Ktor · SKIE iOS interop |
+Install from GitHub without cloning this repository:
 
-## Install
-
-**Claude Code** — as a plugin, so you get versioning and updates:
-
-```
-/plugin marketplace add maxsoloma/android-kmp-bootstrap-skills
-/plugin install bootstrap-projects@android-kmp-bootstrap-skills
+```sh
+codex plugin marketplace add maxsoloma/android-kmp-bootstrap-skills
+codex plugin add bootstrap-projects@android-kmp-bootstrap-skills
 ```
 
-**Any other agent** — Codex, GitHub Copilot, Gemini CLI, Cursor, Firebender and others read
-the shared `~/.agents/skills/` directory:
+Claude Code:
 
-```bash
-git clone https://github.com/maxsoloma/android-kmp-bootstrap-skills.git
-mkdir -p ~/.agents/skills
-cp -R android-kmp-bootstrap-skills/skills/* ~/.agents/skills/
+```text
+/plugin install bootstrap-projects --marketplace maxsoloma/android-kmp-bootstrap-skills
 ```
 
-Per-agent paths, project-scoped installs, and the agents that need a different directory are
-in **[docs/INSTALL.md](docs/INSTALL.md)**.
+Start a fresh agent conversation and select **Android & KMP Bootstrap**. For a
+terminal wizard, use the installed skill's JAR as described in [installation](docs/INSTALL.md).
 
-## Use
-
-Ask for a new project in plain language, or invoke the skill directly:
-
-```
-/bootstrap-android-project
-/bootstrap-kmp-project
+```sh
+java -jar skills/bootstrap-project/bin/bootstrap.jar init /path/to/Aurora
 ```
 
-Installed as a plugin, the namespaced form `/bootstrap-projects:bootstrap-android-project`
-always works; the bare name works too unless it collides with another skill.
+The wizard selects platforms, UI, DI, navigation, networking, local storage and
+agent instructions. Review the file plan before `create`; `save` writes only the
+config. Existing files are never overwritten. Agents and CI use the same contract:
 
-The agent asks four questions — project basics, optional modules, first feature name, and
-plan approval — and writes nothing to disk until you approve the plan tree.
+```sh
+java -jar skills/bootstrap-project/bin/bootstrap.jar catalog --json
+java -jar skills/bootstrap-project/bin/bootstrap.jar plan --config recipe.json --output /path/to/Aurora
+java -jar skills/bootstrap-project/bin/bootstrap.jar generate --config recipe.json --output /path/to/Aurora
+```
 
-## What you get
+```json
+{"name":"Aurora","package":"com.example.aurora","targets":["android","ios","desktop","web"],"di":"koin","navigation":"navigation3","network":"ktor","storage":"settings"}
+```
 
-**Required modules** (always generated): `domain`, `design`, `di`, `navigation`, `network`
-(api/impl split), `resources`, `utils`, plus the architecture-test module and one starter
-feature.
+## Stack choices
 
-**Optional modules** (you pick; dependencies resolve transitively): `analytics`, `auth`,
-`billing`, `config`, `database`, `datastore` (KMP), `dma`, `image`, `permissions`,
-`remote-config` (Android), `sync`. Picking `billing` also pulls in `remote-config`,
-`analytics`, and `config` — you don't track that yourself.
-
-**Architecture tests** — the part that makes this different from a template. Konsist rules
-run as ordinary unit tests, so a violation is a red build, not a review comment:
-
-| # | Rule |
+| Choice | Supported options |
 |---|---|
-| 1 | `domain/repository` and `domain/usecase` import nothing from data, presentation, or UI packages |
-| 2 | Public `*Repository` methods never accept or return `*Entity`, `*Dto`, or `*Ui` types |
-| 3 | `domain/model` classes carry no `@Serializable`, `@Entity`, `@PrimaryKey`, or converter annotations |
-| 4 | Every `domain/repository` interface has exactly one `*RepositoryImpl` — no orphans on either side |
-| 5 | `*ViewModel` constructor parameters stay within a configurable limit (default 8) |
-| 6 | `*Mapper` classes implement the shared `Mapper<FROM, TO>` contract |
-| 7 | A feature imports nothing from another feature's internals |
-| 8 | Every `@Suppress` carries a `// SUPPRESS-RATIONALE:` comment or is explicitly allow-listed |
+| UI | Shared Compose; native Android Compose; shared Kotlin logic with SwiftUI on iOS and Compose on Android |
+| DI | Manual composition or Koin |
+| Navigation | None; Navigation 3 for Compose; SwiftUI NavigationStack with Android Navigation 3 |
+| Network | None or Ktor, with per-platform engines, timeout and cancellation |
+| Storage | None or Settings: SharedPreferences, NSUserDefaults, JVM file, browser localStorage |
 
-The KMP skill adds three source-set rules that catch the mistakes specific to multiplatform:
+SwiftUI supports iOS alone or Android+iOS. NavigationStack requires iOS minimum
+16.0+. Shared Compose supports every nonempty subset of the four platforms.
+Networking is user-triggered; generated tests use mock transports. Settings is
+for small non-secret key-value data. Modern SQL/DataStore/Retrofit/Hilt recipes
+are not implemented. Catalog/plan explains compatibility before writing.
 
-| # | Rule |
-|---|---|
-| 9 | No `actual` declarations in `commonMain` |
-| 10 | `commonMain` imports no `android.*`, `platform.*`, `java.*`, `javax.*`, or `kotlinx.cinterop` |
-| 11 | Types from `androidMain`/`iosMain` never appear in public `commonMain` signatures |
+## Build generated apps
 
-Rules 5, 8, and 10 read their thresholds and allow-lists from `config.yml` and
-`suppress-allowlist.yml`, so you can tune them without editing test code.
+```sh
+./kotlin build
+./kotlin test
+./kotlin run -m desktopApp
+```
 
-**Zero-baseline detekt.** No `detekt-baseline.xml` ships, and a `checkNoDetektBaseline` task
-fails the build if one appears. Generating a baseline to silence violations is the one escape
-hatch these skills deliberately remove.
+Use `--platform android|iosSimulatorArm64|jvm|wasmJs` for host-specific checks.
+iOS requires macOS, full Xcode and an installed simulator runtime for tests.
+Toolchain provisions other build tools/dependencies on first use. A global Kotlin
+CLI is not required. Generated specs/locks replay only with a matching generator.
+`bootstrap verify PROJECT` records separate build/test results in `.bootstrap/`.
 
-## Requirements
+## Develop this repository
 
-- **zsh** — the generators use associative arrays and the `:l` case modifier, so bash 3.2
-  (still the default `/bin/bash` on macOS) will not run them. zsh is the macOS default shell
-  and is packaged for every major Linux distribution.
-- **python3** — used for path-segment rewriting that plain shell handles badly.
-- **JDK 17+** and the **Android SDK** for the verification build.
-- **macOS with Xcode** — only for the KMP skill's iOS link check. Without it that step is
-  reported as SKIPPED rather than silently passed.
+See [build instructions](docs/BUILD.md), [configuration](docs/CLI-CONFIG.md),
+[stack choices](docs/STACKS.md), [data integrations](docs/DATA.md),
+[terminal wizard](docs/BOOTSTRAP-WIZARD.md) and [installation](docs/INSTALL.md).
 
-## Scope
+Version 3 removes the Gradle backend and hardened profiles/skills. Old generated
+projects are left untouched; use their matching old release to reproduce them.
+Prior OpenSpec changes retain the migration history; retired templates and golden fixtures have been removed.
 
-These skills only create new projects. Both abort if the target directory already contains a
-`settings.gradle.kts` — they never modify an existing project.
+The Toolchain default passed the real 48-stack matrix plus five platform-only
+projects: 134 builds and 134 test runs with 640 successful test executions.
+See [acceptance evidence](openspec/changes/archive/2026-10-17-migrate-kotlin-toolchain/verification.md)
+for exact versions, commands, fixes and runtime limits.
 
-## Contributing
+Real UI acceptance also passed navigation, live HTTPS and restart persistence on
+Android emulator, iOS simulator (Compose and SwiftUI), desktop and browser Wasm.
+It found and fixed a missing Compose compiler on the KMP Android host. See the
+[runtime report and screenshots](openspec/changes/archive/2026-10-17-verify-runtime-ui/verification.md)
+for the seven tested combinations and remaining coverage limits.
 
-Issues and pull requests are welcome. When changing a template, please describe which
-verification steps you ran; `supporting/verification.md` in each skill lists the full gate.
-
-## License
-
-[MIT](LICENSE)
+The installed Codex plugin also passed marketplace installation, native skill
+discovery, terminal init, agent generation and generated-app launch. See the
+[Codex flow report](openspec/changes/archive/2026-10-17-verify-codex-plugin-flow/verification.md)
+and [installation commands](docs/INSTALL.md).

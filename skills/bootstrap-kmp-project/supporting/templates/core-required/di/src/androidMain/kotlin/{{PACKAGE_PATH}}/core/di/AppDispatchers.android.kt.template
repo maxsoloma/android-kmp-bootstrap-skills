@@ -1,8 +1,0 @@
-package {{PACKAGE_BASE}}.core.di
-
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-
-// SUPPRESS-RATIONALE: Dispatchers.IO is not injectable; this is the explicit platform binding.
-@Suppress("InjectDispatcher")
-internal actual fun ioDispatcher(): CoroutineDispatcher = Dispatchers.IO

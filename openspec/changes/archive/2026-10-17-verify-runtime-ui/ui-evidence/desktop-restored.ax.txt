@@ -1,0 +1,15 @@
+Window: "UiShared", App: JarLauncher.
+0 стандартное окно UiShared, Secondary Actions: Raise
+	1 неизвестно (selectable) 0
+		2 container (selectable) 0
+			3 container (selectable) 0
+				4 неизвестно (selectable) 0
+					5 текст (selectable) UiShared: 4
+					6 кнопка (selectable) Fetch response
+					7 кнопка (selectable) Increment
+					8 кнопка (selectable) Details
+	9 текст UiShared
+10 menu bar
+	11 BootstrapDesktopUI
+
+The focused UI element is 1 неизвестно (selectable)

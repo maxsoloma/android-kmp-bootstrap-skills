@@ -1,0 +1,154 @@
+Android & KMP Bootstrap — init
+Enter accepts the shown value. Use back or cancel at any prompt. Nothing is written before create/save.
+
+1/6: basics
+Output directory [/tmp/bootstrap-codex-flow/Wizard App]: 
+CodexWizard
+dev.bootstrap.codex.wizard
+
+3
+
+
+
+
+16.0
+shared-compose
+koin
+navigation3
+ktor
+
+settings
+codex
+create
+Project name: Package: Application / bundle ID [dev.bootstrap.codex.wizard]: 
+2/6: recipe
+Choose a starting recipe:
+1) Android / Jetpack Compose
+2) Mobile / Shared Compose UI
+3) Universal Compose / choose platforms
+4) Native Mobile UI / Android Compose + SwiftUI
+Recipe number [2]: UI: shared-compose. Modern UI, DI and navigation are editable in components.
+Architecture: compact Kotlin Toolchain starter with selectable DI/navigation.
+
+3/6: targets
+Select any nonempty platform subset.
+1) android  2) ios  3) desktop  4) web
+Platforms (IDs or comma-separated numbers) [android,ios,desktop,web]: 
+4/6: sdk
+Defaults: min 26, target/compile 37. Android compile must be 37.
+SDK min [26]: SDK target [37]: SDK compile [37]: iOS minimum [15.0]: 
+5/6: components
+ui compatibility for the current answers:
+  android-compose: Kind kmp requires shared-compose or swiftui for native mobile UI
+  shared-compose: compatible
+  swiftui: SwiftUI requires modern KMP with iOS, optionally Android; remove desktop/web or choose shared-compose
+1) android-compose  2) shared-compose  3) swiftui
+ui (IDs or comma-separated numbers) [shared-compose]: di compatibility for the current answers:
+  manual: compatible
+  koin: compatible
+  hilt: Hilt is not supported; use manual or Koin
+1) manual  2) koin  3) hilt
+di (IDs or comma-separated numbers) [manual]: navigation compatibility for the current answers:
+  none: compatible
+  navigation3: compatible
+  platform-native: platform-native requires SwiftUI; choose navigation3 for Compose screens
+1) none  2) navigation3  3) platform-native
+navigation (IDs or comma-separated numbers) [none]: network compatibility for the current answers:
+  none: compatible
+  ktor: compatible
+  retrofit: Use none or ktor; a modern Retrofit recipe is not implemented
+1) none  2) ktor  3) retrofit
+network (IDs or comma-separated numbers) [none]: HTTPS endpoint (clear removes the explicit URL) [https://httpbin.org/uuid]: Networking happens only on the Fetch action. Browser endpoints require CORS permission; URL validation does not check it.
+storage compatibility for the current answers:
+  none: compatible
+  settings: compatible
+  room: Use none or settings for key-value data; modern SQL/DataStore recipes are not implemented
+  datastore: Use none or settings for key-value data; modern SQL/DataStore recipes are not implemented
+1) none  2) settings  3) room  4) datastore
+storage (IDs or comma-separated numbers) [none]: 
+6/6: agents
+AGENTS.md is always emitted; choose additional agent adapters.
+1) codex  2) claude  3) gemini  4) copilot  5) cursor  6) none
+Agents (IDs or comma-separated numbers) [codex,claude]: 
+Review — /tmp/bootstrap-codex-flow/Wizard App
+CodexWizard: Universal Compose / choose platforms; targets android,ios,desktop,web
+UI: shared-compose; SDK 26/37/37; iOS 16.0
+DI: koin; navigation: navigation3; component pins: {"koin":"4.2.2","navigation3":"1.1.2","serialization":"1.11.0","ktor":"3.6.0","settings":"1.3.0","coroutines":"1.11.0"}
+Network: ktor; storage: settings; endpoint: https://httpbin.org/uuid
+Data adapters: {"android":"CIO","ios":"Darwin","desktop":"CIO","web":"Js (WasmJS fetch)"}; {"android":"SharedPreferencesSettings (application context)","ios":"NSUserDefaultsSettings (app suite)","desktop":"PropertiesSettings (app-specific file)","web":"StorageSettings (origin localStorage)"}
+Agents: codex
+Modules: androidApp,desktopApp,iosApp,shared,webApp
+43 files, including portable bootstrap.spec.json and bootstrap.lock.json.
+Java 17+ runs this generator; Kotlin wrapper provisions its build tools on first build
+macOS + full Xcode for iOS; simulator runtime for native tests
+Network for initial dependency/tool downloads; generation stays offline
+Build checks: NOT_RUN. Generation does not install SDKs or run builds.
+./kotlin build --platform android (Toolchain-provisioned dependencies and platform tools)
+./kotlin test --platform android (Toolchain-provisioned dependencies and platform tools)
+./kotlin build --platform iosSimulatorArm64 (macOS + Xcode and iOS simulator runtime)
+./kotlin test --platform iosSimulatorArm64 (macOS + Xcode and iOS simulator runtime)
+./kotlin build --platform jvm (Toolchain-provisioned dependencies and platform tools)
+./kotlin test --platform jvm (Toolchain-provisioned dependencies and platform tools)
+./kotlin build --platform wasmJs (Toolchain-provisioned dependencies and platform tools)
+./kotlin test --platform wasmJs (Toolchain-provisioned dependencies and platform tools)
+Use details for the full file plan, exact module configuration and lock.
+Actions: create, details, save, edit <basics|recipe|targets|sdk|components|ui|di|navigation|network|storage|endpoint|agents>, back, cancel
+> {
+  "output": "/tmp/bootstrap-codex-flow/Wizard App",
+  "files": 43,
+  "targets": [
+    "android",
+    "ios",
+    "desktop",
+    "web"
+  ],
+  "build_status": "NOT_RUN",
+  "verification": {
+    "status": "NOT_RUN",
+    "runner": "bootstrap verify OUTPUT",
+    "commands": [
+      {
+        "target": "android",
+        "command": "./kotlin build --platform android",
+        "requires": "Toolchain-provisioned dependencies and platform tools"
+      },
+      {
+        "target": "android",
+        "command": "./kotlin test --platform android",
+        "requires": "Toolchain-provisioned dependencies and platform tools"
+      },
+      {
+        "target": "ios",
+        "command": "./kotlin build --platform iosSimulatorArm64",
+        "requires": "macOS + Xcode and iOS simulator runtime"
+      },
+      {
+        "target": "ios",
+        "command": "./kotlin test --platform iosSimulatorArm64",
+        "requires": "macOS + Xcode and iOS simulator runtime"
+      },
+      {
+        "target": "desktop",
+        "command": "./kotlin build --platform jvm",
+        "requires": "Toolchain-provisioned dependencies and platform tools"
+      },
+      {
+        "target": "desktop",
+        "command": "./kotlin test --platform jvm",
+        "requires": "Toolchain-provisioned dependencies and platform tools"
+      },
+      {
+        "target": "web",
+        "command": "./kotlin build --platform wasmJs",
+        "requires": "Toolchain-provisioned dependencies and platform tools"
+      },
+      {
+        "target": "web",
+        "command": "./kotlin test --platform wasmJs",
+        "requires": "Toolchain-provisioned dependencies and platform tools"
+      }
+    ],
+    "scope": "Actual Toolchain compilation and platform unit/browser tests. Device UI, app-store signing and live endpoint behavior require separate checks."
+  }
+}
+

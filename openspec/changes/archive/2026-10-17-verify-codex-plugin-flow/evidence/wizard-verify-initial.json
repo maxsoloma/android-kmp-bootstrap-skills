@@ -1,0 +1,102 @@
+{
+  "project": "/tmp/bootstrap-codex-flow/Wizard App",
+  "checks": [
+    {
+      "target": "android",
+      "check": "build",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "build",
+        "--platform",
+        "android"
+      ],
+      "seconds": 16.2,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/android-build.log"
+    },
+    {
+      "target": "android",
+      "check": "test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "test",
+        "--platform",
+        "android"
+      ],
+      "seconds": 4.53,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/android-test.log"
+    },
+    {
+      "target": "ios",
+      "check": "build",
+      "status": "SKIPPED",
+      "reason": "Full Xcode required: xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance"
+    },
+    {
+      "target": "ios",
+      "check": "test",
+      "status": "SKIPPED",
+      "reason": "Full Xcode required: xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance"
+    },
+    {
+      "target": "desktop",
+      "check": "build",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "build",
+        "--platform",
+        "jvm"
+      ],
+      "seconds": 7.31,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/desktop-build.log"
+    },
+    {
+      "target": "desktop",
+      "check": "test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "test",
+        "--platform",
+        "jvm"
+      ],
+      "seconds": 1.95,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/desktop-test.log"
+    },
+    {
+      "target": "web",
+      "check": "build",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "build",
+        "--platform",
+        "wasmJs"
+      ],
+      "seconds": 33.86,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/web-build.log"
+    },
+    {
+      "target": "web",
+      "check": "test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "test",
+        "--platform",
+        "wasmJs"
+      ],
+      "seconds": 8.03,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/web-test.log"
+    }
+  ],
+  "scope": "Toolchain compilation, selected app hosts and platform unit/browser tests. Device UI interaction, live HTTP and signing require separate verification."
+}

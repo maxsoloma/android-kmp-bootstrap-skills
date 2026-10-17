@@ -1,2 +1,0 @@
-module: billing
-requires: [remote-config, analytics]

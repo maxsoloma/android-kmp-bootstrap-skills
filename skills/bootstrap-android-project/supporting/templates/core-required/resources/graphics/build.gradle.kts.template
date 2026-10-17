@@ -1,7 +1,0 @@
-plugins {
-    alias(libs.plugins.app.library)
-}
-
-android {
-    namespace = "{{PACKAGE_BASE}}.core.resources.graphics"
-}

@@ -1,0 +1,10 @@
+{
+  "valid": false,
+  "issues": [
+    {
+      "field": "terminal",
+      "code": "interactive_required",
+      "message": "init requires a terminal. Agents/CI: use catalog --json, collect a config, then plan --config SPEC --output OUTPUT and generate --config SPEC --output OUTPUT."
+    }
+  ]
+}

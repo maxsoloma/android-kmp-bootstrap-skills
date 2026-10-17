@@ -1,0 +1,118 @@
+{
+  "project": "/tmp/bootstrap-codex-flow/Wizard App",
+  "checks": [
+    {
+      "target": "android",
+      "check": "build",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "build",
+        "--platform",
+        "android"
+      ],
+      "seconds": 8.59,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/android-build.log"
+    },
+    {
+      "target": "android",
+      "check": "test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "test",
+        "--platform",
+        "android"
+      ],
+      "seconds": 1.95,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/android-test.log"
+    },
+    {
+      "target": "ios",
+      "check": "build",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "build",
+        "--platform",
+        "iosSimulatorArm64"
+      ],
+      "seconds": 22.34,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/ios-build.log"
+    },
+    {
+      "target": "ios",
+      "check": "test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "test",
+        "--platform",
+        "iosSimulatorArm64"
+      ],
+      "seconds": 8.2,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/ios-test.log"
+    },
+    {
+      "target": "desktop",
+      "check": "build",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "build",
+        "--platform",
+        "jvm"
+      ],
+      "seconds": 1.02,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/desktop-build.log"
+    },
+    {
+      "target": "desktop",
+      "check": "test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "test",
+        "--platform",
+        "jvm"
+      ],
+      "seconds": 2.0,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/desktop-test.log"
+    },
+    {
+      "target": "web",
+      "check": "build",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "build",
+        "--platform",
+        "wasmJs"
+      ],
+      "seconds": 1.47,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/web-build.log"
+    },
+    {
+      "target": "web",
+      "check": "test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Wizard App/kotlin",
+        "test",
+        "--platform",
+        "wasmJs"
+      ],
+      "seconds": 6.84,
+      "log": "/tmp/bootstrap-codex-flow/Wizard App/.bootstrap/web-test.log"
+    }
+  ],
+  "scope": "Toolchain compilation, selected app hosts and platform unit/browser tests. Device UI interaction, live HTTP and signing require separate verification."
+}

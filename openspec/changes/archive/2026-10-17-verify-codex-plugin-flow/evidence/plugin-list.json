@@ -1,0 +1,23 @@
+{
+  "installed": [
+    {
+      "pluginId": "bootstrap-projects@android-kmp-bootstrap-skills",
+      "name": "bootstrap-projects",
+      "marketplaceName": "android-kmp-bootstrap-skills",
+      "version": "3.0.0",
+      "installed": true,
+      "enabled": true,
+      "source": {
+        "source": "local",
+        "path": "/Users/maxsolonkevich/Work/Progects/Git/android-kmp-bootstrap-skills"
+      },
+      "marketplaceSource": {
+        "sourceType": "local",
+        "source": "/Users/maxsolonkevich/Work/Progects/Git/android-kmp-bootstrap-skills"
+      },
+      "installPolicy": "AVAILABLE",
+      "authPolicy": "ON_INSTALL"
+    }
+  ],
+  "available": []
+}

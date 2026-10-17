@@ -1,9 +1,0 @@
-package {{PACKAGE_BASE}}.core.navigation
-
-/**
- * Top-level destinations reachable from the app's root navigation surface.
- * v1 ships a single entry; more are added when features land.
- */
-enum class TopLevelDestination {
-    MAIN,
-}

@@ -1,0 +1,37 @@
+[
+  {
+    "check": "existing destination",
+    "project": "Wizard App",
+    "exitCode": 1,
+    "filesUnchanged": 43,
+    "output": "{\n  \"valid\": false,\n  \"missing_fields\": [],\n  \"issues\": [\n    {\n      \"field\": \"configuration\",\n      \"code\": \"invalid_configuration\",\n      \"message\": \"Output must be absent or empty; existing files are never overwritten\"\n    }\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "check": "existing destination",
+    "project": "Agent App",
+    "exitCode": 1,
+    "filesUnchanged": 23,
+    "output": "{\n  \"valid\": false,\n  \"missing_fields\": [],\n  \"issues\": [\n    {\n      \"field\": \"configuration\",\n      \"code\": \"invalid_configuration\",\n      \"message\": \"Output must be absent or empty; existing files are never overwritten\"\n    }\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "check": "locked config replay",
+    "exitCode": 0,
+    "identicalFiles": 43
+  },
+  {
+    "check": "cancel and non-TTY",
+    "outputAbsent": true,
+    "nonTtyFeedback": {
+      "valid": false,
+      "issues": [
+        {
+          "field": "terminal",
+          "code": "interactive_required",
+          "message": "init requires a terminal. Agents/CI: use catalog --json, collect a config, then plan --config SPEC --output OUTPUT and generate --config SPEC --output OUTPUT."
+        }
+      ]
+    }
+  }
+]

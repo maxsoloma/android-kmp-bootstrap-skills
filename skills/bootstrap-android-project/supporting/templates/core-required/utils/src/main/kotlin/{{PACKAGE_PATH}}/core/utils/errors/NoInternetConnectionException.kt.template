@@ -1,5 +1,0 @@
-package {{PACKAGE_BASE}}.core.utils.errors
-
-import java.io.IOException
-
-class NoInternetConnectionException : IOException("No internet connection")

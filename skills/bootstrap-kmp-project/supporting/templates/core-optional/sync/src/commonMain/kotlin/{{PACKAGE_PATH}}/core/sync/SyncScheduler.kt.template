@@ -1,6 +1,0 @@
-package {{PACKAGE_BASE}}.core.sync
-
-expect class SyncScheduler {
-    fun schedule()
-    fun cancel()
-}

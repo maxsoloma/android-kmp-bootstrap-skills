@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android & KMP Bootstrap"
+  short_description: "Start Android, iOS, desktop and web apps"
+  default_prompt: "Use $bootstrap-project to guide me through choosing and creating a Kotlin Multiplatform project."

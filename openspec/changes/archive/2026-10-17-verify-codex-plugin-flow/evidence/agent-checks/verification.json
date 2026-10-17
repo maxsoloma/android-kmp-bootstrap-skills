@@ -1,0 +1,34 @@
+{
+  "project": "/tmp/bootstrap-codex-flow/Agent App",
+  "checks": [
+    {
+      "target": "web",
+      "check": "build",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Agent App/kotlin",
+        "build",
+        "--platform",
+        "wasmJs"
+      ],
+      "seconds": 32.53,
+      "log": "/tmp/bootstrap-codex-flow/Agent App/.bootstrap/web-build.log"
+    },
+    {
+      "target": "web",
+      "check": "test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/tmp/bootstrap-codex-flow/Agent App/kotlin",
+        "test",
+        "--platform",
+        "wasmJs"
+      ],
+      "seconds": 9.19,
+      "log": "/tmp/bootstrap-codex-flow/Agent App/.bootstrap/web-test.log"
+    }
+  ],
+  "scope": "Toolchain compilation, selected app hosts and platform unit/browser tests. Device UI interaction, live HTTP and signing require separate verification."
+}

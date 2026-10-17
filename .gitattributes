@@ -1,0 +1,16 @@
+# Deterministic template bytes and executable JARs on Windows, macOS and Linux.
+* text=auto eol=lf
+*.jar binary
+*.png binary
+*.jpg binary
+*.log -text -diff
+# Preserve the released wrapper checksums on every checkout.
+/kotlin -text
+/kotlin.bat -text whitespace=cr-at-eol
+/skills/bootstrap-project/assets/toolchain/kotlin -text
+/skills/bootstrap-project/assets/toolchain/kotlin.bat -text whitespace=cr-at-eol
+# These templates intentionally end with a separator blank line.
+/src/main/resources/data/CounterController.template whitespace=-blank-at-eof
+/src/main/resources/data/CounterStore.template whitespace=-blank-at-eof
+/src/main/resources/data/SettingsStore.template whitespace=-blank-at-eof
+/src/main/resources/stacks/CounterController.template whitespace=-blank-at-eof

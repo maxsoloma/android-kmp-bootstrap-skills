@@ -1,6 +1,0 @@
-package {{PACKAGE_BASE}}.core.domain.mappers
-
-interface BidirectionalMapper<A, B> {
-    fun mapTo(from: A): B
-    fun mapFrom(from: B): A
-}

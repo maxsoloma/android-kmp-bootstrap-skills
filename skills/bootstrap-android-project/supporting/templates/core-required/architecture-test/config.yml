@@ -1,4 +1,0 @@
-# Architecture test configuration.
-# viewModelMaxParams: max constructor params for a *ViewModel (Rule 5).
-#   Tightening (lowering this) forces earlier extraction of dependencies into facades/use-cases.
-viewModelMaxParams: 8

@@ -1,0 +1,25 @@
+product: jvm/app
+layout: maven-like
+
+dependencies:
+  - org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0
+
+settings:
+  kotlin:
+    version: 2.4.21
+  jvm:
+    mainClass: bootstrap.MainKt
+    release: 17
+    jdk:
+      version: 21
+  junit: junit-4
+
+test-settings:
+  jvm:
+    test:
+      systemProperties:
+        bootstrap.repo: .
+        bootstrap.jar: build/bootstrap.jar
+
+plugins:
+  bootstrap-build: enabled
