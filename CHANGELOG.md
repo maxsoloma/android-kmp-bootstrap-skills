@@ -15,6 +15,9 @@
   independent review: all six build/test commands passed, eight tests per
   platform, and actual emulator/simulator/browser UI checks. Repository: 77 tests
   passed. See [live acceptance](docs/verification/feature-orchestrator-live-20261029/README.md).
+- Reject Windows root-relative, drive-qualified and UNC source scopes on every
+  host; add positive coverage for ordinary relative paths and spaces. The release
+  regression suite passes 79 tests.
 - Include updated installation, upgrade, CLI/workflow, privacy and release docs
   in the plugin distribution. Token/billing limits and evidence authenticity
   remain explicitly outside the cooperative journal's enforcement boundary.

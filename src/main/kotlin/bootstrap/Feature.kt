@@ -18,7 +18,9 @@ private fun JsonObject.update(vararg fields: Pair<String, Any?>) = JsonObject(th
 private fun nonempty(s: String) = s.also { require(it.isNotBlank()) { "Nonempty text required" } }
 private fun safeScope(s: String): Path {
     val p = Path.of(s)
-    require(s.isNotBlank() && !p.isAbsolute && p.normalize() == p && p.nameCount > 0 &&
+    // Windows root-relative and drive-relative paths are not necessarily absolute.
+    require(s.isNotBlank() && p.root == null && !s.startsWith("\\") &&
+        !Regex("^[A-Za-z]:").containsMatchIn(s) && p.normalize() == p && p.nameCount > 0 &&
         p.none { it.toString() in setOf("..", ".", ".git", ".feature-runs", "build", ".kotlin", ".amper") }) { "Unsafe source scope: $s" }
     return p
 }

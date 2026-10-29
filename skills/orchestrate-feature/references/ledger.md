@@ -49,8 +49,8 @@ plan/task/limit fields fail. IDs use lowercase letters, digits and hyphens, max
 shared/platform modules, tests, project config, dependencies and relevant source
 documents, including existing files read by checks. Use repository-relative files
 or directories. Existing and future files under declared directories are hashed.
-Absolute paths, dot/parent components, symlinks and reserved cache/state scopes
-are rejected. Plan files are not an OS sandbox. All scopes contribute to one
+Absolute, root-relative and drive-qualified paths, dot/parent components,
+symlinks and reserved cache/state scopes are rejected. Plan files are not an OS sandbox. All scopes contribute to one
 candidate hash; project.yaml, kotlin, kotlin.bat and bootstrap.json are included
 automatically. Anything outside that coverage requires host diff review and a
 properly scoped plan before implementation; do not silently expand work.

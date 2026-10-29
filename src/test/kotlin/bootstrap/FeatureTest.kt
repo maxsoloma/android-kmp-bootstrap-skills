@@ -81,6 +81,27 @@ class FeatureTest {
         packet.writeText("x".repeat(16385)); assertFails { claim("code") }
         assertTrue(Json.parseToJsonElement(journal()).jsonObject.getValue("attempts").jsonArray.isEmpty())
     }
+    @Test fun rootedAndDriveQualifiedScopesRejectBeforeJournalPublicationOnEveryHost() {
+        val unsafeScopes = listOf(
+            "/absolute", "\\rooted", "C:drive-relative", "C:/absolute", "C:\\absolute",
+            "c:drive-relative", "c:/absolute", "c:\\absolute", "\\\\server\\share", "//server/share",
+        )
+        for ((index, scope) in unsafeScopes.withIndex()) {
+            val run = "unsafe-path-$index"
+            val tasks = listOf(task("code", "developer", emptyList(), listOf(scope)), task("tests", "tester", listOf("code"), listOf("test")), task("review", "reviewer", listOf("tests"), listOf("src")))
+            assertFails(scope) { op("init", "--plan", plan(tasks = tasks).toString(), run = run) }
+            assertFalse(app.resolve(".feature-runs/runs/$run.json").exists(), scope)
+        }
+    }
+    @Test fun ordinaryProjectRelativeScopesWithNestedPathsAndSpacesRemainAdmitted() {
+        val nested = app.resolve("src/nested directory").also { it.createDirectory() }
+        nested.resolve("example.kt").writeText("// Existing project source")
+        val scopes = listOf("src", "src/nested directory", "src/nested directory/example.kt")
+        val tasks = listOf(task("code", "developer", emptyList(), scopes), task("tests", "tester", listOf("code"), listOf("test")), task("review", "reviewer", listOf("tests"), listOf("src")))
+        op("init", "--plan", plan(tasks = tasks).toString())
+        assertTrue(app.resolve(".feature-runs/runs/example.json").isRegularFile())
+        assertEquals("// Existing project source", nested.resolve("example.kt").readText())
+    }
     @Test fun sharedRepairLimitDoesNotResetAcrossTasks() {
         init(repairs = 1); claim("code"); settle("code", "failed")
         packet.writeText("Diagnosed failure; bounded repair")
