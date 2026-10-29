@@ -9,6 +9,14 @@ to it on the user's computer. It writes configuration, generated source files an
 verification logs locally. Generation does not contact the demo network service.
 Users control these files and can remove them using their normal filesystem tools.
 
+Feature orchestration also writes local `.feature-runs/` journals, task packets,
+source/packet/evidence hashes, worker identifiers, check results and handoffs.
+Keep these artifacts locally excluded from Git and omit secrets/private user
+information from packets and evidence. The CLI does not launch models or transmit
+journals to a maintainer service. When the coding agent delegates work, the
+selected task context is processed by its provider under that provider's policies;
+a journal does not add a separate telemetry service or billing enforcement.
+
 The selected coding agent processes conversations and tool calls under that agent
 provider's policies. Kotlin Toolchain, SDK tools and dependency repositories use
 network access for installation and builds under their vendors' policies.

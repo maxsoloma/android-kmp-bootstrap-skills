@@ -1,7 +1,7 @@
-# Release 3.0.0
+# Release 3.2.0
 
-The release contains one portable `bootstrap-project` skill, its standalone JAR,
-and Codex/Claude plugin manifests. The release JAR is built by `./kotlin do bundle`;
+The release contains portable `bootstrap-project` and `orchestrate-feature`
+skills, identical standalone JARs in each skill and Codex/Claude plugin manifests. The release JAR is built by `./kotlin do bundle`;
 run `./kotlin test` and both strict Claude manifest validations before pushing.
 
 ## GitHub installation
@@ -21,9 +21,28 @@ app using the installed copy. Never interpret local-cache reuse as a clean remot
 installation. The existing development marketplace may need to be replaced with
 the Git source for this check; leave unrelated marketplaces/plugins untouched.
 
+## Release and update verification
+
+Before publication, confirm the exact remote main/tag and review the complete
+release diff, including any earlier local commits not yet pushed. Keep manifest
+versions, CLI version, changelog and documentation aligned. Tag the verified
+commit as `v3.2.0`; do not move an existing published tag.
+
+The distribution ZIP includes both complete skill folders, their references and
+JARs, all user documentation, icons, manifests and license/privacy notices.
+Publish `bootstrap.jar`, the ZIP and SHA256SUMS with the GitHub release.
+
+After pushing, follow [upgrade instructions](INSTALL.md#upgrade-an-existing-installation)
+for the existing installation. Verify the Git-backed marketplace's actual commit,
+installed version, both skills and documentation, and JAR bytes against the tag.
+Use the installed copy outside the source repository for a generation/build
+smoke and feature-journal initialization; retain the real command results.
+A GitHub release and a refreshed repository marketplace do not assert approval
+or publication in the universal plugin directory.
+
 ## Submission packages
 
-The GitHub release provides the CLI JAR and a ZIP containing the skill, icons,
+The GitHub release provides the CLI JAR and a ZIP containing both complete skill folders, icons,
 manifests, README, license, third-party notices and privacy information. Codex
 requires local execution, explicitly declared by `requires_local_executor: true`.
 There is no MCP server to register and no reviewer login to this project's service.

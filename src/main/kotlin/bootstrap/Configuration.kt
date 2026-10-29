@@ -4,7 +4,7 @@ import kotlinx.serialization.json.*
 import java.nio.file.Path
 
 const val SPEC_VERSION = 2
-const val CLI_VERSION = "3.1.0"
+const val CLI_VERSION = "3.2.0"
 val agentChoices = listOf("codex", "claude", "gemini", "copilot", "cursor", "none")
 
 data class Issue(val field: String, val code: String, val message: String) {

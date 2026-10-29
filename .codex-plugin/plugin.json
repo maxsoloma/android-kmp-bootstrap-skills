@@ -1,7 +1,7 @@
 {
   "name": "bootstrap-projects",
-  "version": "3.1.0",
-  "description": "Start Kotlin Toolchain apps for Android, iOS, desktop and web with portable agent workflows and reproducible stack selection.",
+  "version": "3.2.0",
+  "description": "Create Kotlin Toolchain apps and implement features with a portable, resumable agent orchestrator.",
   "author": {
     "name": "Maksim Salankevich",
     "url": "https://github.com/maxsoloma"
@@ -25,15 +25,16 @@
   "requires_local_executor": true,
   "interface": {
     "displayName": "Android & KMP Bootstrap",
-    "shortDescription": "Bootstrap Kotlin apps",
-    "longDescription": "Start Android and Kotlin Multiplatform development from a reviewed recipe. Choose Android, iOS, desktop JVM or browser Wasm; shared Compose or native SwiftUI; manual or Koin DI; navigation; Ktor networking, Settings storage and native mobile Firebase Analytics, Messaging and Remote Config. A portable Kotlin/JVM CLI validates compatibility, previews files, generates reproducible projects and runs selected build/test checks. Requires a local Java 17+ JDK. iOS builds require macOS and full Xcode. SDK/dependency downloads require network access. Existing projects are never overwritten. No MCP server or service account is required for generation. Optional Firebase connection uses an authenticated Firebase tool or CLI; Apple push needs APNs setup.",
+    "shortDescription": "Create apps and build features",
+    "longDescription": "Start Android and Kotlin Multiplatform development from a reviewed recipe. Choose Android, iOS, desktop JVM or browser Wasm; shared Compose or native SwiftUI; manual or Koin DI; navigation; Ktor networking, Settings storage and native mobile Firebase Analytics, Messaging and Remote Config. A portable Kotlin/JVM CLI validates compatibility, previews files, generates reproducible projects and runs selected build/test checks. Requires a local Java 17+ JDK. iOS builds require macOS and full Xcode. SDK/dependency downloads require network access. Generation never overwrites existing projects. The orchestrate-feature skill implements changes in existing Kotlin Toolchain apps with dependency tasks, bounded attempts, durable recovery and source-bound test/review evidence. Managed subagents are used when available; unavailable independent review is reported. No MCP server or service account is required for generation. Optional Firebase connection uses an authenticated Firebase tool or CLI; Apple push needs APNs setup.",
     "developerName": "Maksim Salankevich",
     "category": "Developer Tools",
     "capabilities": [
       "Create Android and KMP projects",
       "Review platform compatibility",
       "Generate Compose and SwiftUI apps",
-      "Verify generated builds"
+      "Verify generated builds",
+      "Implement features with resumable orchestration"
     ],
     "websiteURL": "https://github.com/maxsoloma/android-kmp-bootstrap-skills",
     "supportURL": "https://github.com/maxsoloma/android-kmp-bootstrap-skills/issues",
@@ -44,7 +45,8 @@
     "brandColor": "#352255",
     "defaultPrompt": [
       "Start the step-by-step wizard to create a Kotlin app.",
-      "Help me choose platforms, UI and components for a new app."
+      "Help me choose platforms, UI and components for a new app.",
+      "Use orchestrate-feature to implement a feature in this existing Kotlin app."
     ]
   }
 }

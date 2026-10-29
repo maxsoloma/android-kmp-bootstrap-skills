@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.2.0 — 2026-10-29
+
+- Add the portable `orchestrate-feature` skill for implementing and resuming
+  features in existing Kotlin Toolchain apps without regenerating them.
+- Add Kotlin CLI feature journals with dependency validation, exclusive active
+  scopes, bounded attempts/repairs/time/packets, retained history, independent
+  review admission and current-source test/review evidence.
+- Bundle the same standalone Java 17+ runtime in both skills; no Python,
+  RoadTower checkout, central tracker or model API key is required.
+- Add independent tester guidance, requirement-to-case mapping, skill discovery
+  and portable reference checks, recovery instructions and usage examples.
+- Verify a real Android/iOS/Web shared-Compose feature with managed authors and
+  independent review: all six build/test commands passed, eight tests per
+  platform, and actual emulator/simulator/browser UI checks. Repository: 77 tests
+  passed. See [live acceptance](docs/verification/feature-orchestrator-live-20261029/README.md).
+- Include updated installation, upgrade, CLI/workflow, privacy and release docs
+  in the plugin distribution. Token/billing limits and evidence authenticity
+  remain explicitly outside the cooperative journal's enforcement boundary.
+
 ## 3.1.0 — 2026-10-28
 
 - Update Navigation 3 to stable 1.2.0 and serialization to 1.12.0.

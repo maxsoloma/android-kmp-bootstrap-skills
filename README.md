@@ -1,11 +1,13 @@
 # Android & KMP Bootstrap
 
-Create Android, iOS, desktop JVM and browser Wasm apps from a conversation in
-Codex or Claude Code. Choose shared Compose UI or native SwiftUI, add the
-components you need, review the file plan and generate a runnable starter.
+Create Android, iOS, desktop JVM and browser Wasm apps, then implement features
+in existing Kotlin Toolchain apps from a conversation in Codex or Claude Code.
+For a new app, choose shared Compose UI or native SwiftUI, add components, review
+the file plan and generate a runnable starter.
 
-The plugin ships one portable `bootstrap-project` skill and a ready-to-run
-Kotlin/JVM generator. Generated apps use pinned Kotlin Toolchain wrappers.
+The plugin ships two portable skills: `bootstrap-project` for new apps and
+`orchestrate-feature` for implementation in existing apps. Both include a
+ready-to-run Kotlin/JVM CLI. Generated apps use pinned Kotlin Toolchain wrappers.
 
 ## Install once
 
@@ -48,6 +50,36 @@ chat; it does not require opening a terminal. Questions follow your language.
 
 See [installation details and troubleshooting](docs/INSTALL.md) for terminal
 installation in Claude Code and manual portable installation.
+
+## Implement a feature in an existing app
+
+Open the app workspace and describe the outcome with the new skill:
+
+| Agent | Send in chat |
+|---|---|
+| Codex | `$bootstrap-projects:orchestrate-feature Add a persistent theme selector to this app.` |
+| Claude Code | `/bootstrap-projects:orchestrate-feature Add a persistent theme selector to this app.` |
+
+The agent inspects the existing architecture, defines acceptance and dependency
+tasks, implements the change, runs affected platform checks and obtains independent
+review when managed subagents are available. Code and tests use separate authors;
+testers receive a bundled role guide and map requirements to behavioral cases.
+Without subagents it can implement and check sequentially, while reporting the
+missing independent review. The same workflow handles bug fixes and continuation:
+`Use orchestrate-feature to continue the theme feature from its saved run.`
+
+Each run has a local `.feature-runs/runs/<id>.json` journal with shared attempt, repair,
+time and packet limits, ownership and source-bound evidence. Interrupted work
+resumes the same run. Changed code invalidates test/review evidence; repeated
+unchanged retries and exhausted starts are rejected. Keep journals and logs locally
+excluded from Git. The agent manages the CLI; users do not need to prepare JSON.
+
+This workflow targets existing Kotlin Toolchain apps. It preserves the selected
+stack and wrapper, and does not regenerate or migrate an existing application.
+The journal is cooperative: it does not launch models, authenticate authors,
+verify submitted logs or enforce token/billing quotas. Completion, PR, merge and
+release remain separate outcomes. See the [feature orchestration guide](docs/FEATURE-ORCHESTRATION.md)
+for examples, recovery, limits and implementation details.
 
 ## What the wizard asks
 
@@ -228,6 +260,7 @@ README for Xcode-specific commands.
 |---|---|
 | [Install and start](docs/INSTALL.md) | Agent installation, discovery troubleshooting, portable copy, direct JAR usage |
 | [Chat and terminal wizards](docs/BOOTSTRAP-WIZARD.md) | Menu flow, review, editing choices, saving and cancellation |
+| [Feature orchestration](docs/FEATURE-ORCHESTRATION.md) | Implement/resume features, dependencies, bounded attempts and review |
 | [Configuration and CLI](docs/CLI-CONFIG.md) | JSON fields, defaults, plan/generate commands and locked replay |
 | [Application stacks](docs/STACKS.md) | UI, platforms, DI, navigation and compatibility |
 | [Networking and storage](docs/DATA.md) | Ktor engines, Settings adapters and runtime behavior |

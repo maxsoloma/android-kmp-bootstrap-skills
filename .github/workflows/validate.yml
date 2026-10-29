@@ -38,7 +38,7 @@ jobs:
           exit $LASTEXITCODE
       - name: Check the committed skill bundle
         shell: bash
-        run: git diff --exit-code -- skills/bootstrap-project/bin/bootstrap.jar
+        run: git diff --exit-code -- skills/bootstrap-project/bin/bootstrap.jar skills/orchestrate-feature/bin/bootstrap.jar
 
   generated-matrix:
     if: github.event_name == 'workflow_dispatch'

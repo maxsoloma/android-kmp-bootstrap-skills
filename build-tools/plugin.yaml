@@ -11,6 +11,7 @@ tasks:
       dependencies: ${module.runtimeClasspath}
       output: ${project.rootDir}/build/bootstrap.jar
       skill: ${project.rootDir}/skills/bootstrap-project/bin/bootstrap.jar
+      orchestrator: ${project.rootDir}/skills/orchestrate-feature/bin/bootstrap.jar
 
 generated:
   resources:

@@ -145,6 +145,7 @@ fun publish(output: Path, files: Map<String, ByteArray>) {
 }
 val help = """
 Android & KMP Bootstrap $CLI_VERSION — Kotlin/JVM CLI (Java 17+)
+  feature OP PROJECT --run ID   Durable feature workflow (init/status/claim/settle/finish)
   init [OUTPUT]                  Interactive terminal wizard
   catalog --json
   plan --config SPEC --output OUTPUT [--lock LOCK]
@@ -170,6 +171,7 @@ Exit codes: 0 success, 1 failure, 2 verification with skipped checks.
 fun runCli(args: List<String>): Int {
     if (args.isEmpty() || args.any { it in listOf("--help", "-h") }) { println(help); return 0 }
     return when (args.first()) {
+        "feature" -> feature(args.drop(1))
         "generate" -> generate(args.drop(1))
         "catalog" -> catalog(args.drop(1))
         "init" -> init(args.drop(1))

@@ -32,7 +32,7 @@ fun prepareResources(@Input assets: Path, @Input toolchain: Path, @Input sourceR
 }
 
 @TaskAction
-fun bundle(@Input app: CompilationArtifact, @Input dependencies: Classpath, @Output output: Path, @Output skill: Path) {
+fun bundle(@Input app: CompilationArtifact, @Input dependencies: Classpath, @Output output: Path, @Output skill: Path, @Output orchestrator: Path) {
     val entries = TreeMap<String, ByteArray>()
     for (file in listOf(app.artifact) + dependencies.resolvedFiles.sortedBy { it.toString() }) {
         if (!Files.isRegularFile(file) || !file.toString().endsWith(".jar")) continue
@@ -57,5 +57,7 @@ fun bundle(@Input app: CompilationArtifact, @Input dependencies: Classpath, @Out
     }
     Files.createDirectories(skill.parent)
     Files.copy(output, skill, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+    Files.createDirectories(orchestrator.parent)
+    Files.copy(output, orchestrator, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
     println("Bundled standalone CLI: $output")
 }

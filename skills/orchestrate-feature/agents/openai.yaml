@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kotlin Feature Orchestrator"
+  short_description: "Implement and resume features with checks and review"
+  default_prompt: "Use $orchestrate-feature to implement the requested feature in this existing Kotlin Toolchain app, keeping durable task progress, checks and review evidence."

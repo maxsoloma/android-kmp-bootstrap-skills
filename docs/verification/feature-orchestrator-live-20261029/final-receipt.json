@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-29",
+  "status": "completed",
+  "run": "counter-live",
+  "source_sha256": "568550e01c45f44838583f2c0dcbfe51dfc9b5b4f0a173e01ada1f78e0bdd186",
+  "review": {
+    "verdict": "approved",
+    "reviewer": "/root/live_final_reviewer",
+    "findings_requiring_repair": 0
+  },
+  "platforms": {
+    "android": {
+      "build": "passed",
+      "tests_passed": 8,
+      "tests_skipped": 0,
+      "ui": "passed"
+    },
+    "ios": {
+      "build": "passed",
+      "tests_passed": 8,
+      "tests_skipped": 0,
+      "ui": "passed"
+    },
+    "web": {
+      "build": "passed",
+      "tests_passed": 8,
+      "tests_skipped": 0,
+      "ui": "passed"
+    }
+  },
+  "repository_tests": {
+    "passed": 77,
+    "skipped": 0
+  },
+  "native_discovery": {
+    "standalone_skills": [
+      "bootstrap-project",
+      "orchestrate-feature"
+    ],
+    "local_plugin_version": "3.2.0",
+    "prefixed_skills": [
+      "bootstrap-projects:bootstrap-project",
+      "bootstrap-projects:orchestrate-feature"
+    ],
+    "remote_install": false
+  },
+  "attempts": 5,
+  "repairs": 1,
+  "limits": {
+    "attempts": 12,
+    "repairs": 6,
+    "seconds": 7200,
+    "packet_bytes": 16384
+  },
+  "usage": null,
+  "terminal_reopen_rejected": true,
+  "journal_sha256": "c461960986533551db200d5612580d924fea11d70751b3108dc8c1358541be7e",
+  "portable_jar_sha256": "1073fb8ef74011e08b2ca9910e4d4c3c551da27a6ce8e2ff278c704773065903",
+  "notes": [
+    "Live portable entrypoint predates final tester-guide linkage; guided repair loaded the bundled role guide explicitly. Final standalone-copy tests and native discovery covered the linked entrypoint.",
+    "Web bridge disabled-state and initial iOS migration diagnostics retained in the report.",
+    "No production publication; test artifacts retained and temporary processes stopped."
+  ]
+}

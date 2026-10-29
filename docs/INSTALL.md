@@ -1,8 +1,8 @@
 # Install and start
 
 Install through Codex or Claude Code's built-in plugin manager. You need Git
-and a Java 17+ JDK to run the generator. The plugin contains the portable skill,
-its compiled `bin/bootstrap.jar` and all assets.
+and a Java 17+ JDK to run the generator. The plugin contains two portable skills, each with its own compiled
+`bin/bootstrap.jar`; bootstrap-project also includes generation assets.
 
 ## Install the plugin
 
@@ -28,7 +28,8 @@ installation and its `installedPath`:
 codex plugin list --marketplace android-kmp-bootstrap-skills --json
 ```
 
-The plugin should be installed and enabled at version `3.1.0`. If the skill is
+This checkout targets plugin version `3.2.0`; verify the installed release version
+before expecting its new skill. If the skill is
 missing, open a new conversation so discovery reloads the installed plugin. For
 local plugin development, replace the GitHub source with the checkout path in
 the marketplace command. See [official plugin packaging documentation](https://developers.openai.com/plugins/build/plugins).
@@ -57,6 +58,36 @@ Start a new conversation and send:
 
 The [Claude Code skills documentation](https://code.claude.com/docs/en/skills)
 explains the plugin prefix and automatic invocation.
+
+## Upgrade an existing installation
+
+Refresh only this marketplace, then install/update the target plugin:
+
+```sh
+# Codex
+codex plugin marketplace upgrade android-kmp-bootstrap-skills
+codex plugin add bootstrap-projects@android-kmp-bootstrap-skills
+codex plugin list --marketplace android-kmp-bootstrap-skills --json
+
+# Claude Code
+claude plugin marketplace update android-kmp-bootstrap-skills
+claude plugin update bootstrap-projects@android-kmp-bootstrap-skills
+claude plugin list --json
+```
+
+Verify version `3.2.0` and the installed source/path. Start a new conversation so
+the installed skill catalog reloads; restart the client if it retains the old
+catalog. Both `bootstrap-project` and `orchestrate-feature` should be available.
+For manual copies, replace the complete skill folder with the matching release;
+keep the previous copy for any unfinished run that requires its CLI version.
+
+## Feature implementation in an existing app
+
+Open the existing app workspace. In Codex invoke
+`$bootstrap-projects:orchestrate-feature` with the desired feature or bug fix;
+in Claude Code use `/bootstrap-projects:orchestrate-feature`. Describe the
+observable outcome; the agent handles planning, the journal and checks.
+See [feature orchestration](FEATURE-ORCHESTRATION.md).
 
 ## Start in chat
 
@@ -134,7 +165,12 @@ directory into your agent's skills directory: `~/.agents/skills/` for Codex or
 `~/.claude/skills/` for Claude Code. With this method, invoke `$bootstrap-project`
 in Codex or `/bootstrap-project` in Claude Code. Use either the plugin or the
 manual copy to avoid duplicate skill entries. Keep all bundled files intact.
-The skill is self-contained: Java 17+ runs the JAR without repository sources or
+For feature implementation, independently copy the complete
+`skills/orchestrate-feature` folder and invoke `$orchestrate-feature` or
+`/orchestrate-feature`. It includes its own JAR and references; the bootstrap skill
+is not a prerequisite.
+
+Each skill is self-contained: Java 17+ runs the JAR without repository sources or
 sibling skills. Generated instruction files for other agents are selected
 independently of which agent runs the skill.
 
@@ -160,6 +196,6 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" verify /path/to/NewApp
 ```
 
-Version 3 includes only the modern Kotlin Toolchain skill. Hardened skills and
+Version 3 uses Kotlin Toolchain for generation and feature implementation. Hardened skills and
 the Gradle backend were removed. Use an existing application's corresponding
 old release to replay old locks or build instructions.

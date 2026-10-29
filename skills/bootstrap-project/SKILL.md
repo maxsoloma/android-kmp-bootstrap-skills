@@ -93,3 +93,10 @@ be reported. Use the generated plan's commands and logs as evidence.
 References: [chat wizard](references/chat-wizard.md),
 [configuration](references/stacks.md), [data](references/data.md),
 [toolchain](references/toolchain.md), [verification](references/verification.md).
+
+## Continue with feature implementation
+
+After generation, requests to implement features in the existing app belong to
+`orchestrate-feature`, available separately in this plugin. Use it if installed;
+never regenerate into the app as a feature implementation strategy. A portable
+copy of this creation skill does not require that sibling to generate projects.

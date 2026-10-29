@@ -1,6 +1,6 @@
 {
   "name": "android-kmp-bootstrap-skills",
-  "description": "Portable Android and KMP bootstrap workflows for Claude Code and Codex.",
+  "description": "Portable Kotlin app creation and feature orchestration for Claude Code and Codex.",
   "owner": {
     "name": "Maksim Salankevich",
     "url": "https://github.com/maxsoloma"
@@ -9,7 +9,7 @@
     {
       "name": "bootstrap-projects",
       "source": "./",
-      "description": "Kotlin Toolchain starters for Android, iOS, desktop and web.",
+      "description": "Kotlin Toolchain starters and resumable feature implementation for Android, iOS, desktop and web.",
       "category": "scaffolding",
       "tags": [
         "android",

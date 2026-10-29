@@ -9,7 +9,10 @@ java -jar build/bootstrap.jar catalog --json
 ```
 
 `bundle` compiles the CLI, prepares its indexed resources and creates the standalone
-executable at `build/bootstrap.jar` and `skills/bootstrap-project/bin/bootstrap.jar`.
+executable at `build/bootstrap.jar` and identical standalone copies in
+`skills/bootstrap-project/bin/bootstrap.jar` and
+`skills/orchestrate-feature/bin/bootstrap.jar`. Feature workflow regressions cover
+dependencies, ownership, persistent budgets, stale evidence and isolated JAR use.
 The build plugin is Kotlin code in `build-tools/`; it reads explicit resource
 inputs and preserves embedded binary bytes. JAR entries have deterministic order
 and timestamps. Wrappers are release 0.13.0 with upstream distribution checksums.

@@ -136,6 +136,8 @@ class BootstrapTest {
         assertTrue(listing.text("longDescription").isNotBlank())
         for (field in listOf("logo", "composerIcon")) assertTrue(repo.resolve(listing.text(field)).isRegularFile(), field)
         assertTrue(repo.resolve("skills/bootstrap-project/agents/openai.yaml").isRegularFile())
+        assertTrue(repo.resolve("skills/orchestrate-feature/agents/openai.yaml").isRegularFile())
+        assertContentEquals(repo.resolve("skills/bootstrap-project/bin/bootstrap.jar").readBytes(), repo.resolve("skills/orchestrate-feature/bin/bootstrap.jar").readBytes())
         assertFalse(repo.resolve("skills/bootstrap-android-project").exists()); assertFalse(repo.resolve("skills/bootstrap-kmp-project").exists())
     }
 }
