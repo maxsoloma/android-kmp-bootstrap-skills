@@ -1,6 +1,6 @@
 ---
 name: bootstrap-project
-description: Create Android and Kotlin Multiplatform projects through step-by-step chat menus for platforms, UI and components, backed by a standalone Kotlin Toolchain generator.
+description: Create Android and Kotlin Multiplatform projects through chat menus for platforms, Compose or SwiftUI, Navigation 3 and optional mobile Firebase setup, using a portable Kotlin Toolchain generator.
 ---
 
 # Bootstrap Kotlin Toolchain projects
@@ -15,12 +15,13 @@ CLI contract. Discover supported choices instead of inventing integrations.
 A bare skill invocation starts the guided menus immediately; do not ask the user
 to write a project specification or run the terminal wizard. Read
 [the chat wizard](references/chat-wizard.md) and follow it for interactive creation.
-Only project name and package require free-text input. Default the destination
+For local generation only project name and package require free-text input.
+Optional Firebase connection also needs the chosen cloud project/account. Default the destination
 to `<calling workspace>/<project name>` and the application ID to the package.
 Use the agent's available native question/choice tool in its current mode;
 otherwise present one numbered menu at a time in chat. Wait for each answer.
 
-Offer explicit choices for platforms, UI, DI, navigation, networking and storage;
+Offer explicit choices for platforms, UI, DI, navigation, networking, storage and Firebase;
 recommendations are not submitted answers. Do not silently default these steps.
 Honor choices already supplied in the request, and skip only answered steps or
 choices the user explicitly delegated to defaults. Config/replay/CI requests can
@@ -41,6 +42,11 @@ use the direct CLI flow without an interactive wizard.
    or `java -jar <skill>/bin/bootstrap.jar verify OUTPUT`. Report actual results,
    logs and limitations separately from generation. Never claim skipped checks pass.
 
+Keep simple creation in one agent. For independent research or verification that
+benefits from workers, read [delegation](references/agents.md): start fresh workers
+with a bounded brief, file ownership and compact results. Do not forward the
+conversation or load every reference into each worker.
+
 Humans can run `java -jar <skill>/bin/bootstrap.jar init OUTPUT` in a real terminal.
 Non-TTY agents use catalog → config → plan → generate. Terminal review supports
 `edit ui`, `edit di`, `edit navigation`, `edit network`, `edit storage` and
@@ -54,6 +60,9 @@ Cancellation/EOF and review never create a project.
 - Shared Compose supports Android/iOS/desktop/Wasm. Native Android is Android only.
   SwiftUI shares UI-free Kotlin logic and supports iOS, optionally Android.
 - Manual/Koin DI; none/Navigation 3 for Compose; none/platform-native for SwiftUI.
+  Recommend Navigation 3 in Compose menus. Keep None available; direct CLI/config
+  defaults remain None for replay compatibility. Navigation keys use explicit
+  non-JVM serializers and per-entry saveable state.
   SwiftUI NavigationStack needs iOS 16.0+; the chat wizard derives this minimum
   when the user has not explicitly set one.
 - Optional Ktor HTTPS request with platform engines, loading/result/error,
@@ -63,6 +72,11 @@ Cancellation/EOF and review never create a project.
   Storage failures are visible. Settings is not SQL or credential storage.
 - All generated code/config/version fields must come from the CLI. Do not create
   unsupported SQL/DataStore/Retrofit/Hilt recipes by merely adding dependencies.
+- Optional native Firebase Analytics, Cloud Messaging and Remote Config in Android
+  and iOS app hosts. Read [Firebase](references/firebase.md) only when selected;
+  it covers project/app registration, config retrieval and platform checks.
+  Generation stays offline. Missing configs are CONFIG_MISSING; live service
+  checks start NOT_RUN. Crashlytics and desktop/web Firebase recipes are unsupported.
 
 ## Safety and verification
 

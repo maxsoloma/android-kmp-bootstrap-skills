@@ -38,7 +38,8 @@ Select **Android & KMP Bootstrap** in Codex or send just the skill invocation:
 
 **No project description or arguments are required.** The skill starts a guided
 conversation. You type only the project name and package; platforms, UI and
-components are selected from the offered options.
+components are selected from the offered options. Optional Firebase connection
+also selects a cloud project/account; creating a project can require its ID.
 
 The agent uses native question forms when they are available in its current
 mode. Otherwise, it shows the same choices as numbered chat menus: reply with
@@ -56,10 +57,11 @@ installation in Claude Code and manual portable installation.
 | 2. Platforms | Select one or more: Android, iOS, Desktop JVM, Browser Wasm. |
 | 3. UI | Select a compatible option: native Android Compose, shared Compose, or SwiftUI on iOS with shared Kotlin logic. |
 | 4. DI | Select Manual wiring or Koin. |
-| 5. Navigation | Select None or Navigation 3; SwiftUI offers None or native navigation. |
+| 5. Navigation | Navigation 3 is recommended for Compose; None remains available. SwiftUI offers native navigation or None. |
 | 6. Networking | Select None or Ktor. |
 | 7. Local storage | Select None or Settings key-value storage. |
-| 8. Review | Select Create project, Change choices or Cancel. |
+| 8. Firebase | None, Analytics + Messaging, or custom Analytics/Messaging/Remote Config. Connect a project now or prepare SDKs only. |
+| 9. Review | Select Create project, Change choices or Cancel. |
 
 Only compatible UI/navigation options are offered. When shared Compose is the
 only UI compatible with your platforms, the wizard explains the selection and
@@ -92,6 +94,7 @@ Invoke the skill without arguments, then enter/select:
 | Navigation | Navigation 3 |
 | Networking | Ktor |
 | Local storage | Settings |
+| Firebase | Analytics + Messaging, or None |
 | Review | Create project |
 
 The result is `./AuroraMobile` with shared Compose UI, a sample HTTPS action and

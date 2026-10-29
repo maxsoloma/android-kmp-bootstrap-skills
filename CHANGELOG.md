@@ -1,5 +1,22 @@
 # Changelog
 
+## 3.1.0 — 2026-10-28
+
+- Update Navigation 3 to stable 1.2.0 and serialization to 1.12.0.
+- Recommend Navigation 3 in Compose menus, retain explicit None and direct-config
+  defaults, decorate per-entry saveable state and test ordered back-stack replay.
+- Add optional native Firebase Analytics, Cloud Messaging and Remote Config in
+  Android/iOS hosts: validated public SDK config, offline replay, notification
+  permissions, FID registration callbacks, Apple APNs mapping and SwiftUI delegate handling.
+- Extend chat/terminal configuration and project/app registration guidance with
+  explicit CONFIG_MISSING / CONFIGURED / live NOT_RUN states. Crashlytics upload
+  tooling and desktop/web Firebase recipes remain unsupported.
+- Add fresh-context bounded worker guidance to the portable skill and generated
+  agent instructions. Validate the wizard through independent forward testing.
+- Recheck current Kotlin/Compose/Toolchain pins and AGP 9 KMP module ownership;
+  preserve the Toolchain backend and bundled wrapper bytes. See
+  [stack review and verification](docs/STACK-REVIEW.md).
+
 ## 3.0.0 — 2026-10-17
 
 - A standalone Kotlin/JVM CLI and terminal init wizard power the same portable

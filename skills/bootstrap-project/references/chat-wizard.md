@@ -58,8 +58,8 @@ choices and defaults as the authority. Handle CLI paths and JSON for the user.
    choice or revisit platforms; do not silently switch it to the sole option.
 4. **Dependency injection.** Manual wiring (`di: manual`, recommended) or Koin
    (`di: koin`). Explain that manual wiring needs no DI framework.
-5. **Navigation.** None (`navigation: none`, recommended), or Navigation 3
-   (`navigation3`) for either Compose UI. For SwiftUI, offer None or Native
+5. **Navigation.** Navigation 3 (`navigation: navigation3`, recommended), or None
+   (`none`) for either Compose UI. For SwiftUI, offer None or Native
    navigation (`platform-native`: SwiftUI NavigationStack plus Android
    Navigation 3 when Android is selected). For native navigation set the iOS
    minimum to at least the catalog's `ios_minimum` (currently `16.0`) and show
@@ -75,15 +75,31 @@ choices and defaults as the authority. Handle CLI paths and JSON for the user.
 7. **Local storage.** None (`storage: none`, recommended) or Settings key-value
    storage (`storage: settings`). Explain that Settings stores small non-secret
    values and is not a SQL database.
-8. **Review.** Resolve the complete config with `plan` and show selected platforms,
+8. **Firebase.** For a selection containing Android or iOS, offer None (recommended
+   unless Firebase was requested), Analytics + Messaging, or Custom services.
+   Custom chooses any nonempty subset from `catalog.firebase.services`; collect
+   include/exclude answers when multi-select is unavailable. Read
+   [Firebase](firebase.md) after selection. Offer Connect now / Prepare SDKs only;
+   Connect now selects an existing project or creates one from an explicit user
+   choice, registers/reuses matching apps and retrieves configs before generation.
+   Reuse exact IDs already supplied. Do not ask for credentials in chat.
+   Prepare SDKs only omits configs and shows CONFIG_MISSING in review.
+   For desktop/web alone explain that Firebase is unavailable and omit the field.
+9. **Review.** Resolve the complete config with `plan` and show selected platforms,
    UI, components, output, package/application ID, derived SDKs/iOS minimum,
-   endpoint when selected, modules/file plan and requirements relevant to selected
+   endpoint when selected, Firebase services/project/configuration status when
+   selected, modules/file plan and requirements relevant to selected
    platforms (Xcode is an iOS requirement). Offer **Create project / Change choices
    / Cancel**. Change choices opens a menu of
    previous steps; preserve other answers and revalidate dependent choices.
    Create project runs `generate` with the reviewed config and destination.
    Cancel ends the wizard without creating a project; discard temporary config
    files created by this run. Never run generation with an unanswered choice.
+
+When the user asks to see a plan first, produce a preliminary plan with the known
+choices and clearly mark unresolved Firebase project/config fields. This does
+not select Prepare SDKs only or authorize project/app creation. Resolve those
+choices before generation or a cloud action.
 
 For fields outside these menus, use catalog defaults (SDK versions and additional
 agent instructions) unless supplied explicitly. Do not ask for application ID,
@@ -100,7 +116,7 @@ never interpret either as permission to create the app.
 After collecting the name and package, a platform step can look like:
 
 ```text
-Step 2/8 — Platforms (choose one or more)
+Step 2/9 — Platforms (choose one or more)
 1. Android
 2. iOS
 3. Desktop JVM

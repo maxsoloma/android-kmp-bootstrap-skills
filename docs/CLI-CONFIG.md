@@ -93,10 +93,19 @@ Ktor uses the bundled demo HTTPS endpoint when `network_url` is omitted. Set
 | `agents` | Nonempty array of `codex`, `claude`, `gemini`, `copilot`, `cursor`, or `none` alone | `codex,claude` |
 | `sdk` | Object with integer `min`, `target`, `compile`; `23 <= min <= target <= compile <= 37`; Android requires compile 37 | `26/37/37` |
 | `ios_deployment_target` | Version string, at least `15.0`; NavigationStack requires `16.0`+ | `15.0` |
+| `firebase` | Optional object: `services` array (`analytics`, `messaging`, `remote-config`); `project_id`; `android_config`/`ios_config` paths or embedded `android`/`ios` configs | Omitted |
 
 Kind `android` supports only `android-compose` on Android. Shared Compose
 supports any nonempty platform subset. SwiftUI requires iOS, optionally Android,
 and supports `none` or `platform-native` navigation. See [stack compatibility](STACKS.md).
+
+Compose chat/terminal menus recommend Navigation 3; direct CLI/config defaults
+remain `none` for compatibility. Firebase requires at least one mobile target;
+desktop and Wasm hosts receive no SDK. Config paths resolve relative to the JSON
+file; normalized specs embed public SDK identifiers for path-independent replay.
+Package/bundle/project mismatches and unsupported services fail before writes.
+Missing configs are `CONFIG_MISSING`, configured SDKs are `CONFIGURED`, and live
+checks begin `NOT_RUN`. See [Firebase setup](../skills/bootstrap-project/references/firebase.md).
 
 `AGENTS.md` is always generated. The `agents` field controls additional adapter
 files; it does not select the agent running the generator.

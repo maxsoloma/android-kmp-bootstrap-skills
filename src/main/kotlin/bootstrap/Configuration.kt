@@ -4,7 +4,7 @@ import kotlinx.serialization.json.*
 import java.nio.file.Path
 
 const val SPEC_VERSION = 2
-const val CLI_VERSION = "3.0.0"
+const val CLI_VERSION = "3.1.0"
 val agentChoices = listOf("codex", "claude", "gemini", "copilot", "cursor", "none")
 
 data class Issue(val field: String, val code: String, val message: String) {
@@ -21,7 +21,10 @@ fun normalizedSpec(o: Options): JsonObject = value(linkedMapOf<String, Any>(
     "targets" to o.targets, "agents" to o.agents,
     "sdk" to mapOf("min" to o.min, "target" to o.target, "compile" to o.compile),
     "ios_deployment_target" to o.ios,
-).apply { o.networkUrl?.let { put("network_url", it) } }).jsonObject
+).apply {
+    o.networkUrl?.let { put("network_url", it) }
+    o.firebase?.let { put("firebase", it.document()) }
+}).jsonObject
 
 fun resolveSpec(input: JsonObject, output: Path): Resolution {
     val issues = mutableListOf<Issue>()
@@ -29,7 +32,7 @@ fun resolveSpec(input: JsonObject, output: Path): Resolution {
     fun checkKeys(obj: JsonObject, allowed: Set<String>, prefix: String = "") {
         (obj.keys - allowed).forEach { issue(prefix + it, "unknown_field", "Unknown configuration field: $prefix$it") }
     }
-    checkKeys(input, setOf("schema_version", "build_system", "name", "package", "app_id", "profile", "kind", "targets", "agents", "sdk", "ios_deployment_target", "feature", "modules", "ui", "di", "navigation", "network", "storage", "network_url"))
+    checkKeys(input, setOf("schema_version", "build_system", "name", "package", "app_id", "profile", "kind", "targets", "agents", "sdk", "ios_deployment_target", "feature", "modules", "ui", "di", "navigation", "network", "storage", "network_url", "firebase"))
     fun string(key: String, default: String? = null): String? {
         val v = input[key] ?: return default
         if (v !is JsonPrimitive || !v.isString) { issue(key, "invalid_type", "$key must be a string"); return default }
@@ -70,13 +73,14 @@ fun resolveSpec(input: JsonObject, output: Path): Resolution {
     if (min < 23 || min > target || target > compile || compile > 37) issue("sdk", "incompatible", "Require 23 <= min <= target <= compile <= 37")
     if ("android" in targets && compile != 37) issue("sdk.compile", "incompatible", "Pinned Compose libraries require compile SDK 37")
     val appId = string("app_id", pkg)
+    val firebase = resolveFirebase(input["firebase"], targets, appId ?: "", issues)
     if (issues.isNotEmpty()) return Resolution(null, null, issues)
     val flags = mutableListOf(output.toString(), "--name", name!!, "--package", pkg!!, "--app-id", appId!!,
         "--kind", kind, "--targets", targets.joinToString(","), "--agents", agents.joinToString(","),
         "--min-sdk", "$min", "--target-sdk", "$target", "--compile-sdk", "$compile", "--ios-deployment-target", ios,
         "--ui", ui, "--di", di, "--navigation", navigation, "--network", network, "--storage", storage)
     networkUrl?.let { flags += listOf("--network-url", it) }
-    return try { val options = parseGenerate(flags); Resolution(options, normalizedSpec(options), emptyList()) }
+    return try { val options = parseGenerate(flags).copy(firebase = firebase); Resolution(options, normalizedSpec(options), emptyList()) }
     catch (e: Exception) { Resolution(null, null, listOf(Issue("configuration", "invalid_configuration", e.message ?: "Invalid configuration"))) }
 }
 
@@ -100,7 +104,9 @@ fun catalogDocument(): JsonObject = value(mapOf(
         "di" to "manual (default) or koin", "navigation" to "none (default), navigation3 for Compose, platform-native for SwiftUI (iOS 16+)",
         "network" to "none (default) or ktor", "storage" to "none (default) or settings", "network_url" to "Ktor-only HTTPS URL, no userinfo/fragment; defaults to demo endpoint",
         "agents" to "array; codex,claude by default; none alone", "sdk" to "object {min,target,compile}; defaults 26/37/37; Android compile 37",
-        "ios_deployment_target" to "string; default 15.0; NavigationStack needs 16.0+"),
+        "ios_deployment_target" to "string; default 15.0; NavigationStack needs 16.0+",
+        "firebase" to "optional object; services array, project_id, android_config/ios_config paths or embedded android/ios configs"),
+    "firebase" to firebaseCatalog(),
     "presets" to presets.map { mapOf("id" to it.id, "label" to it.label, "defaults" to it.defaults()) },
     "agents" to agentChoices, "stack_choices" to stackCatalog(),
     "retired" to listOf("Gradle backend", "hardened profiles", "feature/modules options"),

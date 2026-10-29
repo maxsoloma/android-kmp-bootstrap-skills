@@ -146,12 +146,31 @@ class InitWizard(private val io: WizardIO, output: Path) {
 
         if (componentEdit == null || componentEdit == "ui") stackChoice("ui", listOf("android-compose", "shared-compose", "swiftui"), preset.ui)
         if (componentEdit == null || componentEdit == "di") stackChoice("di", listOf("manual", "koin", "hilt"), "manual")
-        if (componentEdit == null || componentEdit == "navigation") stackChoice("navigation", listOf("none", "navigation3", "platform-native"), "none")
+        if (componentEdit == null || componentEdit == "navigation") stackChoice("navigation", listOf("navigation3", "none", "platform-native"), if (string("ui") == "swiftui") "none" else "navigation3")
         if (componentEdit == null || componentEdit == "network") {
             stackChoice("network", listOf("none", "ktor", "retrofit"), "none")
             if (string("network") == "ktor") endpoint()
         }
         if (componentEdit == null || componentEdit == "storage") stackChoice("storage", listOf("none", "settings", "room", "datastore"), "none")
+        if (componentEdit == null || componentEdit == "firebase") firebase()
+    }
+    private fun firebase() {
+        io.say("Firebase mobile SDKs: Analytics, Messaging and Remote Config. Desktop/web hosts stay independent. Crashlytics tooling is not implemented.")
+        val old = answers["firebase"] as? JsonObject
+        val services = choices("Firebase services", listOf("none") + firebaseServices, old?.strings("services") ?: listOf("none"))
+        if (services == listOf("none")) { answers.remove("firebase"); return }
+        if ("none" in services) { io.say("Choose none alone or one or more services."); firebase(); return }
+        val config = (old ?: JsonObject(emptyMap())).toMutableMap()
+        config["services"] = value(services)
+        val project = raw("Firebase project ID [${old?.get("project_id")?.jsonPrimitive?.content ?: "pending"}] (empty keeps previous; clear removes): ")
+        if (project == "clear") config.remove("project_id") else if (project.isNotEmpty()) config["project_id"] = value(project)
+        for (platform in listOf("android", "ios").filter { it in (answers["targets"] as? JsonArray)?.map { v -> v.jsonPrimitive.content }.orEmpty() }) {
+            val path = raw("$platform Firebase config path (empty keeps previous or CONFIG_MISSING; clear removes): ")
+            if (path == "clear") { config.remove("${platform}_config"); config.remove(platform) }
+            else if (path.isNotEmpty()) { config["${platform}_config"] = value(path); config.remove(platform) }
+        }
+        answers["firebase"] = JsonObject(config)
+        showIssues(resolveSpec(spec(), output).issues)
     }
     private fun endpoint() {
         val answer = text("HTTPS endpoint (clear removes the explicit URL)", string("network_url") ?: if (string("network") == "ktor") demoEndpoint else "clear") {
@@ -185,6 +204,7 @@ class InitWizard(private val io: WizardIO, output: Path) {
         io.say("UI: ${plan.spec.text("ui")}; SDK ${plan.options.min}/${plan.options.target}/${plan.options.compile}; iOS ${plan.options.ios}")
         io.say("DI: ${plan.options.di}; navigation: ${plan.options.navigation}; component pins: ${doc.getValue("stack").jsonObject.getValue("pins")}")
         io.say("Network: ${plan.options.network}; storage: ${plan.options.storage}; endpoint: ${plan.options.networkUrl ?: "none"}")
+        io.say("Firebase: ${firebaseStatus(plan.options)}")
         io.say("Data adapters: ${doc.getValue("stack").jsonObject.getValue("network_adapters")}; ${doc.getValue("stack").jsonObject.getValue("storage_adapters")}")
         io.say("Agents: ${plan.options.agents.joinToString(",")}")
         io.say("Modules: ${doc.strings("modules").joinToString(",")}")
@@ -210,7 +230,7 @@ class InitWizard(private val io: WizardIO, output: Path) {
                     }
                     val result = planProject(spec(), output)
                     review(result)
-                    io.say("Actions: create, details, save, edit <basics|recipe|targets|sdk|components|ui|di|navigation|network|storage|endpoint|agents>, back, cancel")
+                    io.say("Actions: create, details, save, edit <basics|recipe|targets|sdk|components|ui|di|navigation|network|storage|endpoint|firebase|agents>, back, cancel")
                     when (val action = raw("> ")) {
                         "create" -> if (result.valid) {
                             // Revalidate before publication, including a destination populated during review.
@@ -229,9 +249,9 @@ class InitWizard(private val io: WizardIO, output: Path) {
                         }
                         else -> {
                             val target = action.removePrefix("edit ")
-                            val index = if (target in listOf("ui", "di", "navigation", "network", "storage", "endpoint")) steps.indexOf("components") else steps.indexOf(target)
+                            val index = if (target in listOf("ui", "di", "navigation", "network", "storage", "endpoint", "firebase")) steps.indexOf("components") else steps.indexOf(target)
                             if (action.startsWith("edit ") && index >= 0) {
-                                componentEdit = target.takeIf { it in listOf("ui", "di", "navigation", "network", "storage", "endpoint") }
+                                componentEdit = target.takeIf { it in listOf("ui", "di", "navigation", "network", "storage", "endpoint", "firebase") }
                                 step = index; editing = true
                             }
                             else io.say("Choose one of the listed actions.")

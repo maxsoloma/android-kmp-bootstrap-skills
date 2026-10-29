@@ -9,6 +9,7 @@ fun projectMetadata(o: Options): JsonObject = value(mapOf(
     "network" to o.network, "storage" to o.storage, "network_url" to o.networkUrl,
     "toolchain" to toolchain, "sdk" to mapOf("min" to o.min, "target" to o.target, "compile" to o.compile),
     "ios_deployment_target" to o.ios,
+    "firebase" to firebaseStatus(o),
     "checks" to o.targets.associateWith { target ->
         val platform = when (target) { "ios" -> "iosSimulatorArm64"; "desktop" -> "jvm"; "web" -> "wasmJs"; else -> target }
         listOf(listOf("build", "--platform", platform), listOf("test", "--platform", platform))
@@ -35,6 +36,10 @@ fun configureToolchain(o: Options, files: MutableMap<String, ByteArray>) {
         }
         if (module == "desktopApp") deps += "\$compose.desktop.currentOs"
         if (module == "androidApp") deps += "androidx.activity:activity-compose:${toolchain.text("activity_compose")}"
+        if (module == "androidApp") o.firebase?.services?.forEach { service ->
+            val artifact = if (service == "remote-config") "config" else service
+            deps += "com.google.firebase:firebase-$artifact:${componentPins.text("firebase_$service") }"
+        }
         if (nav) deps += listOf("org.jetbrains.androidx.navigation3:navigation3-ui:${componentPins.text("navigation3")}", "org.jetbrains.kotlinx:kotlinx-serialization-json:${componentPins.text("serialization")}")
         if (module == logic) {
             if (o.di == "koin") deps += "io.insert-koin:koin-core:${componentPins.text("koin")}"

@@ -66,6 +66,7 @@ data class Options(
     val navigation: String = "none",
     val network: String = "none", val storage: String = "none",
     val networkUrl: String? = if (network == "ktor") demoEndpoint else null,
+    val firebase: FirebaseOptions? = null,
 ) {
     val hasData get() = (network != "none" || storage != "none")
     val customStack get() = (ui == "swiftui" || di != "manual" || navigation != "none" || hasData)
@@ -143,7 +144,7 @@ fun publish(output: Path, files: Map<String, ByteArray>) {
     } finally { staging.toFile().deleteRecursively() }
 }
 val help = """
-Android & KMP Bootstrap 3.0.0 — Kotlin/JVM CLI (Java 17+)
+Android & KMP Bootstrap $CLI_VERSION — Kotlin/JVM CLI (Java 17+)
   init [OUTPUT]                  Interactive terminal wizard
   catalog --json
   plan --config SPEC --output OUTPUT [--lock LOCK]

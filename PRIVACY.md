@@ -19,6 +19,15 @@ it for your application. The endpoint receives normal HTTP connection informatio
 Settings stores the example counter in the selected platform's local storage.
 It is not intended for credentials or sensitive personal data.
 
+Optional Firebase connection uses the user's authenticated Firebase tools to
+list/select a project, register mobile apps and retrieve public SDK configs.
+Local generation stays offline. The normalized spec embeds public Firebase SDK
+identifiers for replay; private admin credentials and APNs keys are not accepted.
+When a configured generated app runs, selected Firebase SDKs communicate with
+Google under Firebase's policies. Analytics can collect app usage; Messaging
+uses installation/device registration tokens; Remote Config fetches values when
+the application invokes it. App owners control consent and service configuration.
+
 Support is available through the repository's GitHub issues. Information posted
 to a public issue is public; do not include credentials or private project data.
 The software is distributed under the MIT license in LICENSE.

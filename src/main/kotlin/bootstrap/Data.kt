@@ -17,5 +17,6 @@ fun storageAdapters(targets: List<String>) = targets.associateWith { when (it) {
 fun selectedPins(o: Options) = componentPins.filterKeys {
     (it == "koin" && o.di == "koin") ||
     (it in listOf("navigation3", "serialization") && (o.navigation == "navigation3" || o.navigation == "platform-native" && "android" in o.targets)) ||
-    (it == "ktor" && o.network == "ktor") || (it == "settings" && o.storage == "settings") || (it == "coroutines" && o.hasData)
+    (it == "ktor" && o.network == "ktor") || (it == "settings" && o.storage == "settings") || (it == "coroutines" && o.hasData) ||
+    (o.firebase != null && (it == "firebase_apple" && "ios" in o.targets || it == "firebase_bom_reference" && "android" in o.targets || "android" in o.targets && o.firebase.services.any { service -> it == "firebase_$service" }))
 }

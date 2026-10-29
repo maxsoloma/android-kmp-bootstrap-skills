@@ -28,7 +28,7 @@ installation and its `installedPath`:
 codex plugin list --marketplace android-kmp-bootstrap-skills --json
 ```
 
-The plugin should be installed and enabled at version `3.0.0`. If the skill is
+The plugin should be installed and enabled at version `3.1.0`. If the skill is
 missing, open a new conversation so discovery reloads the installed plugin. For
 local plugin development, replace the GitHub source with the checkout path in
 the marketplace command. See [official plugin packaging documentation](https://developers.openai.com/plugins/build/plugins).

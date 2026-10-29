@@ -6,6 +6,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.serialization.builtins.ListSerializer
 
 class RoutesTest {
     @Test fun destinationKeysRoundTripWithoutJvmReflection() {
@@ -14,5 +15,11 @@ class RoutesTest {
         for (key: NavKey in listOf(HomeRoute, DetailsRoute)) {
             assertEquals(key, json.decodeFromString(serializer, json.encodeToString(serializer, key)))
         }
+    }
+    @Test fun savedBackStackPreservesOrderAndRepeatedDestinations() {
+        val json = Json { serializersModule = routeSerializers }
+        val serializer = ListSerializer(kotlinx.serialization.PolymorphicSerializer(NavKey::class))
+        val stack: List<NavKey> = listOf(HomeRoute, DetailsRoute, DetailsRoute)
+        assertEquals(stack, json.decodeFromString(serializer, json.encodeToString(serializer, stack)))
     }
 }

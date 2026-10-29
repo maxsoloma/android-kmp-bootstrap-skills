@@ -23,7 +23,7 @@ class WizardTest {
     }
     private fun inputs(recipe: Int = 2, di: String = "", navigation: String = "", ios: String = "", network: String = "", storage: String = "") =
         listOf("", "Aurora", "com.example.aurora", "", "$recipe", "", "", "", "", ios) +
-            (listOf("", di, navigation, network) + (if (network == "ktor") listOf("") else emptyList()) + listOf(storage)) + listOf("")
+            (listOf("", di, navigation, network) + (if (network == "ktor") listOf("") else emptyList()) + listOf(storage, "")) + listOf("")
     private fun run(input: List<String>, output: Path = out, beforeRead: (String) -> Unit = {}): ScriptedIO {
         val io = ScriptedIO(input, beforeRead)
         assertEquals(0, InitWizard(io, output).run(), io.transcript.toString())
@@ -51,7 +51,7 @@ class WizardTest {
         assertTrue(Files.list(temp).use { it.findAny().isEmpty })
     }
     @Test fun invalidAnswersRecoverWithoutAbandoningTheWizard() {
-        val io = run(listOf("", "bad name", "Aurora", "wrong", "com.example.aurora", "", "99", "1", "web", "android", "oops", "26", "", "", "") + listOf("", "", "", "", "") + listOf("none,claude", "none", "create"))
+        val io = run(listOf("", "bad name", "Aurora", "wrong", "com.example.aurora", "", "99", "1", "web", "android", "oops", "26", "", "", "") + listOf("", "", "", "", "", "") + listOf("none,claude", "none", "create"))
         assertTrue(out.exists(), io.transcript.toString())
         assertTrue("Use a PascalCase" in io.transcript)
         assertTrue("Native Android supports only android" in io.transcript)
@@ -67,7 +67,7 @@ class WizardTest {
     }
     @Test fun backAndTargetedEditDoNotResetOtherAnswers() {
         // Back from platforms returns to the recipe menu, preserving basics.
-        val answers = listOf("", "Aurora", "com.example.aurora", "", "2", "back", "1", "", "", "", "", "") + listOf("", "", "", "", "", "", "edit agents", "gemini,cursor", "create")
+        val answers = listOf("", "Aurora", "com.example.aurora", "", "2", "back", "1", "", "", "", "", "") + listOf("", "", "", "", "", "", "", "edit agents", "gemini,cursor", "create")
         val io = run(answers)
         assertTrue(out.exists(), io.transcript.toString())
         val spec = readObject(out.resolve("bootstrap.spec.json"))
@@ -160,5 +160,19 @@ class WizardTest {
         val spec = readObject(out.resolve("bootstrap.spec.json"))
         assertEquals("ktor", spec.text("network")); assertEquals("settings", spec.text("storage"))
         assertEquals(demoEndpoint, spec.text("network_url"))
+    }
+    @Test fun firebaseCanBePreparedEditedAndDisabledWithoutResettingTheStack() {
+        val io = run(inputs(navigation = "navigation3", network = "ktor") + listOf(
+            "edit firebase", "analytics,messaging", "", "", "", "create",
+        ))
+        assertTrue(out.exists(), io.transcript.toString())
+        val spec = readObject(out.resolve("bootstrap.spec.json"))
+        assertEquals(listOf("analytics", "messaging"), spec.getValue("firebase").jsonObject.strings("services"))
+        assertTrue("CONFIG_MISSING" in io.transcript)
+        val second = temp.resolve("second")
+        val disabled = run(inputs(navigation = "navigation3") + listOf("edit firebase", "analytics", "", "", "", "edit firebase", "none", "create"), second)
+        assertTrue(second.exists(), disabled.transcript.toString())
+        assertFalse("firebase" in readObject(second.resolve("bootstrap.spec.json")))
+        assertEquals("navigation3", readObject(second.resolve("bootstrap.spec.json")).text("navigation"))
     }
 }

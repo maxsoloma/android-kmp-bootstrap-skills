@@ -72,6 +72,12 @@ jobs:
           scripts/verify-platform-subsets.sh
           "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap.jar"
           "$RUNNER_TEMP/subsets"
+      - name: Build and test native Firebase SDK recipes
+        if: matrix.group == 'shared'
+        run: >-
+          sh scripts/verify-firebase.sh
+          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap.jar"
+          "$RUNNER_TEMP/firebase"
       - name: Preserve matrix results
         if: always()
         uses: actions/upload-artifact@v4
@@ -84,4 +90,7 @@ jobs:
             ${{ runner.temp }}/matrix-${{ matrix.group }}/**/.bootstrap/**
             ${{ runner.temp }}/subsets/*.tsv
             ${{ runner.temp }}/subsets/*.log
+            ${{ runner.temp }}/firebase/*.tsv
+            ${{ runner.temp }}/firebase/*.log
+            ${{ runner.temp }}/firebase/**/.bootstrap/**
             ${{ runner.temp }}/subsets/**/.bootstrap/**

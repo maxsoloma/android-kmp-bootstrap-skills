@@ -1,7 +1,7 @@
 {
   "name": "bootstrap-projects",
   "description": "Start Kotlin Toolchain apps for Android, iOS, desktop and web with portable agent workflows and reproducible stack selection.",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "author": {
     "name": "Maksim Salankevich",
     "url": "https://github.com/maxsoloma"
@@ -16,6 +16,8 @@
     "kotlin-multiplatform",
     "compose",
     "scaffold",
-    "kotlin-toolchain"
+    "kotlin-toolchain",
+    "navigation3",
+    "firebase"
   ]
 }

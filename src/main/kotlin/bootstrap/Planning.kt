@@ -37,6 +37,7 @@ data class GenerationPlan(val options: Options, val spec: JsonObject, val lock: 
             "output" to o.output.toString(), "spec" to spec, "lock" to lock,
             "build_system" to "kotlin-toolchain",
             "stack" to mapOf("ui" to o.ui, "di" to o.di, "navigation" to o.navigation,
+                "firebase" to firebaseStatus(o),
                 "network" to o.network, "storage" to o.storage, "network_url" to o.networkUrl,
                 "network_adapters" to if (o.network == "ktor") networkAdapters(o.targets) else emptyMap<String, String>(),
                 "storage_adapters" to if (o.storage == "settings") storageAdapters(o.targets) else emptyMap<String, String>(),
@@ -60,7 +61,7 @@ fun planProject(spec: JsonObject, output: Path, suppliedLock: JsonObject? = null
     if (!resolved.valid) return PlanningResult(null, resolved.issues)
     return try {
         val o = resolved.options!!
-        val rendered = renderModern(o)
+        val rendered = renderModern(o).also { configureFirebase(o, it.files) }
         val lock = value(mapOf("schema_version" to 1, "generator_version" to CLI_VERSION,
             "spec_sha256" to sha256(canonical(resolved.spec!!).toString().toByteArray(Charsets.UTF_8)),
             "recipes_sha256" to recipeHash, "files_sha256" to treeHash(rendered.files))).jsonObject
@@ -86,7 +87,7 @@ fun configCommand(args: List<String>, generate: Boolean): Int {
         val output = Path.of(a.get("output")).toAbsolutePath().normalize()
         val lockPath = a.options["lock"]?.let { Path.of(it).toAbsolutePath().normalize() }
             ?: config.resolveSibling("bootstrap.lock.json").takeIf { Files.exists(it, NOFOLLOW_LINKS) }
-        val result = planProject(readObject(config), output, lockPath?.let(::readObject))
+        val result = planProject(readSpec(config), output, lockPath?.let(::readObject))
         if (!result.valid) { print(encode(result.document())); return 1 }
         print(encode(if (generate && "dry-run" !in a.options) publishPlan(result.plan!!) else result.document()))
         return 0

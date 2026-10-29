@@ -7,7 +7,7 @@ Invoke `$bootstrap-projects:bootstrap-project` in Codex or
 skill starts a step-by-step conversation. Only the project name and package are
 free-text inputs; it proposes `./<ProjectName>` as the destination.
 
-Choose platforms, compatible UI, DI, navigation, networking and local storage
+Choose platforms, compatible UI, DI, navigation, networking, local storage and Firebase
 from the menus, then review and choose Create project, Change choices or Cancel.
 Platforms support any nonempty subset of Android, iOS, desktop and web. The UI
 menu offers only compatible choices. Each step waits for an answer; default
@@ -23,6 +23,12 @@ Review displays the derived SDK settings, package/application ID, destination,
 selected components and modules/file plan. Native SwiftUI navigation sets an
 unspecified iOS minimum to 16.0. Ktor uses the demo HTTPS endpoint unless supplied
 explicitly. Advanced settings can be requested, but are not mandatory inputs.
+
+Navigation 3 is recommended for Compose. Firebase offers Analytics, Messaging and
+Remote Config, then Connect now / Prepare SDKs only. Connecting requires selecting
+an existing Firebase project or explicitly creating one; the agent handles app
+registration and config retrieval. SDK-only preparation reports CONFIG_MISSING.
+Apple signing/APNs and live service receipts remain separate checks.
 
 Change choices lets you revisit a step without resetting unrelated answers.
 Conflicting dependent choices are explained and corrected through menus. Cancel
@@ -60,7 +66,7 @@ The wizard has six steps:
 2. **Recipe:** choose the starting UI and platform setup.
 3. **Targets:** select platforms by IDs or comma-separated menu numbers.
 4. **SDK:** Android minimum/target/compile levels and iOS minimum version.
-5. **Components:** UI, DI, navigation, networking, endpoint and local storage.
+5. **Components:** UI, DI, navigation, networking, endpoint, local storage and Firebase.
 6. **Agents:** additional instruction files; `AGENTS.md` is always generated.
 
 | Recipe | Starting targets | UI |
@@ -86,7 +92,7 @@ verification commands. Build checks are still `NOT_RUN` at this stage.
 | `edit basics` | Change destination, name, package or application ID. |
 | `edit recipe`, `edit targets`, `edit sdk`, `edit agents` | Revisit the corresponding step. |
 | `edit components` | Revisit all UI and component choices. |
-| `edit ui`, `edit di`, `edit navigation`, `edit network`, `edit storage`, `edit endpoint` | Change one component choice. |
+| `edit ui`, `edit di`, `edit navigation`, `edit network`, `edit storage`, `edit endpoint`, `edit firebase` | Change one component choice. |
 | `create` | Revalidate the destination and publish the project. |
 | `save` | Save the resolved JSON config outside the output directory, then exit. |
 | `cancel` | Exit without creating the project or saving a config. |

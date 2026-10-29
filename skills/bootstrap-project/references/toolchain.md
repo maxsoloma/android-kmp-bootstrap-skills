@@ -6,7 +6,7 @@ source tag. The wrapper embeds the release distribution SHA-256. Other pins are
 in `supporting/toolchain.json` and selected components are exposed by catalog.
 
 Kotlin 2.4.21, Compose Multiplatform 1.12.2, Material 3 1.9.0, SDK 26/37/37.
-Koin 4.2.2, Navigation 3 1.1.2, serialization/coroutines 1.11.0, Ktor 3.6.0 and
+Koin 4.2.2, Navigation 3 1.2.0, serialization 1.12.0, coroutines 1.11.0, Ktor 3.6.0 and
 Settings 1.3.0 are included only when selected. Pin dependency changes explicitly.
 
 Generated apps use `project.yaml`, `module.yaml`, `src` and `src@platform`.
@@ -31,8 +31,23 @@ says tests are unavailable, but 0.13.0 implements Chromium/Playwright execution.
 Do not infer unsupported functionality from stale documentation or successful
 file generation. Keep actual matrix results and environmental failures visible.
 
+Reviewed 2026-10-28: Kotlin 2.4.21, Compose 1.12.2 and Toolchain 0.13.0 remain
+the current stable release pins. Published Maven Central metadata confirms
+Navigation 3 1.2.0 and serialization 1.12.0; both pins are updated. The Compose
+1.12 documentation table still lists a Navigation 3 release candidate, so published
+stable artifacts take precedence. Android app hosts are already separate from
+the shared library, as
+required by the AGP 9 KMP migration. Toolchain owns Android build tooling; do not
+add Gradle plugin DSL or retired Gradle files to this recipe. Use [verification](verification.md) to record concrete build evidence for each run.
+
 Sources:
 - https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.13.0
 - https://kotlinlang.org/docs/multiplatform/kotlin-toolchain.html
 - https://kotlin-toolchain.org/0.13/cli/provisioning/
 - https://kotlin-toolchain.org/0.13/user-guide/product-types/ios-app/
+- https://kotlinlang.org/docs/releases.html
+- https://kotlinlang.org/docs/multiplatform/whats-new-compose-112.html
+- https://kotlinlang.org/docs/multiplatform/multiplatform-project-agp-9-migration.html
+- https://kotlinlang.org/docs/multiplatform/compose-navigation-3.html
+- https://repo1.maven.org/maven2/org/jetbrains/androidx/navigation3/navigation3-ui/maven-metadata.xml
+- https://repo1.maven.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-json/maven-metadata.xml
