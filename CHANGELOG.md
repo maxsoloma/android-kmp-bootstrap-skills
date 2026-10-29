@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.0 — 2026-10-29
+
+- Automatically include all four official Koin skills and their full references
+  for Koin DI projects, with project-scoped Kotzilla MCP configuration for each
+  selected coding agent. Vendor upstream plugin 2.0.0 with provenance and license
+  inside the standalone CLI; generation remains offline. Preserve Kotlin
+  Toolchain/current DSL; OAuth and runtime SDK setup remain separate.
+
 ## 3.2.0 — 2026-10-29
 
 - Add the portable `orchestrate-feature` skill for implementing and resuming

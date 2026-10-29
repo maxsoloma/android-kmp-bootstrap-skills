@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-projects",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Create Kotlin Toolchain apps and implement features with a portable, resumable agent orchestrator.",
   "author": {
     "name": "Maksim Salankevich",

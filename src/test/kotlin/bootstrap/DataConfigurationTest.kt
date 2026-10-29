@@ -55,7 +55,7 @@ class DataConfigurationTest {
             val targets = platforms.filterIndexed { i, _ -> mask and (1 shl i) != 0 }
             val p = planProject(spec("targets" to targets, "di" to di, "navigation" to nav, "network" to network, "storage" to storage), out)
             assertTrue(p.valid, p.issues.toString())
-            assertFalse(p.plan!!.rendered.files.keys.any { "gradle" in it.lowercase() })
+            assertFalse(p.plan!!.rendered.files.keys.any { "gradle" in it.lowercase() && !it.endsWith("/references/gradle.md") })
             assertEquals("kotlin-toolchain", p.plan.spec.text("build_system"))
         }
     }

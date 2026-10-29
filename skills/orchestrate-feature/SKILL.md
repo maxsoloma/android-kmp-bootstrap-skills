@@ -24,6 +24,11 @@ The CLI is a cooperative journal/admission helper; the current agent executes wo
    callers and observable acceptance criteria. Read only relevant product sources.
    Use Context7 resolve-library-id then query-docs for library/API/CLI decisions
    when available; otherwise consult current official docs and report the fallback.
+   If the app uses Koin, load its installed official `koin` skill for DI edits and
+   `koin-diagnose` for failures (look in .agents/skills, .claude/skills or
+   .github/skills). Preserve Kotlin Toolchain and the current DI style despite
+   upstream Gradle examples; do not add compiler plugins or Kotzilla SDK unasked.
+   Missing skills in an older app are a setup gap; never regenerate to install them.
 2. Inspect existing `.feature-runs/runs/*.json` and recover the run matching the actual
    task and branch, including active owners and artifacts. Do not pick the latest
    run just because it is active. Reconcile ambiguous prior effects before retries.

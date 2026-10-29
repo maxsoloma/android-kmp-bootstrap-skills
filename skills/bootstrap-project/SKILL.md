@@ -60,6 +60,10 @@ Cancellation/EOF and review never create a project.
 - Shared Compose supports Android/iOS/desktop/Wasm. Native Android is Android only.
   SwiftUI shares UI-free Kotlin logic and supports iOS, optionally Android.
 - Manual/Koin DI; none/Navigation 3 for Compose; none/platform-native for SwiftUI.
+  Koin with coding agents selected also installs the four official Koin skills
+  with their references and project-scoped Kotzilla MCP settings for those agents.
+  Generation is offline; OAuth login is a separate user step. Read the generated
+  AGENTS.md: Kotlin Toolchain and the existing DSL override upstream Gradle recipes.
   Recommend Navigation 3 in Compose menus. Keep None available; direct CLI/config
   defaults remain None for replay compatibility. Navigation keys use explicit
   non-JVM serializers and per-entry saveable state.

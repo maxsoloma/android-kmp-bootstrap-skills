@@ -49,6 +49,7 @@ internal class AppGraph {
     val summary = "\n## Selected stack\n\nUI: ${o.ui}; DI: ${o.di}; navigation: ${o.navigation}.\n" +
         if (native) "Shared Kotlin logic has a JVM test target: `./kotlin test -m shared --platform jvm`. iOS owns SwiftUI state.\n" else "The Compose owner closes its controller on disposal. Navigation retains one owner above the back stack.\n"
     for (path in listOf("README.md", "AGENTS.md")) put(path, files.getValue(path).toString(Charsets.UTF_8) + summary)
+    configureKoinAgents(o, files)
     return Rendered(files, metadata)
 }
 

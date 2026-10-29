@@ -28,7 +28,7 @@ installation and its `installedPath`:
 codex plugin list --marketplace android-kmp-bootstrap-skills --json
 ```
 
-This checkout targets plugin version `3.2.0`; verify the installed release version
+This checkout targets plugin version `3.3.0`; verify the installed release version
 before expecting its new skill. If the skill is
 missing, open a new conversation so discovery reloads the installed plugin. For
 local plugin development, replace the GitHub source with the checkout path in
@@ -75,7 +75,7 @@ claude plugin update bootstrap-projects@android-kmp-bootstrap-skills
 claude plugin list --json
 ```
 
-Verify version `3.2.0` and the installed source/path. Start a new conversation so
+Verify version `3.3.0` and the installed source/path. Start a new conversation so
 the installed skill catalog reloads; restart the client if it retains the old
 catalog. Both `bootstrap-project` and `orchestrate-feature` should be available.
 For manual copies, replace the complete skill folder with the matching release;

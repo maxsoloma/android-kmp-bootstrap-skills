@@ -9,6 +9,15 @@ The plugin ships two portable skills: `bootstrap-project` for new apps and
 `orchestrate-feature` for implementation in existing apps. Both include a
 ready-to-run Kotlin/JVM CLI. Generated apps use pinned Kotlin Toolchain wrappers.
 
+Selecting Koin DI installs the four [official Koin agent skills](https://insert-koin.io/docs/tooling/ai-agents/)
+and Kotzilla MCP configuration in the generated project for the selected agents
+(Codex, Claude Code, Gemini, Copilot or Cursor). Skills and their references are
+bundled, so generation needs no Node.js, downloads or global agent changes.
+Manual DI and `agents: ["none"]` do not install this tooling. Trust/reload the
+project for discovery. Kotzilla requires OAuth login in the agent; runtime
+measurements also require an explicitly configured SDK and sessions. Installing
+skills does not change the Kotlin Toolchain backend or enable a compiler plugin.
+
 ## Install once
 
 You need your agent, Git and a **Java 17+ JDK** available as `java`.

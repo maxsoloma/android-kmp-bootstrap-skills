@@ -1,4 +1,4 @@
-# Release 3.2.0
+# Release 3.3.0
 
 The release contains portable `bootstrap-project` and `orchestrate-feature`
 skills, identical standalone JARs in each skill and Codex/Claude plugin manifests. The release JAR is built by `./kotlin do bundle`;
@@ -26,7 +26,7 @@ the Git source for this check; leave unrelated marketplaces/plugins untouched.
 Before publication, confirm the exact remote main/tag and review the complete
 release diff, including any earlier local commits not yet pushed. Keep manifest
 versions, CLI version, changelog and documentation aligned. Tag the verified
-commit as `v3.2.0`; do not move an existing published tag.
+commit as `v3.3.0`; do not move an existing published tag.
 
 The distribution ZIP includes both complete skill folders, their references and
 JARs, all user documentation, icons, manifests and license/privacy notices.
@@ -45,7 +45,9 @@ or publication in the universal plugin directory.
 The GitHub release provides the CLI JAR and a ZIP containing both complete skill folders, icons,
 manifests, README, license, third-party notices and privacy information. Codex
 requires local execution, explicitly declared by `requires_local_executor: true`.
-There is no MCP server to register and no reviewer login to this project's service.
+The plugin hosts no MCP service. Koin recipes include optional Kotzilla MCP
+client settings and require the user's own OAuth login for live access; the
+local generation flow requires no reviewer login.
 
 Publish through the repository's own marketplaces after the remote install passes.
 Public store listings use separate review systems:

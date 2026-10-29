@@ -71,12 +71,17 @@ class BootstrapTest {
     }
     @Test fun packagedJarWorksAloneOutsideRepository() {
         val isolated = temp.resolve("installed skill/bin/bootstrap.jar"); Files.createDirectories(isolated.parent); Files.copy(jar, isolated)
-        for ((i, flags) in listOf(listOf("--targets", "ios"), listOf("--kind", "android"), listOf("--targets", "desktop,web", "--network", "ktor", "--storage", "settings")).withIndex()) {
+        for ((i, flags) in listOf(listOf("--targets", "ios"), listOf("--kind", "android"), listOf("--targets", "desktop,web", "--network", "ktor", "--storage", "settings"), listOf("--targets", "desktop", "--di", "koin")).withIndex()) {
             val out = temp.resolve("generated $i")
             assertEquals(0, cli("generate", out.toString(), "--name", "Demo", "--package", "org.example.demo", *flags.toTypedArray(), executable = isolated).code, temp.resolve("cli.log").readText())
             assertContentEquals(repo.resolve("kotlin").readBytes(), out.resolve("kotlin").readBytes())
             if (!windows) assertTrue(Files.isExecutable(out.resolve("kotlin")))
             assertEquals("@AGENTS.md\n", out.resolve("CLAUDE.md").readText())
+            if ("koin" in flags) {
+                assertTrue(out.resolve(".agents/skills/koin/SKILL.md").exists())
+                assertTrue(out.resolve(".claude/skills/koin/references/rules.md").exists())
+                assertTrue("https://mcp.kotzilla.io/mcp" in out.resolve(".codex/config.toml").readText())
+            }
         }
     }
     @Test fun verifierContinuesAfterFailureAndStoresPerCommandLogs() {

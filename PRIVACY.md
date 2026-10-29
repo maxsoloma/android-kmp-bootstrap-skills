@@ -27,6 +27,14 @@ it for your application. The endpoint receives normal HTTP connection informatio
 Settings stores the example counter in the selected platform's local storage.
 It is not intended for credentials or sensitive personal data.
 
+When Koin DI and coding agents are selected, generation installs the official
+Koin skills locally and writes project-scoped Kotzilla MCP endpoint settings.
+Generation does not authenticate or contact Kotzilla. Using the configured MCP
+in an agent communicates with Kotzilla under its own policies and requires OAuth.
+The Kotzilla SDK is not installed automatically; runtime session collection
+requires separate setup and authorization. See the bundled upstream privacy
+notice in `.agents/koin-upstream/PRIVACY.md` and https://kotzilla.io/privacy-policy.
+
 Optional Firebase connection uses the user's authenticated Firebase tools to
 list/select a project, register mobile apps and retrieve public SDK configs.
 Local generation stays offline. The normalized spec embeds public Firebase SDK
