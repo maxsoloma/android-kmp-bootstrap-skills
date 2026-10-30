@@ -1,5 +1,6 @@
 {
   "name": "bootstrap-projects",
+  "displayName": "Android & KMP Bootstrap",
   "description": "Create Kotlin Toolchain apps and implement features with a portable, resumable agent orchestrator.",
   "version": "3.3.0",
   "author": {
@@ -9,6 +10,11 @@
   "homepage": "https://github.com/maxsoloma/android-kmp-bootstrap-skills",
   "repository": "https://github.com/maxsoloma/android-kmp-bootstrap-skills",
   "license": "MIT",
+  "icon": "./assets/icon.png",
+  "documentationUrl": "https://github.com/maxsoloma/android-kmp-bootstrap-skills/blob/main/docs/INSTALL.md",
+  "supportUrl": "https://github.com/maxsoloma/android-kmp-bootstrap-skills/issues",
+  "privacyPolicyUrl": "https://github.com/maxsoloma/android-kmp-bootstrap-skills/blob/main/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/maxsoloma/android-kmp-bootstrap-skills/blob/main/LICENSE",
   "keywords": [
     "android",
     "kotlin",
