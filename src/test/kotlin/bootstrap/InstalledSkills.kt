@@ -27,13 +27,18 @@ object InstalledSkills {
         return target
     }
 
-    fun launcher(skill: Path): List<String> =
-        if (windows) listOf("cmd.exe", "/d", "/c", skill.resolve("bin/bootstrap.cmd").toString()) else listOf(skill.resolve("bin/bootstrap").toString())
+    /**
+     * The launcher command line. `cmd /c` strips the first and last quote of a line with more than two,
+     * so on Windows the whole line is quoted explicitly and passed through `/s`.
+     */
+    fun command(skill: Path, args: List<String>): List<String> =
+        if (!windows) listOf(skill.resolve("bin/bootstrap").toString()) + args
+        else listOf("cmd.exe", "/d", "/s", "/c", (listOf(skill.resolve("bin/bootstrap.cmd").toString()) + args).joinToString(" ", "\"", "\"") { "\"$it\"" })
 
     /** Runs a skill launcher with separate stdout/stderr, a working directory and environment overrides (null removes a variable). */
-    fun run(skill: Path, args: List<String>, directory: Path, env: Map<String, String?> = emptyMap(), launcher: List<String> = launcher(skill)): LauncherResult {
+    fun run(skill: Path, args: List<String>, directory: Path, env: Map<String, String?> = emptyMap()): LauncherResult {
         val out = Files.createTempFile(root, "stdout-", ".log"); val err = Files.createTempFile(root, "stderr-", ".log")
-        val builder = ProcessBuilder(launcher + args).directory(directory.toFile()).redirectOutput(out.toFile()).redirectError(err.toFile())
+        val builder = ProcessBuilder(command(skill, args)).directory(directory.toFile()).redirectOutput(out.toFile()).redirectError(err.toFile())
         builder.environment()["BOOTSTRAP_BUILD_DIR"] = buildCache.resolve(skill.fileName.toString()).toString()
         for ((key, value) in env) if (value == null) builder.environment().remove(key) else builder.environment()[key] = value
         val process = builder.start()
