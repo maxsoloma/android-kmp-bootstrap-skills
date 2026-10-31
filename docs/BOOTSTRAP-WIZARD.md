@@ -47,11 +47,11 @@ separate from the default in-chat menu flow.
 
 ### Start
 
-Use the JAR inside your installed skill, as described in [installation](INSTALL.md):
+Use the launcher inside your installed skill, as described in [installation](INSTALL.md):
 
 ```sh
 bootstrap_skill_dir="/path/to/installed/skills/bootstrap-project"
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" init ./Aurora
+"$bootstrap_skill_dir/bin/bootstrap" init ./Aurora
 ```
 
 Run this in a real terminal. `./Aurora` must be absent or empty. Omitting the
@@ -116,8 +116,8 @@ it does not create the project or save a separate lock file.
 For example, save `./aurora-recipe.json` and later run:
 
 ```sh
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" plan --config ./aurora-recipe.json --output ./Aurora
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" generate --config ./aurora-recipe.json --output ./Aurora
+"$bootstrap_skill_dir/bin/bootstrap" plan --config ./aurora-recipe.json --output ./Aurora
+"$bootstrap_skill_dir/bin/bootstrap" generate --config ./aurora-recipe.json --output ./Aurora
 ```
 
 Generation includes the resolved spec and lock in the new project. See

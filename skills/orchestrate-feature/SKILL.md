@@ -12,8 +12,12 @@ generator against them. Read local AGENTS.md and preserve the app's architecture
 wrapper bytes, dependencies and unrelated work. Do not migrate Gradle projects;
 explain that this workflow targets Kotlin Toolchain and leave their files intact.
 
-Use the standalone `bin/bootstrap.jar` inside THIS skill with Java 17+.
-Resolve it relative to this skill, not a sibling skill or source checkout.
+Run the CLI with the `bin/bootstrap` launcher inside THIS skill (`bin\bootstrap.cmd`
+on Windows). It builds the bundled `cli/` sources with the pinned Kotlin Toolchain
+wrapper and reuses an installed Java 25+; no Java installation is required. The
+first run on a machine may download the Toolchain, a runtime and dependencies;
+progress goes to stderr. Resolve it relative to this skill, not a sibling skill or
+source checkout.
 No RoadTower, Python, Beads, cloud account or model API key is required.
 The CLI is a cooperative journal/admission helper; the current agent executes work.
 

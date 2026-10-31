@@ -14,13 +14,11 @@ import java.util.concurrent.CompletableFuture
 class BootstrapTest {
     private val temp = Files.createTempDirectory("bootstrap-test-")
     private val output = temp.resolve("project with spaces")
-    private val jar = Path.of(System.getProperty("bootstrap.jar", "build/bootstrap.jar")).toAbsolutePath()
     private val repo = Path.of(System.getProperty("bootstrap.repo", ".")).toAbsolutePath()
-    private val java = Path.of(System.getProperty("java.home"), "bin", if (windows) "java.exe" else "java").toString()
     @After fun clean() { temp.toFile().deleteRecursively() }
     private fun args(vararg extra: String) = listOf(output.toString(), "--name", "Aurora", "--package", "dev.example.aurora") + extra
     private fun options(vararg extra: String) = parseGenerate(args(*extra))
-    private fun cli(vararg args: String, executable: Path = jar) = execute(listOf(java, "-jar", executable.toString()) + args, 60, temp.resolve("cli.log"), temp)
+    private fun cli(vararg args: String) = InstalledSkills.run(InstalledSkills.skill("bootstrap-project"), args.toList(), temp).also { temp.resolve("cli.log").writeText(it.stdout + it.stderr) }
     @Test fun everyTargetSubsetHasOnlySelectedHostsAndPinnedWrappers() {
         for (mask in 1..15) {
             val targets = platforms.filterIndexed { i, _ -> mask and (1 shl i) != 0 }
@@ -69,11 +67,10 @@ class BootstrapTest {
         assertTrue("minSdk: 23" in yaml); assertTrue("targetSdk: 35" in yaml); assertTrue("applicationId: org.other.product" in yaml)
         assertTrue("AGENTS.md" in rendered.files); assertFalse("CLAUDE.md" in rendered.files); assertFalse("shared/module.yaml" in rendered.files)
     }
-    @Test fun packagedJarWorksAloneOutsideRepository() {
-        val isolated = temp.resolve("installed skill/bin/bootstrap.jar"); Files.createDirectories(isolated.parent); Files.copy(jar, isolated)
+    @Test fun installedSkillWorksAloneOutsideRepository() {
         for ((i, flags) in listOf(listOf("--targets", "ios"), listOf("--kind", "android"), listOf("--targets", "desktop,web", "--network", "ktor", "--storage", "settings"), listOf("--targets", "desktop", "--di", "koin")).withIndex()) {
             val out = temp.resolve("generated $i")
-            assertEquals(0, cli("generate", out.toString(), "--name", "Demo", "--package", "org.example.demo", *flags.toTypedArray(), executable = isolated).code, temp.resolve("cli.log").readText())
+            assertEquals(0, cli("generate", out.toString(), "--name", "Demo", "--package", "org.example.demo", *flags.toTypedArray()).code, temp.resolve("cli.log").readText())
             assertContentEquals(repo.resolve("kotlin").readBytes(), out.resolve("kotlin").readBytes())
             if (!windows) assertTrue(Files.isExecutable(out.resolve("kotlin")))
             assertEquals("@AGENTS.md\n", out.resolve("CLAUDE.md").readText())
@@ -142,7 +139,8 @@ class BootstrapTest {
         for (field in listOf("logo", "composerIcon")) assertTrue(repo.resolve(listing.text(field)).isRegularFile(), field)
         assertTrue(repo.resolve("skills/bootstrap-project/agents/openai.yaml").isRegularFile())
         assertTrue(repo.resolve("skills/orchestrate-feature/agents/openai.yaml").isRegularFile())
-        assertContentEquals(repo.resolve("skills/bootstrap-project/bin/bootstrap.jar").readBytes(), repo.resolve("skills/orchestrate-feature/bin/bootstrap.jar").readBytes())
+        assertEquals(InstalledSkills.digest(repo.resolve("skills/bootstrap-project/cli")), InstalledSkills.digest(repo.resolve("skills/orchestrate-feature/cli")))
+        assertFalse(Files.walk(repo.resolve("skills")).use { paths -> paths.anyMatch { it.extension == "jar" } })
         assertFalse(repo.resolve("skills/bootstrap-android-project").exists()); assertFalse(repo.resolve("skills/bootstrap-kmp-project").exists())
     }
 }

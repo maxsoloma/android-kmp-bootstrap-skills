@@ -76,7 +76,7 @@ actual state and checks existing worker outputs before replacing a stopped worke
 Unknown dispatch effects remain unresolved until reconciled. It retains prior
 attempts and does not reset allowance after interruption. Completed/blocked runs
 are terminal; there is no automatic allowance grant or terminal reset command.
-Keep the matching skill/JAR version for unfinished runs, since version mismatch
+Keep the matching skill version for unfinished runs, since version mismatch
 fails explicitly. See [recovery](../skills/orchestrate-feature/references/recovery.md).
 
 ## Evidence and practical boundaries

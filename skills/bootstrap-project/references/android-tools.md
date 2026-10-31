@@ -2,7 +2,7 @@
 
 The current **Android CLI** (`android`) is distinct from the retired SDK `android`
 tool. Inspect `android --help` for `skills`, `studio`, `describe`, `info` before
-assuming the executable is the modern agent CLI. `bin/bootstrap.jar doctor` performs
+assuming the executable is the modern agent CLI. `bin/bootstrap doctor` performs
 this read-only detection. SDK command-line tools (`sdkmanager`, `avdmanager`,
 `adb`, `emulator`) remain useful fallbacks.
 

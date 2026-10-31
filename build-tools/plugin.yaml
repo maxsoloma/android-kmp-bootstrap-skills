@@ -7,11 +7,20 @@ tasks:
       output: ${taskOutputDir}
   bundle:
     action: !bootstrap.build.bundle
-      app: ${module.jar}
-      dependencies: ${module.runtimeClasspath}
-      output: ${project.rootDir}/build/bootstrap.jar
-      skill: ${project.rootDir}/skills/bootstrap-project/bin/bootstrap.jar
-      orchestrator: ${project.rootDir}/skills/orchestrate-feature/bin/bootstrap.jar
+      projectFile: ${project.rootDir}/project.yaml
+      moduleFile: ${project.rootDir}/module.yaml
+      sources: ${project.rootDir}/src/main
+      pluginModule: ${project.rootDir}/build-tools/module.yaml
+      pluginSource: ${project.rootDir}/build-tools/src/build.kt
+      assets: ${project.rootDir}/skills/bootstrap-project/assets
+      toolchain: ${project.rootDir}/skills/bootstrap-project/supporting/toolchain.json
+      wrapper: ${project.rootDir}/kotlin
+      windowsWrapper: ${project.rootDir}/kotlin.bat
+      launchers: ${project.rootDir}/build-tools/launchers
+      skill: ${project.rootDir}/skills/bootstrap-project/cli
+      skillBin: ${project.rootDir}/skills/bootstrap-project/bin
+      orchestrator: ${project.rootDir}/skills/orchestrate-feature/cli
+      orchestratorBin: ${project.rootDir}/skills/orchestrate-feature/bin
 
 generated:
   resources:

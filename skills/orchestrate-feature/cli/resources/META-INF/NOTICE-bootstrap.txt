@@ -1,0 +1,12 @@
+Android & KMP Bootstrap — MIT; see licenses/bootstrap-MIT.txt.
+
+This executable bundles Kotlin standard library (JetBrains), kotlinx.serialization
+(JetBrains and contributors), and JetBrains annotations under Apache License 2.0.
+See licenses/Apache-2.0.txt and upstream notices retained in the JAR.
+https://github.com/JetBrains/kotlin
+https://github.com/Kotlin/kotlinx.serialization
+https://github.com/JetBrains/java-annotations
+
+Bundled Kotlin Toolchain wrapper scripts are from JetBrains, Apache 2.0.
+Their script notices and pinned checksums are preserved.
+https://github.com/JetBrains/kotlin-toolchain

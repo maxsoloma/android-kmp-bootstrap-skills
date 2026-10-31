@@ -1,10 +1,10 @@
 # Verification
 
-Use `java -jar <skill>/bin/bootstrap.jar doctor --targets TARGETS` for environment
+Use `<skill>/bin/bootstrap doctor --targets TARGETS` for environment
 inspection. Toolchain can provision build tools on first use; iOS requires full
 Xcode and a runtime for simulator tests. Optional Android CLI is independent.
 
-Run `java -jar <skill>/bin/bootstrap.jar verify PROJECT` or the plan's commands.
+Run `<skill>/bin/bootstrap verify PROJECT` or the plan's commands.
 Each selected platform has separate Toolchain build and test commands. Logs and
 structured results are written under `.bootstrap/`. Failures do not prevent the
 other checks from running. Return codes: 0 passed; 1 failed; 2 includes skips.

@@ -1,0 +1,6 @@
+package {{PACKAGE_BASE}}
+
+@OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+internal actual fun platformCounterStore(): CounterStore = SettingsCounterStore(
+    com.russhwolf.settings.NSUserDefaultsSettings(platform.Foundation.NSUserDefaults(suiteName = "{{APP_ID}}.counter"))
+)

@@ -1,8 +1,33 @@
 # Install and start
 
-Install through Codex or Claude Code's built-in plugin manager. You need Git
-and a Java 17+ JDK to run the generator. The plugin contains two portable skills, each with its own compiled
-`bin/bootstrap.jar`; bootstrap-project also includes generation assets.
+Install through Codex or Claude Code's built-in plugin manager. You need Git; no
+Java installation is required. The plugin contains two portable skills, each with
+its own `bin/bootstrap` launcher and `cli/` generator sources; bootstrap-project
+also includes generation assets.
+
+## First run and Java reuse
+
+The launcher builds the bundled sources with the pinned Kotlin Toolchain wrapper.
+The first run on a machine downloads what is missing into the shared Toolchain
+cache: the Toolchain distribution, a Java runtime for the Toolchain CLI, the
+compilation JDK, the Kotlin compiler and Maven dependencies. On an empty cache
+this measured about 40 seconds and 1.2 GB. Later runs take a couple of seconds
+and work offline. Building any generated project warms the same cache.
+
+Installed Java is reused before anything is downloaded:
+
+- `KOTLIN_CLI_JAVA_HOME`, when set, is used as the Toolchain CLI runtime unchanged.
+- Otherwise `JAVA_HOME`, then `java` on `PATH`, is used when it is Java 25 or newer.
+  Older or non-functional runtimes (such as the macOS `/usr/bin/java` stub) are
+  skipped and the wrapper downloads its pinned runtime once.
+- The generator compiles with JDK 25; a `JAVA_HOME` JDK 25 is reused, otherwise the
+  Toolchain provisions one once.
+
+Compiled output goes to `~/Library/Caches/bootstrap-projects` on macOS,
+`$XDG_CACHE_HOME/bootstrap-projects` (default `~/.cache`) on Linux and
+`%LOCALAPPDATA%\bootstrap-projects` on Windows; set `BOOTSTRAP_BUILD_DIR` to change
+it. The installed skill directory is never modified. Behind a proxy or mirror,
+set the wrapper's `KOTLIN_CLI_DOWNLOAD_ROOT` and `KOTLIN_CLI_JRE_DOWNLOAD_ROOT`.
 
 ## Install the plugin
 
@@ -28,7 +53,7 @@ installation and its `installedPath`:
 codex plugin list --marketplace android-kmp-bootstrap-skills --json
 ```
 
-This checkout targets plugin version `3.3.0`; verify the installed release version
+This checkout targets plugin version `3.4.0`; verify the installed release version
 before expecting its new skill. If the skill is
 missing, open a new conversation so discovery reloads the installed plugin. For
 local plugin development, replace the GitHub source with the checkout path in
@@ -75,7 +100,7 @@ claude plugin update bootstrap-projects@android-kmp-bootstrap-skills
 claude plugin list --json
 ```
 
-Verify version `3.3.0` and the installed source/path. Start a new conversation so
+Verify version `3.4.0` and the installed source/path. Start a new conversation so
 the installed skill catalog reloads; restart the client if it retains the old
 catalog. Both `bootstrap-project` and `orchestrate-feature` should be available.
 For manual copies, replace the complete skill folder with the matching release;
@@ -101,7 +126,7 @@ Invoke the skill without arguments using the command above, or select
 
 The agent uses its available native question forms, or numbered chat menus when
 forms are unavailable. It waits for each answer; you do not need to write a
-specification or find a JAR. Output defaults to `./<ProjectName>` in the workspace,
+specification or run the generator yourself. Output defaults to `./<ProjectName>` in the workspace,
 and the package is also used as the application ID. The SDKs and other advanced
 fields are derived automatically and shown in review.
 
@@ -116,7 +141,8 @@ and [wizard behavior](BOOTSTRAP-WIZARD.md) for the menu choices and editing flow
 | Questions appear as text instead of buttons | This agent/mode has no callable native question form. Choose the numbered chat options; the same wizard remains available. |
 | Short skill name does not work | Plugin installations use `$bootstrap-projects:bootstrap-project` in Codex and `/bootstrap-projects:bootstrap-project` in Claude Code. Manual copies use the short name. |
 | Codex does not recognize `plugin` | Use a Codex version with plugin support, or install the portable skill manually below. The recorded plugin flow used codex-cli 0.163.0. |
-| `java` is missing or the JAR reports an unsupported class version | Run `java -version`; expose a Java 17+ JDK on your terminal/agent's PATH. An IDE-bundled JDK can be used if its `bin` directory is on PATH. |
+| First command is slow or fails while downloading | The first run provisions the Toolchain, runtime and dependencies; check network or proxy access, or set `KOTLIN_CLI_DOWNLOAD_ROOT`/`KOTLIN_CLI_JRE_DOWNLOAD_ROOT` for a mirror. Later runs are offline. |
+| `Unrecognized VM option` when `KOTLIN_CLI_JAVA_HOME` is set | That runtime is older than Java 25. Unset it to let the launcher choose or download a suitable runtime. |
 | Destination is not empty | Choose a new directory or an existing empty one. The skill does not add its scaffold to an existing app. |
 | `init` reports `interactive_required` | Run the wizard in a real terminal, or use the chat/JSON configuration flow. |
 
@@ -139,7 +165,7 @@ path once, then run:
 
 ```sh
 bootstrap_skill_dir="/path/to/installed/skills/bootstrap-project"
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" init /path/to/NewApp
+"$bootstrap_skill_dir/bin/bootstrap" init /path/to/NewApp
 ```
 
 `init` needs a real terminal. Review supports `details`, `edit <choice>`, `create`,
@@ -147,10 +173,10 @@ java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" init /path/to/NewApp
 Agents and CI without a TTY use the reproducible config flow:
 
 ```sh
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" catalog --json
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" plan --config /path/to/recipe.json --output /path/to/NewApp
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" generate --config /path/to/recipe.json --output /path/to/NewApp
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" verify /path/to/NewApp
+"$bootstrap_skill_dir/bin/bootstrap" catalog --json
+"$bootstrap_skill_dir/bin/bootstrap" plan --config /path/to/recipe.json --output /path/to/NewApp
+"$bootstrap_skill_dir/bin/bootstrap" generate --config /path/to/recipe.json --output /path/to/NewApp
+"$bootstrap_skill_dir/bin/bootstrap" verify /path/to/NewApp
 ```
 
 See [configuration](CLI-CONFIG.md) for JSON examples and
@@ -167,16 +193,16 @@ in Codex or `/bootstrap-project` in Claude Code. Use either the plugin or the
 manual copy to avoid duplicate skill entries. Keep all bundled files intact.
 For feature implementation, independently copy the complete
 `skills/orchestrate-feature` folder and invoke `$orchestrate-feature` or
-`/orchestrate-feature`. It includes its own JAR and references; the bootstrap skill
+`/orchestrate-feature`. It includes its own launcher, sources and references; the bootstrap skill
 is not a prerequisite.
 
-Each skill is self-contained: Java 17+ runs the JAR without repository sources or
-sibling skills. Generated instruction files for other agents are selected
+Each skill is self-contained: its launcher runs without repository sources or
+sibling skills. On Windows use `bin\bootstrap.cmd` instead of `bin/bootstrap`. Generated instruction files for other agents are selected
 independently of which agent runs the skill.
 
 ## Build requirements
 
-The generator can create files offline after plugin installation. The first
+The generator can create files offline after its first run. The first
 application build needs network access for Toolchain, dependencies and SDK tools.
 Generated apps include pinned `kotlin` and `kotlin.bat` wrappers.
 
@@ -193,7 +219,7 @@ active, set `DEVELOPER_DIR` to your Xcode developer folder for the build command
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-  java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" verify /path/to/NewApp
+  "$bootstrap_skill_dir/bin/bootstrap" verify /path/to/NewApp
 ```
 
 Version 3 uses Kotlin Toolchain for generation and feature implementation. Hardened skills and

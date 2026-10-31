@@ -1,0 +1,15 @@
+{
+  "reviewed": "2026-10-28",
+  "kotlin": "2.4.21",
+  "compose_multiplatform": "1.12.2",
+  "activity_compose": "1.13.0",
+  "junit": "4.13.2",
+  "compile_sdk": 37,
+  "target_sdk": 37,
+  "min_sdk": 26,
+  "ios_deployment_target": "15.0",
+  "xcode_tested_upstream": "26.4",
+  "compose_material3": "1.9.0",
+  "kotlin_toolchain": "0.13.0",
+  "toolchain_distribution_sha256": "fa82b9872dcfa04d26c8f800f33d597c99fbffd747a0e9bbce3a9e4424b3a588"
+}

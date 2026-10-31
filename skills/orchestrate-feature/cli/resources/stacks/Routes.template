@@ -1,0 +1,17 @@
+package {{PACKAGE_BASE}}
+
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
+
+@Serializable internal data object HomeRoute : NavKey
+@Serializable internal data object DetailsRoute : NavKey
+
+internal val routeSerializers = SerializersModule {
+    polymorphic(NavKey::class) {
+        subclass(HomeRoute::class, HomeRoute.serializer())
+        subclass(DetailsRoute::class, DetailsRoute.serializer())
+    }
+}

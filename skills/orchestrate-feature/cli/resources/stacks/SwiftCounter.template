@@ -1,0 +1,23 @@
+import SwiftUI
+import Combine
+import Shared
+
+final class CounterModel: ObservableObject {
+    private let controller = CounterController()
+    @Published private(set) var count: Int32 = 0
+
+    func increment() { count = controller.increment() }
+    deinit { controller.close() }
+}
+
+struct ContentView: View {
+    @StateObject private var model = CounterModel()
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("{{PROJECT_NAME}}")
+            Button("Clicked \(model.count) times") { model.increment() }
+        }
+        .padding()
+    }
+}

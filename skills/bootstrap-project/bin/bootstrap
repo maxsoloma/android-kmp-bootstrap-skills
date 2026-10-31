@@ -1,0 +1,44 @@
+#!/bin/sh
+# Runs the bootstrap-project CLI 3.4.0 from the sources in ../cli with the bundled
+# Kotlin Toolchain wrapper. No Java installation is required: a Java 25+
+# runtime that is already installed is reused, otherwise the wrapper provisions one.
+set -eu
+
+skill_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cli_dir="$skill_dir/cli"
+min_java=25
+
+# Prints java.home of a functional runtime that meets the Toolchain CLI minimum.
+probe_java() {
+  settings=$("$1" -XshowSettings:properties -version 2>&1) || return 1
+  version=$(printf '%s\n' "$settings" | sed -n 's/^ *java\.specification\.version = //p' | head -n 1)
+  home=$(printf '%s\n' "$settings" | sed -n 's/^ *java\.home = //p' | head -n 1)
+  major=${version%%.*}
+  case "$major" in ''|*[!0-9]*) return 1 ;; esac
+  [ "$major" -ge "$min_java" ] && [ -n "$home" ] && [ -x "$home/bin/java" ] || return 1
+  printf '%s\n' "$home"
+}
+
+if [ -z "${KOTLIN_CLI_JAVA_HOME:-}" ]; then
+  for candidate in "${JAVA_HOME:+$JAVA_HOME/bin/java}" "$(command -v java 2>/dev/null || true)"; do
+    [ -n "$candidate" ] && [ -x "$candidate" ] || continue
+    if home=$(probe_java "$candidate"); then
+      KOTLIN_CLI_JAVA_HOME=$home
+      export KOTLIN_CLI_JAVA_HOME
+      break
+    fi
+  done
+fi
+
+case "$(uname -s)" in
+  Darwin*) cache_root="$HOME/Library/Caches" ;;
+  *) cache_root="${XDG_CACHE_HOME:-$HOME/.cache}" ;;
+esac
+build_dir="${BOOTSTRAP_BUILD_DIR:-$cache_root/bootstrap-projects/3.4.0/bootstrap-project}"
+mkdir -p "$build_dir"
+
+KOTLIN_CLI_NO_WELCOME_BANNER=1
+export KOTLIN_CLI_NO_WELCOME_BANNER
+# Compile first with Toolchain output on stderr, so stdout carries only CLI output.
+"$cli_dir/kotlin" --log-level=error build --project-dir="$cli_dir" --build-dir="$build_dir" >&2
+exec "$cli_dir/kotlin" --log-level=error run --project-dir="$cli_dir" --build-dir="$build_dir" --working-dir="$(pwd)" -- "$@"

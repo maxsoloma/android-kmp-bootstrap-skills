@@ -19,16 +19,13 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: '21'
-      - name: Bundle and test the standalone CLI
+      # No setup-java: the launchers and Toolchain must provision what they need.
+      - name: Bundle and test the CLI and skill launchers
         if: runner.os != 'Windows'
         run: |
           ./kotlin do bundle
           ./kotlin test
-      - name: Bundle and test the standalone CLI on Windows
+      - name: Bundle and test the CLI and skill launchers on Windows
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
@@ -36,9 +33,11 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           ./kotlin.bat test
           exit $LASTEXITCODE
-      - name: Check the committed skill bundle
+      - name: Check the committed skill copies are current
         shell: bash
-        run: git diff --exit-code -- skills/bootstrap-project/bin/bootstrap.jar skills/orchestrate-feature/bin/bootstrap.jar
+        run: |
+          git diff --exit-code -- skills
+          test -z "$(git status --porcelain -- skills)"
 
   generated-matrix:
     if: github.event_name == 'workflow_dispatch'
@@ -63,20 +62,20 @@ jobs:
       - name: Build and test every supported stack
         run: >-
           scripts/verify-matrix.sh
-          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap.jar"
+          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap"
           "$RUNNER_TEMP/matrix-${{ matrix.group }}"
           '${{ matrix.group }}'
       - name: Build and test platform-only projects
         if: matrix.group == 'shared'
         run: >-
           scripts/verify-platform-subsets.sh
-          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap.jar"
+          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap"
           "$RUNNER_TEMP/subsets"
       - name: Build and test native Firebase SDK recipes
         if: matrix.group == 'shared'
         run: >-
           sh scripts/verify-firebase.sh
-          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap.jar"
+          "$GITHUB_WORKSPACE/skills/bootstrap-project/bin/bootstrap"
           "$RUNNER_TEMP/firebase"
       - name: Preserve matrix results
         if: always()

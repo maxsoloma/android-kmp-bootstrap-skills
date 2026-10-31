@@ -1,0 +1,58 @@
+package {{PACKAGE_BASE}}
+
+import io.ktor.client.*
+import io.ktor.client.engine.mock.*
+import io.ktor.http.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.assertNotNull
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class NetworkTest {
+    @Test fun responseAndHttpErrorsReachTheUiWithoutAnyLiveService() = runTest {
+        for (status in listOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError)) {
+            val client = HttpClient(MockEngine { request ->
+                assertEquals(Url({{NETWORK_URL_LITERAL}}), request.url)
+                respond("mock response", status = status)
+            }) { configureNetwork() }
+            val controller = CounterController({ AppGraph(MemoryCounterStore()) { client } }, StandardTestDispatcher(testScheduler))
+            val states = mutableListOf<NetworkState>()
+            val done = CompletableDeferred<NetworkState>()
+            try {
+                controller.fetch { states += it; if (!it.loading) done.complete(it) }
+                val result = done.await()
+                assertTrue(states.first().loading)
+                if (status == HttpStatusCode.OK) assertEquals("mock response", result.text) else assertNotNull(result.error)
+            } finally { controller.close() }
+        }
+    }
+    @Test fun closingTheOwnerCancelsInFlightWorkWithoutALateCallback() = runTest {
+        val started = CompletableDeferred<Unit>(); val cancelled = CompletableDeferred<Unit>()
+        val client = HttpClient(MockEngine {
+            started.complete(Unit)
+            try { awaitCancellation() } finally { cancelled.complete(Unit) }
+        }) { configureNetwork() }
+        val controller = CounterController({ AppGraph(MemoryCounterStore()) { client } }, StandardTestDispatcher(testScheduler))
+        val states = mutableListOf<NetworkState>()
+        controller.fetch { states += it }
+        started.await(); controller.close(); cancelled.await(); runCurrent()
+        assertEquals(1, states.size); assertTrue(states.single().loading)
+    }
+    @Test fun transportFailuresAndTimeoutsAreErrors() = runTest {
+        val offline = HttpClient(MockEngine { error("offline transport") }) { configureNetwork() }
+        val owner = CounterController({ AppGraph(MemoryCounterStore()) { offline } }, StandardTestDispatcher(testScheduler))
+        val done = CompletableDeferred<NetworkState>()
+        try {
+            owner.fetch { if (!it.loading) done.complete(it) }
+            assertNotNull(done.await().error)
+        } finally { owner.close() }
+        val slow = HttpClient(MockEngine { delay(60_000); respond("too late") }) { configureNetwork(timeoutMillis = 50) }
+        try {
+            val failure = runCatching { NetworkRepository(slow).fetch() }.exceptionOrNull()
+            assertTrue(failure is io.ktor.client.plugins.HttpRequestTimeoutException)
+        } finally { slow.close() }
+    }
+}

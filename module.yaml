@@ -11,7 +11,7 @@ settings:
     mainClass: bootstrap.MainKt
     release: 17
     jdk:
-      version: 21
+      version: 25
   junit: junit-4
 
 test-settings:
@@ -19,7 +19,6 @@ test-settings:
     test:
       systemProperties:
         bootstrap.repo: .
-        bootstrap.jar: build/bootstrap.jar
 
 plugins:
   bootstrap-build: enabled

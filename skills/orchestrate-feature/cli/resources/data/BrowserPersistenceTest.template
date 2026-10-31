@@ -1,0 +1,23 @@
+package {{PACKAGE_BASE}}
+
+import com.russhwolf.settings.ExperimentalSettingsImplementation
+import com.russhwolf.settings.StorageSettings
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+@OptIn(ExperimentalSettingsImplementation::class)
+class BrowserPersistenceTest {
+    @Test fun aNewLocalStorageAdapterRestoresTheCounter() {
+        val settings = StorageSettings()
+        val previous = settings.getIntOrNull(counterKey)
+        try {
+            settings.remove(counterKey)
+            val first = CounterRepository(platformCounterStore())
+            assertEquals(1, first.increment()); assertEquals(2, first.increment())
+            val reopened = CounterRepository(platformCounterStore())
+            assertEquals(2, reopened.count); assertEquals(3, reopened.increment())
+        } finally {
+            if (previous == null) settings.remove(counterKey) else settings.putInt(counterKey, previous)
+        }
+    }
+}

@@ -2,7 +2,7 @@
 
 Start this workflow when the skill is invoked for interactive project creation.
 The same workflow works in Codex, Claude Code and a portable skill installation.
-Run `java -jar <skill>/bin/bootstrap.jar catalog --json` first; use its supported
+Run `<skill>/bin/bootstrap catalog --json` first; use its supported
 choices and defaults as the authority. Handle CLI paths and JSON for the user.
 
 ## Present questions

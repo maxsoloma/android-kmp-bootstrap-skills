@@ -1,7 +1,7 @@
 # Data choices
 
 Discover current `stack_choices.network` and `stack_choices.storage` via the
-standalone JAR's catalog. Modern supports none/Ktor and none/Settings independently
+skill launcher's catalog. Modern supports none/Ktor and none/Settings independently
 on every existing target, with manual/Koin and applicable UI/navigation recipes.
 Defaults are none. All recipes use Kotlin Toolchain.
 

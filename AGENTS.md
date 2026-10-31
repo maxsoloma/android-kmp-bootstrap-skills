@@ -12,8 +12,10 @@ refactoring and generator logic do not need documentation lookups. Do not assume
 all agents have the same MCP tools.
 
 Each skill must work when copied independently. Generator/doctor/verifier and
-orchestration logic lives in the Kotlin/JVM CLI, delivered as each skill's
-`bin/bootstrap.jar`. Generation never overwrites existing apps; the feature
+orchestration logic lives in the Kotlin/JVM CLI, delivered as sources in each
+skill's `cli/` (synced by `./kotlin do bundle`; never edit the copies) and run by
+its `bin/bootstrap` launcher through the bundled Toolchain wrapper. No executable
+archive is committed and users need no Java installation. Generation never overwrites existing apps; the feature
 workflow makes explicitly requested scoped edits without regeneration/migration.
 No Python or sibling repository runtime is required. Preserve upstream wrappers
 and embedded binary assets byte-for-byte. Never regenerate over existing projects.
