@@ -37,14 +37,22 @@ if not "%ERRORLEVEL%"=="0" exit /b %ERRORLEVEL%
 @rem Reached only when kotlin.bat could not be started.
 exit /b %ERRORLEVEL%
 
-@rem Sets install_key to a short hash of cli_dir.
+@rem Sets install_key to a short hash of cli_dir. Concurrent launchers start with the
+@rem same %RANDOM% sequence, so the scratch directory is claimed with an atomic mkdir.
 :install_key
 set "install_key="
-set "key_file=%TEMP%\bootstrap-key-%RANDOM%%RANDOM%.txt"
-<nul set /p "=%cli_dir%" > "%key_file%"
-for /f "skip=1 delims=" %%h in ('certutil -hashfile "%key_file%" MD5') do if not defined install_key set "install_key=%%h"
-del "%key_file%" >nul 2>&1
+set /a key_tries=0
+:install_key_dir
+set /a key_tries+=1
+if %key_tries% GTR 50 set "install_key=unkeyed" & exit /b 0
+set "key_dir=%TEMP%\bootstrap-key-%RANDOM%-%RANDOM%"
+mkdir "%key_dir%" 2>nul || goto install_key_dir
+<nul set /p "=%cli_dir%" > "%key_dir%\path.txt"
+for /f "skip=1 delims=" %%h in ('certutil -hashfile "%key_dir%\path.txt" MD5') do if not defined install_key set "install_key=%%h"
+rmdir /s /q "%key_dir%" >nul 2>&1
+if not defined install_key set "install_key=unkeyed"
 set "install_key=%install_key: =%"
+echo(%install_key%| findstr /r /x "[0-9a-fA-F]*" >nul || set "install_key=unkeyed"
 set "install_key=%install_key:~0,12%"
 exit /b 0
 
