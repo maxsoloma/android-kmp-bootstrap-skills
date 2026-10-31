@@ -24,7 +24,7 @@ this version has no grant/successor command. Do not create a replacement run to
 reset spend. A later separately authorized stage may have a new plan, referencing
 the previous run and its full attempt history in the handoff; do not present it as
 an automatic budget extension or resume. New CLI versions reject old journals;
-retain the original installed skill/JAR to inspect/recover with its matching version.
+retain the original installed skill to inspect/recover with its matching version.
 
 The journal limits cooperative attempts/repairs/time/packet size only. It neither
 intercepts arbitrary tools nor hard-caps model inference, subscription quota or

@@ -1,7 +1,8 @@
 # Standalone feature journal CLI
 
-Resolve `JAR` to this skill's `bin/bootstrap.jar`. All operations require Java 17+
-and an existing Kotlin Toolchain project (project.yaml and kotlin or kotlin.bat).
+Resolve `CLI` to this skill's `bin/bootstrap` launcher (`bin\bootstrap.cmd` on
+Windows). All operations require an existing Kotlin Toolchain project (project.yaml
+and kotlin or kotlin.bat); the launcher provisions its own runtime when needed.
 The CLI never generates app files, launches agents, executes commands from plans,
 creates Git branches or contacts a service. The host performs those operations.
 
@@ -56,8 +57,8 @@ automatically. Anything outside that coverage requires host diff review and a
 properly scoped plan before implementation; do not silently expand work.
 
 ```sh
-java -jar "$JAR" feature init /path/to/App --run theme --plan /path/to/plan.json
-java -jar "$JAR" feature status /path/to/App --run theme
+"$CLI" feature init /path/to/App --run theme --plan /path/to/plan.json
+"$CLI" feature status /path/to/App --run theme
 ```
 
 State is `.feature-runs/runs/theme.json`; writes are atomic under a project-wide kernel
@@ -75,7 +76,7 @@ before work/dispatch, then binds the returned worker by recording it immediately
 A lost response leaves a running claim to reconcile, not permission to retry.
 
 ```sh
-java -jar "$JAR" feature claim /path/to/App --run theme --task theme-code \
+"$CLI" feature claim /path/to/App --run theme --task theme-code \
   --owner developer-1 --packet /path/to/code-packet.md
 ```
 
@@ -104,7 +105,7 @@ only after genuine independent review; reviewer source must remain unchanged.
 ```
 
 ```sh
-java -jar "$JAR" feature settle /path/to/App --run theme --task theme-code \
+"$CLI" feature settle /path/to/App --run theme --task theme-code \
   --owner developer-1 --outcome passed --evidence /path/to/evidence.json
 ```
 
@@ -123,7 +124,7 @@ previously passed. An identical task/source/packet retry is rejected. Fix the
 cause before requesting another review. Retain prior attempts and findings.
 
 ```sh
-java -jar "$JAR" feature claim /path/to/App --run theme --task theme-code \
+"$CLI" feature claim /path/to/App --run theme --task theme-code \
   --owner developer-2 --packet /path/to/fix-packet.md --reason 'Fix reported restart regression'
 ```
 
@@ -135,7 +136,7 @@ check is required or detect omitted source scope; final host diff review remains
 necessary. No command grants approval or raises limits.
 
 ```sh
-java -jar "$JAR" feature finish /path/to/App --run theme \
+"$CLI" feature finish /path/to/App --run theme \
   --outcome completed --evidence /path/to/final-handoff.md
 ```
 

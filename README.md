@@ -6,8 +6,8 @@ For a new app, choose shared Compose UI or native SwiftUI, add components, revie
 the file plan and generate a runnable starter.
 
 The plugin ships two portable skills: `bootstrap-project` for new apps and
-`orchestrate-feature` for implementation in existing apps. Both include a
-ready-to-run Kotlin/JVM CLI. Generated apps use pinned Kotlin Toolchain wrappers.
+`orchestrate-feature` for implementation in existing apps. Both include the
+Kotlin generator CLI as sources with a launcher. Generated apps use pinned Kotlin Toolchain wrappers.
 
 Selecting Koin DI installs the four [official Koin agent skills](https://insert-koin.io/docs/tooling/ai-agents/)
 and Kotzilla MCP configuration in the generated project for the selected agents
@@ -20,8 +20,10 @@ skills does not change the Kotlin Toolchain backend or enable a compiler plugin.
 
 ## Install once
 
-You need your agent, Git and a **Java 17+ JDK** available as `java`.
-The plugin includes the compiled generator and its assets.
+You need your agent and Git. **No Java installation is required**: the plugin
+includes the generator sources and a pinned Kotlin Toolchain wrapper that
+provisions what is missing on first use (about a minute once per machine) and
+reuses an installed Java 25+. See [first run and Java reuse](docs/INSTALL.md#first-run-and-java-reuse).
 
 **Codex — paste into a terminal:**
 
@@ -267,7 +269,7 @@ README for Xcode-specific commands.
 
 | Guide | Contents |
 |---|---|
-| [Install and start](docs/INSTALL.md) | Agent installation, discovery troubleshooting, portable copy, direct JAR usage |
+| [Install and start](docs/INSTALL.md) | Agent installation, discovery troubleshooting, portable copy, first run and Java reuse, direct launcher usage |
 | [Chat and terminal wizards](docs/BOOTSTRAP-WIZARD.md) | Menu flow, review, editing choices, saving and cancellation |
 | [Feature orchestration](docs/FEATURE-ORCHESTRATION.md) | Implement/resume features, dependencies, bounded attempts and review |
 | [Configuration and CLI](docs/CLI-CONFIG.md) | JSON fields, defaults, plan/generate commands and locked replay |

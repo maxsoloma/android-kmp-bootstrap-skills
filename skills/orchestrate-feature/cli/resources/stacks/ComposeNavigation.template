@@ -1,0 +1,46 @@
+package {{PACKAGE_BASE}}
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
+
+@Composable
+fun App() {
+    val controller = remember { CounterController() }
+    DisposableEffect(controller) { onDispose { controller.close() } }
+    var count by remember { mutableIntStateOf(controller.count) }
+    val backStack = rememberNavBackStack(SavedStateConfiguration { serializersModule = routeSerializers }, HomeRoute)
+    MaterialTheme {
+        Scaffold { padding ->
+            NavDisplay(
+                modifier = Modifier.fillMaxSize().padding(padding),
+                backStack = backStack,
+                entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator()),
+                onBack = { if (backStack.size > 1) backStack.removeAt(backStack.lastIndex) },
+                entryProvider = entryProvider {
+                    entry<HomeRoute> {
+                        Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                            Text("{{PROJECT_NAME}}: $count")
+                            Button(onClick = { count = controller.increment() }) { Text("Increment") }
+                            Button(onClick = { backStack.add(DetailsRoute) }) { Text("Details") }
+                        }
+                    }
+                    entry<DetailsRoute> {
+                        Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                            Text("Details: $count")
+                            Button(onClick = { count = controller.increment() }) { Text("Increment") }
+                            Button(onClick = { if (backStack.size > 1) backStack.removeAt(backStack.lastIndex) }) { Text("Back") }
+                        }
+                    }
+                },
+            )
+        }
+    }
+}

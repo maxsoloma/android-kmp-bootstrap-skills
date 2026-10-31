@@ -152,13 +152,9 @@ class FeatureTest {
         claim("tests", owner = "host"); settle("tests", owner = "host")
         assertFails { claim("review", owner = "host") }
     }
-    @Test fun standaloneOrchestratorJarRunsOutsideRepository() {
-        val repo = Path.of(System.getProperty("bootstrap.repo", ".")).toAbsolutePath()
-        val jar = temp.resolve("portable skill/bin/bootstrap.jar"); Files.createDirectories(jar.parent)
-        Files.copy(repo.resolve("skills/orchestrate-feature/bin/bootstrap.jar"), jar)
-        val java = Path.of(System.getProperty("java.home"), "bin", if (windows) "java.exe" else "java").toString()
-        val result = execute(listOf(java, "-jar", jar.toString(), "feature", "init", app.toString(), "--run", "portable", "--plan", plan().toString()), 60, temp.resolve("cli.log"), temp)
-        assertEquals(0, result.code, temp.resolve("cli.log").readText())
+    @Test fun installedOrchestratorRunsOutsideRepository() {
+        val result = InstalledSkills.run(InstalledSkills.skill("orchestrate-feature"), listOf("feature", "init", app.toString(), "--run", "portable", "--plan", plan().toString()), temp)
+        assertEquals(0, result.code, result.stdout + result.stderr)
         assertTrue(app.resolve(".feature-runs/runs/portable.json").isRegularFile())
     }
 }

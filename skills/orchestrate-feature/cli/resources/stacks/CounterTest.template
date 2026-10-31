@@ -1,0 +1,24 @@
+package {{PACKAGE_BASE}}
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class CounterTest {
+    @Test fun graphResolvesAndCounterUpdatesThroughTheSharedService() {
+        val controller = CounterController()
+        try {
+            assertEquals(0, controller.count)
+            assertEquals(1, controller.increment())
+            assertEquals(2, controller.increment())
+            assertEquals(2, controller.count)
+        } finally { controller.close() }
+    }
+    @Test fun independentOwnersDoNotShareOrCloseEachOthersGraphs() {
+        val first = CounterController(); val second = CounterController()
+        first.increment(); first.close()
+        try {
+            assertEquals(0, second.count)
+            assertEquals(1, second.increment())
+        } finally { second.close() }
+    }
+}

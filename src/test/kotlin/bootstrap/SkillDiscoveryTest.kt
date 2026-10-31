@@ -30,7 +30,7 @@ class SkillDiscoveryTest {
         val ui = root.resolve("agents/openai.yaml").readText()
         for (field in listOf("display_name", "short_description", "default_prompt")) require(Regex("(?m)^  $field: \".+\"$").containsMatchIn(ui)) { "Missing interface field $field" }
         require(ui.contains("\$$name")) { "Prompt does not invoke discovered skill" }
-        require(root.resolve("bin/bootstrap.jar").isRegularFile()) { "Missing portable runtime" }
+        for (file in listOf("bin/bootstrap", "bin/bootstrap.cmd", "cli/kotlin", "cli/kotlin.bat", "cli/module.yaml", "cli/project.yaml")) require(root.resolve(file).isRegularFile()) { "Missing portable runtime file $file" }
         val visited = mutableSetOf<Path>()
         fun links(file: Path) {
             if (!visited.add(file)) return

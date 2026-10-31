@@ -1,0 +1,39 @@
+import SwiftUI
+import Combine
+import Shared
+
+final class CounterModel: ObservableObject {
+    private let controller = CounterController()
+    @Published private(set) var count: Int32 = 0
+
+    func increment() { count = controller.increment() }
+    deinit { controller.close() }
+}
+
+private enum Route: Hashable { case details }
+
+struct ContentView: View {
+    @StateObject private var model = CounterModel()
+    @State private var path: [Route] = []
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            VStack(spacing: 16) {
+                Text("{{PROJECT_NAME}}: \(model.count)")
+                Button("Increment") { model.increment() }
+                NavigationLink("Details", value: Route.details)
+            }
+            .padding()
+            .navigationTitle("Home")
+            .navigationDestination(for: Route.self) { _ in
+                VStack(spacing: 16) {
+                    Text("Details: \(model.count)")
+                    Button("Increment") { model.increment() }
+                    Button("Back") { if !path.isEmpty { path.removeLast() } }
+                }
+                .padding()
+                .navigationTitle("Details")
+            }
+        }
+    }
+}

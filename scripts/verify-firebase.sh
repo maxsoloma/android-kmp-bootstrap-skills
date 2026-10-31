@@ -1,9 +1,9 @@
 #!/bin/sh
 # SDK/build verification only: no cloud projects, credentials or live app startup.
 set -eu
-jar=$1
+cli=$1
 output=$2
-case "$jar" in /*) ;; *) echo 'Use an absolute JAR path' >&2; exit 1;; esac
+case "$cli" in /*) ;; *) echo 'Use an absolute launcher path' >&2; exit 1;; esac
 case "$output" in /*) ;; *) echo 'Use an absolute output path' >&2; exit 1;; esac
 if [ -e "$output" ]; then echo 'Verification output must not exist' >&2; exit 1; fi
 mkdir -p "$output"
@@ -20,10 +20,10 @@ for recipe in android shared native; do
   cat > "$config" <<JSON
 {"name":"Aurora","package":"com.example.aurora","kind":"$kind","ui":"$ui","navigation":"$nav","targets":[$targets],"di":"koin","network":"ktor","storage":"settings","ios_deployment_target":"16.0","firebase":{"services":["analytics","messaging","remote-config"]}}
 JSON
-  if ! java -jar "$jar" generate --config "$config" --output "$output/$recipe" > "$output/$recipe-generate.log" 2>&1; then
+  if ! "$cli" generate --config "$config" --output "$output/$recipe" > "$output/$recipe-generate.log" 2>&1; then
     printf '%s\tGENERATION_FAILED\n' "$recipe" >> "$status"; failed=1; continue
   fi
-  if java -jar "$jar" verify "$output/$recipe" --timeout 1200 > "$output/$recipe-verify.log" 2>&1; then
+  if "$cli" verify "$output/$recipe" --timeout 1200 > "$output/$recipe-verify.log" 2>&1; then
     printf '%s\tPASS\n' "$recipe" >> "$status"
   else
     printf '%s\tFAIL\n' "$recipe" >> "$status"; failed=1

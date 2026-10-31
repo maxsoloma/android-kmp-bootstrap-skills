@@ -1,0 +1,24 @@
+package {{PACKAGE_BASE}}
+
+import com.russhwolf.settings.NSUserDefaultsSettings
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSUserDefaults
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+@OptIn(ExperimentalForeignApi::class)
+class IosPersistenceTest {
+    @Test fun aNewNSUserDefaultsAdapterRestoresTheCounter() {
+        val settings = NSUserDefaultsSettings(NSUserDefaults(suiteName = "{{APP_ID}}.counter"))
+        val previous = settings.getIntOrNull(counterKey)
+        try {
+            settings.remove(counterKey)
+            val first = CounterRepository(platformCounterStore())
+            assertEquals(1, first.increment()); assertEquals(2, first.increment())
+            val reopened = CounterRepository(platformCounterStore())
+            assertEquals(2, reopened.count); assertEquals(3, reopened.increment())
+        } finally {
+            if (previous == null) settings.remove(counterKey) else settings.putInt(counterKey, previous)
+        }
+    }
+}

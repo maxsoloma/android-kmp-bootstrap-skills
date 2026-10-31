@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.4.0 — 2026-10-31
+
+- Remove the committed `bin/bootstrap.jar` from both skills. Each skill now ships
+  the CLI sources in `cli/` with byte-identical Kotlin Toolchain 0.13.0 wrappers,
+  and runs them through `bin/bootstrap` (`bin\bootstrap.cmd` on Windows).
+- No Java installation is required. The launcher reuses `KOTLIN_CLI_JAVA_HOME`, or a
+  Java 25+ from `JAVA_HOME`/`PATH`, and otherwise lets the wrapper provision its
+  pinned runtime; the generator compiles with JDK 25 (`selectionMode: auto`).
+- The first run on a machine downloads missing Toolchain components (about 40 s and
+  1.2 GB on an empty cache); later runs and generation work offline. Build output
+  goes to a per-user cache and the installed skill is never modified, including
+  read-only installations.
+- Generated applications, recipes and locks are unchanged.
+
 ## 3.3.0 — 2026-10-29
 
 - Automatically include all four official Koin skills and their full references

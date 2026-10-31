@@ -1,0 +1,12 @@
+package {{PACKAGE_BASE}}
+
+internal interface CounterStore {
+    fun read(): Int
+    fun write(value: Int)
+}
+internal class MemoryCounterStore : CounterStore {
+    private var count = 0
+    override fun read(): Int = count
+    override fun write(value: Int) { count = value }
+}
+

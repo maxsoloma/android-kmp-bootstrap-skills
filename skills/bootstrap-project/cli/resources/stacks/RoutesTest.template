@@ -1,0 +1,25 @@
+package {{PACKAGE_BASE}}
+
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlinx.serialization.builtins.ListSerializer
+
+class RoutesTest {
+    @Test fun destinationKeysRoundTripWithoutJvmReflection() {
+        val json = Json { serializersModule = routeSerializers }
+        val serializer = kotlinx.serialization.PolymorphicSerializer(NavKey::class)
+        for (key: NavKey in listOf(HomeRoute, DetailsRoute)) {
+            assertEquals(key, json.decodeFromString(serializer, json.encodeToString(serializer, key)))
+        }
+    }
+    @Test fun savedBackStackPreservesOrderAndRepeatedDestinations() {
+        val json = Json { serializersModule = routeSerializers }
+        val serializer = ListSerializer(kotlinx.serialization.PolymorphicSerializer(NavKey::class))
+        val stack: List<NavKey> = listOf(HomeRoute, DetailsRoute, DetailsRoute)
+        assertEquals(stack, json.decodeFromString(serializer, json.encodeToString(serializer, stack)))
+    }
+}

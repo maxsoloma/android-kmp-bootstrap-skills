@@ -1,0 +1,29 @@
+package {{PACKAGE_BASE}}
+
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+
+@Composable
+fun FirebaseNotificationHost(content: @Composable () -> Unit) {
+    var permission by remember { mutableStateOf<String?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        permission = if (granted) "Notifications enabled" else "Notification permission denied"
+    }
+    MaterialTheme {
+        Column(Modifier.fillMaxSize().statusBarsPadding()) {
+            Button(enabled = FirebaseServices.configured, onClick = {
+                if (Build.VERSION.SDK_INT >= 33) launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                else permission = "Notifications enabled in system settings"
+            }) { Text("Enable notifications") }
+            if (!FirebaseServices.configured) Text("Firebase configuration missing")
+            permission?.let { Text(it) }
+            Box(Modifier.weight(1f)) { content() }
+        }
+    }
+}

@@ -2,7 +2,8 @@
 
 Agent users normally invoke the skill and choose platforms, UI and components
 from its chat menus; the skill writes the configuration and runs these commands. This guide covers direct terminal use, CI and replay.
-Use the standalone JAR bundled in the installed skill with Java 17+.
+Use the `bin/bootstrap` launcher bundled in the installed skill; no Java installation
+is required (see [first run and Java reuse](INSTALL.md#first-run-and-java-reuse)).
 
 ## Locate the CLI
 
@@ -13,13 +14,13 @@ For a repository checkout, the skill is at `skills/bootstrap-project`.
 
 ```sh
 bootstrap_skill_dir="/path/to/installed/skills/bootstrap-project"
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" --help
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" catalog --json
+"$bootstrap_skill_dir/bin/bootstrap" --help
+"$bootstrap_skill_dir/bin/bootstrap" catalog --json
 ```
 
 The examples below use a POSIX shell. In PowerShell, set
-`$bootstrap_skill_dir = 'C:\path\to\skills\bootstrap-project'` and use the same
-`java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" ...` commands on single lines.
+`$bootstrap_skill_dir = 'C:\path\to\skills\bootstrap-project'` and run
+`& "$bootstrap_skill_dir\bin\bootstrap.cmd" ...` with the same arguments on single lines.
 
 ## Minimal recipe
 
@@ -39,8 +40,8 @@ manual DI and no optional navigation, networking or storage.
 Preview the files, then generate into a new or empty `./Aurora` directory:
 
 ```sh
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" plan --config recipe.json --output ./Aurora
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" generate --config recipe.json --output ./Aurora
+"$bootstrap_skill_dir/bin/bootstrap" plan --config recipe.json --output ./Aurora
+"$bootstrap_skill_dir/bin/bootstrap" generate --config recipe.json --output ./Aurora
 ```
 
 `plan` validates and renders without creating the destination. Its JSON includes
@@ -116,13 +117,13 @@ options fail before project publication.
 
 ```sh
 # Interactive wizard: use a real terminal
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" init ./NewApp
+"$bootstrap_skill_dir/bin/bootstrap" init ./NewApp
 
 # Inspect local tools without installing them
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" doctor --targets android,ios
+"$bootstrap_skill_dir/bin/bootstrap" doctor --targets android,ios
 
 # Build and test only the selected generated targets
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" verify ./Aurora --targets android --timeout 1200
+"$bootstrap_skill_dir/bin/bootstrap" verify ./Aurora --targets android --timeout 1200
 ```
 
 `verify` reads the generated `bootstrap.json`, uses the project's pinned wrapper
@@ -147,8 +148,8 @@ Generated apps include `bootstrap.spec.json` and `bootstrap.lock.json`. Point th
 same generator version at the original spec and a **different empty destination**:
 
 ```sh
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" plan --config ./Aurora/bootstrap.spec.json --output ./AuroraCopy
-java -jar "$bootstrap_skill_dir/bin/bootstrap.jar" generate --config ./Aurora/bootstrap.spec.json --output ./AuroraCopy
+"$bootstrap_skill_dir/bin/bootstrap" plan --config ./Aurora/bootstrap.spec.json --output ./AuroraCopy
+"$bootstrap_skill_dir/bin/bootstrap" generate --config ./Aurora/bootstrap.spec.json --output ./AuroraCopy
 ```
 
 The spec's sibling `bootstrap.lock.json` is loaded automatically. The lock

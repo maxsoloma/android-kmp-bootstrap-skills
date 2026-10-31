@@ -1,0 +1,19 @@
+package {{PACKAGE_BASE}}
+
+import java.nio.file.Files
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class FilePersistenceTest {
+    @Test fun aFreshFileAdapterReadsTheValueWrittenByItsPreviousOwner() {
+        val directory = Files.createTempDirectory("{{APP_ID}}-persistence-")
+        try {
+            val path = directory.resolve("counter.properties")
+            val first = CounterRepository(fileCounterStore(path))
+            assertEquals(1, first.increment()); assertEquals(2, first.increment())
+            val second = CounterRepository(fileCounterStore(path))
+            assertEquals(2, second.count); assertEquals(3, second.increment())
+            assertEquals(3, CounterRepository(fileCounterStore(path)).count)
+        } finally { directory.toFile().deleteRecursively() }
+    }
+}

@@ -1,0 +1,47 @@
+package {{PACKAGE_BASE}}
+
+import kotlinx.coroutines.*
+
+internal class CounterRepository(private val store: CounterStore) {
+    var count: Int = store.read()
+        private set
+    fun increment(): Int {
+        val next = count + 1
+        store.write(next)
+        count = next
+        return count
+    }
+}
+internal class CounterService(private val repository: CounterRepository) {
+    val count: Int get() = repository.count
+    fun increment(): Int = repository.increment()
+}
+
+/** Own this above navigation; UI calls and callbacks belong on the main thread. */
+class CounterController internal constructor(graphFactory: () -> AppGraph, dispatcher: CoroutineDispatcher) {
+    private val scope = CoroutineScope(SupervisorJob() + dispatcher)
+    private var graph: AppGraph? = null
+    private var closed = false
+    var storageError: String? = null
+        private set
+    init {
+        try { graph = graphFactory() }
+        catch (e: Exception) { storageError = e.message ?: "Cannot open local state" }
+    }
+    constructor() : this({ AppGraph() }, Dispatchers.Main)
+    val count: Int get() = graph?.counter?.count ?: 0
+    fun increment(): Int {
+        if (closed || storageError != null) return count
+        try { graph?.counter?.increment() }
+        catch (e: Exception) { storageError = e.message ?: "Cannot save local state" }
+        return count
+    }
+    // NETWORK_METHODS
+    fun close() {
+        if (closed) return
+        closed = true
+        scope.cancel()
+        graph?.close()
+    }
+}
+

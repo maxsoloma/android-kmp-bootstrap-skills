@@ -1,10 +1,10 @@
 #!/bin/sh
 # Run a fresh real-build matrix. Generated files and logs stay outside the repo.
 set -eu
-jar=$1
+cli=$1
 output=$2
 group=$3
-case "$jar" in /*) ;; *) echo 'Use an absolute JAR path' >&2; exit 1;; esac
+case "$cli" in /*) ;; *) echo 'Use an absolute launcher path' >&2; exit 1;; esac
 case "$output" in /*) ;; *) echo 'Use an absolute output path' >&2; exit 1;; esac
 if [ -e "$output" ]; then echo 'Matrix output must not exist' >&2; exit 1; fi
 mkdir -p "$output"
@@ -28,10 +28,10 @@ for di in manual koin; do
 {"name":"Aurora","package":"com.example.aurora","kind":"$kind","targets":[$targets],"ui":"$ui","di":"$di","navigation":"$nav","network":"$network","storage":"$storage","ios_deployment_target":"16.0"}
 JSON
         echo "Starting $id"
-        if ! java -jar "$jar" generate --config "$spec" --output "$project" > "$output/$id-generate.log" 2>&1; then
+        if ! "$cli" generate --config "$spec" --output "$project" > "$output/$id-generate.log" 2>&1; then
           printf '%s\tGENERATION_FAILED\n' "$id" >> "$status"; failed=1; continue
         fi
-        if java -jar "$jar" verify "$project" --timeout 1200 > "$output/$id-verify.log" 2>&1; then
+        if "$cli" verify "$project" --timeout 1200 > "$output/$id-verify.log" 2>&1; then
           printf '%s\tPASS\n' "$id" >> "$status"
           echo "PASS $id"
         else

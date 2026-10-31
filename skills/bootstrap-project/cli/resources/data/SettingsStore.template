@@ -1,0 +1,6 @@
+internal const val counterKey = "{{APP_ID}}.counter"
+internal class SettingsCounterStore(private val settings: com.russhwolf.settings.Settings) : CounterStore {
+    override fun read(): Int = settings.getInt(counterKey, 0)
+    override fun write(value: Int) = settings.putInt(counterKey, value)
+}
+

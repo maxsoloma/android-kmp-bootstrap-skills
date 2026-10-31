@@ -1,0 +1,6 @@
+package {{PACKAGE_BASE}}
+
+@OptIn(com.russhwolf.settings.ExperimentalSettingsImplementation::class)
+internal actual fun platformCounterStore(): CounterStore = SettingsCounterStore(
+    com.russhwolf.settings.StorageSettings()
+)

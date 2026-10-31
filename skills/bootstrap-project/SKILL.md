@@ -5,10 +5,18 @@ description: Create Android and Kotlin Multiplatform projects through chat menus
 
 # Bootstrap Kotlin Toolchain projects
 
-Use this skill's standalone `bin/bootstrap.jar` with Java 17+. Resolve paths
-relative to this skill directory; do not require repository sources or sibling
-skills. No Python or global Kotlin CLI is needed. Claude and Codex use the same
-CLI contract. Discover supported choices instead of inventing integrations.
+Run the generator with this skill's `bin/bootstrap` launcher (`bin\bootstrap.cmd`
+on Windows). It builds the bundled `cli/` sources with the pinned Kotlin Toolchain
+wrapper; no Java, Python or global Kotlin CLI installation is required. Resolve
+paths relative to this skill directory; do not require repository sources or
+sibling skills. Claude and Codex use the same CLI contract. Discover supported
+choices instead of inventing integrations.
+
+The first launcher run on a machine can download the Toolchain, a Java runtime/JDK
+when no suitable one is installed, the Kotlin compiler and dependencies, which can
+take about a minute. Tell the user before the first command; progress goes to
+stderr and stdout stays machine-readable. Later runs and generation work offline.
+An installed Java 25+ (`JAVA_HOME` or `java` on `PATH`) is reused automatically.
 
 ## Start the chat wizard on invocation
 
@@ -29,17 +37,17 @@ use the direct CLI flow without an interactive wizard.
 
 ## Agent flow
 
-1. Run `java -jar <skill>/bin/bootstrap.jar catalog --json`.
+1. Run `<skill>/bin/bootstrap catalog --json`.
 2. Collect the chat wizard's answers, derive the destination and compatible
    config, and show compatibility reasons returned by plan. MCP tools such as
    Context7 are optional per agent; use official vendor docs if unavailable.
 3. Save a strict JSON config outside the destination. Run
-   `java -jar <skill>/bin/bootstrap.jar plan --config CONFIG --output OUTPUT`.
+   `<skill>/bin/bootstrap plan --config CONFIG --output OUTPUT`.
 4. Resolve reported issues without silently replacing explicit choices. Present
    concrete scope/file plan before generation. Generate when authorized with
-   `java -jar <skill>/bin/bootstrap.jar generate --config CONFIG --output OUTPUT`.
+   `<skill>/bin/bootstrap generate --config CONFIG --output OUTPUT`.
 5. Run requested/available build checks with the generated `kotlin` wrapper,
-   or `java -jar <skill>/bin/bootstrap.jar verify OUTPUT`. Report actual results,
+   or `<skill>/bin/bootstrap verify OUTPUT`. Report actual results,
    logs and limitations separately from generation. Never claim skipped checks pass.
 
 Keep simple creation in one agent. For independent research or verification that
@@ -47,7 +55,7 @@ benefits from workers, read [delegation](references/agents.md): start fresh work
 with a bounded brief, file ownership and compact results. Do not forward the
 conversation or load every reference into each worker.
 
-Humans can run `java -jar <skill>/bin/bootstrap.jar init OUTPUT` in a real terminal.
+Humans can run `<skill>/bin/bootstrap init OUTPUT` in a real terminal.
 Non-TTY agents use catalog → config → plan → generate. Terminal review supports
 `edit ui`, `edit di`, `edit navigation`, `edit network`, `edit storage` and
 `edit endpoint`. Disabling Ktor requires explicitly clearing a retained endpoint.

@@ -1,0 +1,20 @@
+package {{PACKAGE_BASE}}
+
+internal fun fileCounterStore(path: java.nio.file.Path): CounterStore {
+    val file = path.toAbsolutePath().normalize()
+    val properties = java.util.Properties()
+    if (java.nio.file.Files.exists(file)) java.nio.file.Files.newInputStream(file).use { properties.load(it) }
+    val settings = com.russhwolf.settings.PropertiesSettings(properties) { values ->
+        java.nio.file.Files.createDirectories(file.parent)
+        val temp = java.nio.file.Files.createTempFile(file.parent, "counter-", ".tmp")
+        try {
+            java.nio.file.Files.newOutputStream(temp).use { values.store(it, "{{PROJECT_NAME}} counter") }
+            java.nio.file.Files.move(temp, file, java.nio.file.StandardCopyOption.ATOMIC_MOVE, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        } finally { java.nio.file.Files.deleteIfExists(temp) }
+    }
+    return SettingsCounterStore(settings)
+}
+
+internal actual fun platformCounterStore(): CounterStore = fileCounterStore(
+    java.nio.file.Path.of(System.getProperty("user.home"), ".{{APP_ID}}", "counter.properties")
+)

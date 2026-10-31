@@ -1,0 +1,18 @@
+package {{PACKAGE_BASE}}
+
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+
+data class NetworkState(val loading: Boolean = false, val text: String? = null, val error: String? = null)
+
+internal fun HttpClientConfig<*>.configureNetwork(timeoutMillis: Long = 10_000) {
+    expectSuccess = true
+    install(HttpTimeout) { requestTimeoutMillis = timeoutMillis }
+}
+
+internal class NetworkRepository(private val client: HttpClient) {
+    suspend fun fetch(): String = client.get({{NETWORK_URL_LITERAL}}).bodyAsText().take(512)
+    fun close() = client.close()
+}

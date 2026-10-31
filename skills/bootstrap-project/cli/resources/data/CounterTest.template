@@ -1,0 +1,33 @@
+package {{PACKAGE_BASE}}
+
+import kotlinx.coroutines.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+
+class CounterTest {
+    @Test fun ownedGraphResolvesAndIndependentCountersRemainIndependent() = runTest {
+        val first = CounterController({ AppGraph(MemoryCounterStore()) }, StandardTestDispatcher(testScheduler))
+        val second = CounterController({ AppGraph(MemoryCounterStore()) }, StandardTestDispatcher(testScheduler))
+        try {
+            assertEquals(1, first.increment())
+            first.close()
+            assertEquals(0, second.count)
+            assertEquals(1, second.increment())
+        } finally { first.close(); second.close() }
+    }
+    @Test fun failedOpenAndWriteAreVisibleWithoutClaimingSavedState() = runTest {
+        val broken = CounterController({ error("disk unavailable") }, StandardTestDispatcher(testScheduler))
+        assertNotNull(broken.storageError); broken.close()
+        val store = object : CounterStore {
+            override fun read() = 7
+            override fun write(value: Int) { error("disk full") }
+        }
+        val owner = CounterController({ AppGraph(store) }, StandardTestDispatcher(testScheduler))
+        try {
+            assertEquals(7, owner.increment())
+            assertEquals(7, owner.count)
+            assertNotNull(owner.storageError)
+        } finally { owner.close() }
+    }
+}

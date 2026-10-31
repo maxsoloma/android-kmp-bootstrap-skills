@@ -1,4 +1,4 @@
-# Deterministic template bytes and executable JARs on Windows, macOS and Linux.
+# Deterministic template bytes on Windows, macOS and Linux.
 * text=auto eol=lf
 *.jar binary
 *.png binary
@@ -9,6 +9,16 @@
 /kotlin.bat -text whitespace=cr-at-eol
 /skills/bootstrap-project/assets/toolchain/kotlin -text
 /skills/bootstrap-project/assets/toolchain/kotlin.bat -text whitespace=cr-at-eol
+/skills/bootstrap-project/cli/kotlin -text
+/skills/bootstrap-project/cli/kotlin.bat -text whitespace=cr-at-eol
+/skills/bootstrap-project/cli/assets/toolchain/kotlin -text
+/skills/bootstrap-project/cli/assets/toolchain/kotlin.bat -text whitespace=cr-at-eol
+/skills/orchestrate-feature/cli/kotlin -text
+/skills/orchestrate-feature/cli/kotlin.bat -text whitespace=cr-at-eol
+/skills/orchestrate-feature/cli/assets/toolchain/kotlin -text
+/skills/orchestrate-feature/cli/assets/toolchain/kotlin.bat -text whitespace=cr-at-eol
+/build-tools/launchers/bootstrap.cmd -text whitespace=cr-at-eol
+/skills/*/bin/bootstrap.cmd -text whitespace=cr-at-eol
 # These templates intentionally end with a separator blank line.
 /src/main/resources/data/CounterController.template whitespace=-blank-at-eof
 /src/main/resources/data/CounterStore.template whitespace=-blank-at-eof

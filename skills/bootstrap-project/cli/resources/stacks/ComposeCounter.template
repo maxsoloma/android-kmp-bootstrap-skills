@@ -1,0 +1,22 @@
+package {{PACKAGE_BASE}}
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+
+@Composable
+fun App() {
+    val controller = remember { CounterController() }
+    DisposableEffect(controller) { onDispose { controller.close() } }
+    var count by remember { mutableIntStateOf(controller.count) }
+    MaterialTheme {
+        Scaffold { padding ->
+            Column(Modifier.fillMaxSize().padding(padding), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Text("{{PROJECT_NAME}}")
+                Button(onClick = { count = controller.increment() }) { Text("Clicked $count times") }
+            }
+        }
+    }
+}

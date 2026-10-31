@@ -1,0 +1,21 @@
+package {{PACKAGE_BASE}}
+
+internal class CounterRepository {
+    var count: Int = 0
+        private set
+    fun increment(): Int { count += 1; return count }
+}
+
+internal class CounterService(private val repository: CounterRepository) {
+    val count: Int get() = repository.count
+    fun increment(): Int = repository.increment()
+}
+
+/** Small synchronous Swift-friendly facade; its UI owner owns its lifetime. */
+class CounterController {
+    private val graph = AppGraph()
+    val count: Int get() = graph.counter.count
+    fun increment(): Int = graph.counter.increment()
+    fun close() = graph.close()
+}
+

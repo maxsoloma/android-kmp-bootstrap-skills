@@ -1,0 +1,11 @@
+tasks:
+  resources:
+    action: !bootstrap.build.prepareSkillResources
+      assets: ${project.rootDir}/assets
+      toolchain: ${project.rootDir}/toolchain.json
+      sourceResources: ${project.rootDir}/resources
+      output: ${taskOutputDir}
+
+generated:
+  resources:
+    - directory: ${tasks.resources.action.output}

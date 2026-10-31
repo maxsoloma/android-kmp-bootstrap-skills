@@ -1,9 +1,9 @@
 #!/bin/sh
 # Exercise layouts that a four-platform project can accidentally hide.
 set -eu
-jar=$1
+cli=$1
 output=$2
-case "$jar:$output" in /*:/*) ;; *) echo 'Use absolute JAR and output paths' >&2; exit 1;; esac
+case "$cli:$output" in /*:/*) ;; *) echo 'Use absolute launcher and output paths' >&2; exit 1;; esac
 if [ -e "$output" ]; then echo 'Subset output must not exist' >&2; exit 1; fi
 mkdir -p "$output"
 failed=0
@@ -20,8 +20,8 @@ for id in desktop web ios-compose ios-swiftui android-kmp; do
 {"name":"Subset","package":"dev.example.subset","kind":"$kind","targets":[$targets],"ui":"$ui","di":"$di","navigation":"$navigation","network":"ktor","storage":"settings","ios_deployment_target":"$ios","sdk":{"min":23,"target":35,"compile":37}}
 JSON
   echo "Starting $id"
-  if java -jar "$jar" generate --config "$output/$id.json" --output "$output/$id" > "$output/$id-generate.log" 2>&1 &&
-     java -jar "$jar" verify "$output/$id" --timeout 1200 > "$output/$id-verify.log" 2>&1; then
+  if "$cli" generate --config "$output/$id.json" --output "$output/$id" > "$output/$id-generate.log" 2>&1 &&
+     "$cli" verify "$output/$id" --timeout 1200 > "$output/$id-verify.log" 2>&1; then
     printf '%s\tPASS\n' "$id" >> "$output/status.tsv"
     echo "PASS $id"
   else
