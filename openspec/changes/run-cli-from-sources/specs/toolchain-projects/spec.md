@@ -28,6 +28,14 @@ Each skill SHALL deliver the generator as Kotlin sources with a skill-relative l
 - **WHEN** the same config is generated through the launcher and through the repository build of the same version
 - **THEN** the generated trees are byte-identical
 
+#### Scenario: Caller inside another Toolchain project
+- **WHEN** the launcher is invoked from a directory inside a Kotlin Toolchain project whose wrapper pins another version
+- **THEN** the skill's own pinned wrapper version runs and the command succeeds
+
+#### Scenario: Separate installations
+- **WHEN** two copies of the same skill version run concurrently
+- **THEN** each uses its own build directory and both print only command output
+
 #### Scenario: Installed skill is not modified
 - **WHEN** the launcher runs from an installed skill
 - **THEN** compilation output is written to a per-user cache and no files inside the skill directory are created or changed

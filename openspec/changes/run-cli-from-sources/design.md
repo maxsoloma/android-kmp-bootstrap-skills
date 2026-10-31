@@ -53,10 +53,18 @@ The launcher resolves its own directory and runs
 `<skill>/cli/kotlin --log-level=error run --project-dir=<skill>/cli
 --build-dir=<cache> --working-dir=<caller cwd> -- "$@"` with
 `KOTLIN_CLI_NO_WELCOME_BANNER=1`, and returns the CLI's exit code.
-- `<cache>` is version-keyed and per-user: `~/Library/Caches/bootstrap-projects/<ver>`
-  on macOS, `${XDG_CACHE_HOME:-~/.cache}/bootstrap-projects/<ver>` on Linux, and
-  `%LOCALAPPDATA%\bootstrap-projects\<ver>` on Windows. An installed plugin
-  directory may be read-only and must stay unchanged.
+- `<cache>` is per-user and keyed by version, skill and a hash of the installation's
+  `cli/` path: `<root>/<ver>/<skill>-<hash>`, where `<root>` is
+  `~/Library/Caches/bootstrap-projects` on macOS, `${XDG_CACHE_HOME:-~/.cache}/bootstrap-projects`
+  on Linux, `%LOCALAPPDATA%\bootstrap-projects` on Windows, or `BOOTSTRAP_CACHE_DIR`.
+  Separate installations sharing one build directory recompiled each other's output,
+  and a recompiling `kotlin run` writes to stdout (found in review). An installed
+  plugin directory may be read-only and must stay unchanged.
+- The launcher sets `KOTLIN_CLI_WRAPPER_ALWAYS_USE_INTRINSIC_VERSION=1`. Without it the
+  wrapper searches upward from the caller's directory and adopts another project's
+  wrapper version, which breaks `orchestrate-feature` inside user apps.
+- Windows: the final `kotlin.bat run` is not invoked with `call`, so `%` and `^` in
+  forwarded arguments are not expanded twice; a drive-root `%CD%` gets a trailing `.`.
 - Any Toolchain stdout lines that are not CLI output are a defect. Task 1.2 checks
   this on an empty cache.
 

@@ -4,7 +4,7 @@
 @rem runtime that is already installed is reused, otherwise the wrapper provisions one.
 setlocal EnableExtensions DisableDelayedExpansion
 
-set "cli_dir=%~dp0..\cli"
+for %%i in ("%~dp0..\cli") do set "cli_dir=%%~fi"
 set "min_java=25"
 
 if defined KOTLIN_CLI_JAVA_HOME goto run
@@ -16,14 +16,37 @@ for /f "delims=" %%j in ('where java.exe 2^>nul') do (
 )
 
 :run
-if not defined BOOTSTRAP_BUILD_DIR set "BOOTSTRAP_BUILD_DIR=%LOCALAPPDATA%\bootstrap-projects\3.4.0\bootstrap-project"
-if not exist "%BOOTSTRAP_BUILD_DIR%" mkdir "%BOOTSTRAP_BUILD_DIR%"
+@rem Each installation gets its own build directory: copies sharing one would recompile
+@rem each other's output, and a recompiling `run` writes to stdout.
+call :install_key
+if not defined BOOTSTRAP_CACHE_DIR set "BOOTSTRAP_CACHE_DIR=%LOCALAPPDATA%\bootstrap-projects"
+set "build_dir=%BOOTSTRAP_CACHE_DIR%\3.4.0\bootstrap-project-%install_key%"
+if not exist "%build_dir%" mkdir "%build_dir%"
+@rem A trailing backslash (drive root) would escape the closing quote of --working-dir.
+set "work_dir=%CD%"
+if "%work_dir:~-1%"=="\" set "work_dir=%work_dir%."
+@rem Run the pinned wrapper version even when the caller's directory is inside another
+@rem Kotlin Toolchain project, whose own wrapper would otherwise select the version.
+set "KOTLIN_CLI_WRAPPER_ALWAYS_USE_INTRINSIC_VERSION=1"
 set "KOTLIN_CLI_NO_WELCOME_BANNER=1"
 @rem Compile first with Toolchain output on stderr, so stdout carries only CLI output.
-call "%cli_dir%\kotlin.bat" --log-level=error build "--project-dir=%cli_dir%" "--build-dir=%BOOTSTRAP_BUILD_DIR%" 1>&2
-if errorlevel 1 exit /b %ERRORLEVEL%
-call "%cli_dir%\kotlin.bat" --log-level=error run "--project-dir=%cli_dir%" "--build-dir=%BOOTSTRAP_BUILD_DIR%" "--working-dir=%CD%" -- %*
+call "%cli_dir%\kotlin.bat" --log-level=error build "--project-dir=%cli_dir%" "--build-dir=%build_dir%" 1>&2
+if not "%ERRORLEVEL%"=="0" exit /b %ERRORLEVEL%
+@rem No `call`: it would expand % and ^ in the forwarded arguments a second time.
+"%cli_dir%\kotlin.bat" --log-level=error run "--project-dir=%cli_dir%" "--build-dir=%build_dir%" "--working-dir=%work_dir%" -- %*
+@rem Reached only when kotlin.bat could not be started.
 exit /b %ERRORLEVEL%
+
+@rem Sets install_key to a short hash of cli_dir.
+:install_key
+set "install_key="
+set "key_file=%TEMP%\bootstrap-key-%RANDOM%%RANDOM%.txt"
+<nul set /p "=%cli_dir%" > "%key_file%"
+for /f "skip=1 delims=" %%h in ('certutil -hashfile "%key_file%" MD5') do if not defined install_key set "install_key=%%h"
+del "%key_file%" >nul 2>&1
+set "install_key=%install_key: =%"
+set "install_key=%install_key:~0,12%"
+exit /b 0
 
 @rem Sets KOTLIN_CLI_JAVA_HOME when %1 is a functional runtime that meets the Toolchain CLI minimum.
 :probe

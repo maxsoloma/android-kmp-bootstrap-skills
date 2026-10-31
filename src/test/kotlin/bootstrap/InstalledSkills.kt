@@ -39,7 +39,7 @@ object InstalledSkills {
     fun run(skill: Path, args: List<String>, directory: Path, env: Map<String, String?> = emptyMap()): LauncherResult {
         val out = Files.createTempFile(root, "stdout-", ".log"); val err = Files.createTempFile(root, "stderr-", ".log")
         val builder = ProcessBuilder(command(skill, args)).directory(directory.toFile()).redirectOutput(out.toFile()).redirectError(err.toFile())
-        builder.environment()["BOOTSTRAP_BUILD_DIR"] = buildCache.resolve(skill.fileName.toString()).toString()
+        builder.environment()["BOOTSTRAP_CACHE_DIR"] = buildCache.toString()
         for ((key, value) in env) if (value == null) builder.environment().remove(key) else builder.environment()[key] = value
         val process = builder.start()
         if (!process.waitFor(900, TimeUnit.SECONDS)) { process.destroyForcibly(); error("Launcher timed out: $args") }

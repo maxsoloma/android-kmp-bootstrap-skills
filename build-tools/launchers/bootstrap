@@ -4,7 +4,7 @@
 # runtime that is already installed is reused, otherwise the wrapper provisions one.
 set -eu
 
-skill_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+skill_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd -P)
 cli_dir="$skill_dir/cli"
 min_java=@MIN_JAVA@
 
@@ -34,11 +34,17 @@ case "$(uname -s)" in
   Darwin*) cache_root="$HOME/Library/Caches" ;;
   *) cache_root="${XDG_CACHE_HOME:-$HOME/.cache}" ;;
 esac
-build_dir="${BOOTSTRAP_BUILD_DIR:-$cache_root/bootstrap-projects/@VERSION@/@SKILL@}"
+# Each installation gets its own build directory: copies sharing one would recompile
+# each other's output, and a recompiling `run` writes to stdout.
+install_key=$(printf '%s' "$cli_dir" | cksum | cut -d ' ' -f 1)
+build_dir="${BOOTSTRAP_CACHE_DIR:-$cache_root/bootstrap-projects}/@VERSION@/@SKILL@-$install_key"
 mkdir -p "$build_dir"
 
+# Run the pinned wrapper version even when the caller's directory is inside another
+# Kotlin Toolchain project, whose own wrapper would otherwise select the version.
+KOTLIN_CLI_WRAPPER_ALWAYS_USE_INTRINSIC_VERSION=1
 KOTLIN_CLI_NO_WELCOME_BANNER=1
-export KOTLIN_CLI_NO_WELCOME_BANNER
+export KOTLIN_CLI_WRAPPER_ALWAYS_USE_INTRINSIC_VERSION KOTLIN_CLI_NO_WELCOME_BANNER
 # Compile first with Toolchain output on stderr, so stdout carries only CLI output.
 "$cli_dir/kotlin" --log-level=error build --project-dir="$cli_dir" --build-dir="$build_dir" >&2
 exec "$cli_dir/kotlin" --log-level=error run --project-dir="$cli_dir" --build-dir="$build_dir" --working-dir="$(pwd)" -- "$@"

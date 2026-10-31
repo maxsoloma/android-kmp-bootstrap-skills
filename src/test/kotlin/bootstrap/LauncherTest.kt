@@ -33,7 +33,7 @@ class LauncherTest {
     /** PATH with only the tools the launcher needs, so host Java installations cannot interfere. */
     private fun toolsPath(vararg first: Path): String {
         val tools = temp.resolve("tools"); Files.createDirectories(tools)
-        for (tool in listOf("sed", "head", "uname", "mkdir", "dirname", "touch")) {
+        for (tool in listOf("sed", "head", "uname", "mkdir", "dirname", "touch", "cksum", "cut")) {
             val real = listOf("/usr/bin", "/bin").map { Path.of(it, tool) }.first { it.isExecutable() }
             if (!tools.resolve(tool).exists()) Files.createSymbolicLink(tools.resolve(tool), real)
         }
@@ -90,6 +90,28 @@ class LauncherTest {
         val expected = temp.resolve("expected")
         assertEquals(0, configCommand(listOf("--config", workspace.resolve("config.json").toString(), "--output", expected.toString()), generate = true))
         assertEquals(InstalledSkills.digest(expected), InstalledSkills.digest(workspace.resolve("Aurora")))
+    }
+    @Test fun callerInsideAnotherToolchainProjectKeepsThePinnedWrapperVersion() {
+        val skill = InstalledSkills.skill("bootstrap-project")
+        val app = temp.resolve("user app"); Files.createDirectories(app)
+        app.resolve("project.yaml").writeText("product: jvm/app\n")
+        for (name in listOf("kotlin", "kotlin.bat")) {
+            val wrapper = app.resolve(name)
+            wrapper.writeText(InstalledSkills.repo.resolve(name).readText().replace("kotlin_cli_version=0.13.0", "kotlin_cli_version=0.0.1"))
+            wrapper.toFile().setExecutable(true)
+        }
+        val catalog = InstalledSkills.run(skill, listOf("catalog", "--json"), app)
+        assertEquals(0, catalog.code, catalog.stderr)
+        assertFalse("0.0.1" in catalog.stderr, catalog.stderr)
+        assertEquals("kotlin-toolchain", Json.parseToJsonElement(catalog.stdout).jsonObject.text("build_system"))
+    }
+    @Test fun separateInstallationsRunInParallelWithCleanOutput() {
+        val copies = (1..2).map { InstalledSkills.copyReadOnly(InstalledSkills.repo.resolve("skills/bootstrap-project"), temp.resolve("copy $it")) }
+        val runs = (copies + copies).map { copy -> java.util.concurrent.CompletableFuture.supplyAsync { InstalledSkills.run(copy, listOf("catalog", "--json"), temp) } }
+        for (result in runs.map { it.get() }) {
+            assertEquals(0, result.code, result.stderr)
+            assertEquals("kotlin-toolchain", Json.parseToJsonElement(result.stdout).jsonObject.text("build_system"), result.stdout)
+        }
     }
     @Test fun installedSkillRunsDoctorAndVerify() {
         val skill = InstalledSkills.skill("bootstrap-project")

@@ -11,8 +11,10 @@ The launcher builds the bundled sources with the pinned Kotlin Toolchain wrapper
 The first run on a machine downloads what is missing into the shared Toolchain
 cache: the Toolchain distribution, a Java runtime for the Toolchain CLI, the
 compilation JDK, the Kotlin compiler and Maven dependencies. On an empty cache
-this measured about 40 seconds and 1.2 GB. Later runs take a couple of seconds
-and work offline. Building any generated project warms the same cache.
+this measured about 40 seconds and 1.2 GB. Later runs of the same installation
+take a couple of seconds and work offline; another installation (for example, the
+Codex and Claude Code copies of the plugin) compiles its own copy once. The pinned
+Toolchain version is used even when you run the launcher inside another project. Building any generated project warms the same cache.
 
 Installed Java is reused before anything is downloaded:
 
@@ -25,8 +27,8 @@ Installed Java is reused before anything is downloaded:
 
 Compiled output goes to `~/Library/Caches/bootstrap-projects` on macOS,
 `$XDG_CACHE_HOME/bootstrap-projects` (default `~/.cache`) on Linux and
-`%LOCALAPPDATA%\bootstrap-projects` on Windows; set `BOOTSTRAP_BUILD_DIR` to change
-it. The installed skill directory is never modified. Behind a proxy or mirror,
+`%LOCALAPPDATA%\bootstrap-projects` on Windows, in a directory per version and
+installation; set `BOOTSTRAP_CACHE_DIR` to change the root. The installed skill directory is never modified. Behind a proxy or mirror,
 set the wrapper's `KOTLIN_CLI_DOWNLOAD_ROOT` and `KOTLIN_CLI_JRE_DOWNLOAD_ROOT`.
 
 ## Install the plugin
