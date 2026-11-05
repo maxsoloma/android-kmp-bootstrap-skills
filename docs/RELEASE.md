@@ -1,4 +1,4 @@
-# Release 3.4.0
+# Release 3.5.0
 
 The release contains portable `bootstrap-project` and `orchestrate-feature`
 skills, each with identical generator sources and launchers synced by `./kotlin do bundle`,
@@ -26,7 +26,7 @@ the Git source for this check; leave unrelated marketplaces/plugins untouched.
 Before publication, confirm the exact remote main/tag and review the complete
 release diff, including any earlier local commits not yet pushed. Keep manifest
 versions, CLI version, changelog and documentation aligned. Tag the verified
-commit as `v3.4.0`; do not move an existing published tag.
+commit as `v3.5.0`; do not move an existing published tag.
 
 The distribution ZIP includes both complete skill folders with their references,
 launchers and generator sources, all user documentation, icons, manifests and

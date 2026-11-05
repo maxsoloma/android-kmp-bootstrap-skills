@@ -1,0 +1,25 @@
+package {{PACKAGE_BASE}}
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+data class CounterUiState(val count: Int = 0)
+
+/** Shared Compose state holder; clearing its ViewModelStore closes the owned controller. */
+class CounterViewModel internal constructor(private val controller: CounterController) : ViewModel() {
+    private val state = MutableStateFlow(CounterUiState(controller.count))
+    val uiState: StateFlow<CounterUiState> = state.asStateFlow()
+
+    fun increment() { state.value = CounterUiState(controller.increment()) }
+
+    override fun onCleared() = controller.close()
+}
+
+/** Non-JVM targets have no reflection: always obtain the ViewModel through this factory. */
+val counterViewModelFactory = viewModelFactory {
+    initializer { CounterViewModel(CounterController()) }
+}

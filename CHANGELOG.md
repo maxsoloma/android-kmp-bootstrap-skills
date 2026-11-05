@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.5.0 — 2026-11-05
+
+- Compose recipes with a shared controller (Koin, Navigation 3, Ktor or Settings)
+  now expose it through a common-code `CounterViewModel` built on
+  `androidx.lifecycle` 2.11.0 (`lifecycle-viewmodel-compose`,
+  `lifecycle-runtime-compose`) instead of the JetBrains fork. Screens obtain it via
+  `viewModel(factory = counterViewModelFactory)` and read a `StateFlow` with
+  `collectAsStateWithLifecycle()`; clearing the ViewModelStore closes the
+  controller.
+- Generated common tests create the ViewModel through `ViewModelProvider.create`
+  with the factory on every target, proving the no-reflection path.
+- SwiftUI keeps its `ObservableObject` owner; the baseline manual recipe stays a
+  stateless counter. `koin-compose-viewmodel` is not added while 4.2.2 depends on the fork.
+- Locks from 3.4.0 recipes no longer match the changed Compose recipes.
+
 ## 3.4.0 — 2026-10-31
 
 - Remove the committed `bin/bootstrap.jar` from both skills. Each skill now ships

@@ -1,0 +1,20 @@
+package {{PACKAGE_BASE}}
+
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertSame
+
+class CounterViewModelTest {
+    @Test fun factoryCreatesRetainedViewModelWithoutReflection() {
+        val store = ViewModelStore()
+        try {
+            val viewModel = ViewModelProvider.create(store, counterViewModelFactory)[CounterViewModel::class]
+            assertEquals(0, viewModel.uiState.value.count)
+            viewModel.increment()
+            assertEquals(1, viewModel.uiState.value.count)
+            assertSame(viewModel, ViewModelProvider.create(store, counterViewModelFactory)[CounterViewModel::class])
+        } finally { store.clear() }
+    }
+}

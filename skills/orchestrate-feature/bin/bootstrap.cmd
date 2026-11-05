@@ -1,5 +1,5 @@
 @echo off
-@rem Runs the orchestrate-feature CLI 3.4.0 from the sources in ..\cli with the bundled
+@rem Runs the orchestrate-feature CLI 3.5.0 from the sources in ..\cli with the bundled
 @rem Kotlin Toolchain wrapper. No Java installation is required: a Java 25+
 @rem runtime that is already installed is reused, otherwise the wrapper provisions one.
 setlocal EnableExtensions DisableDelayedExpansion
@@ -20,7 +20,7 @@ for /f "delims=" %%j in ('where java.exe 2^>nul') do (
 @rem each other's output, and a recompiling `run` writes to stdout.
 call :install_key
 if not defined BOOTSTRAP_CACHE_DIR set "BOOTSTRAP_CACHE_DIR=%LOCALAPPDATA%\bootstrap-projects"
-set "build_dir=%BOOTSTRAP_CACHE_DIR%\3.4.0\orchestrate-feature-%install_key%"
+set "build_dir=%BOOTSTRAP_CACHE_DIR%\3.5.0\orchestrate-feature-%install_key%"
 if not exist "%build_dir%" mkdir "%build_dir%"
 @rem A trailing backslash (drive root) would escape the closing quote of --working-dir.
 set "work_dir=%CD%"

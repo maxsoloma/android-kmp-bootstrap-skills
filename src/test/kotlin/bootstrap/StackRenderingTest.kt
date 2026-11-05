@@ -55,6 +55,9 @@ class StackRenderingTest {
             assertTrue("iosSimulatorArm64" in p.document().getValue("verification").toString())
             val logic = p.file("shared/src/com/example/aurora/CounterController.kt")
             assertEquals(di == "koin", "koinApplication" in logic)
+            assertFalse("lifecycle" in sharedBuild)
+            assertEquals("android" in targets, "lifecycle-viewmodel-compose:2.11.0" in (p.rendered.files["androidApp/module.yaml"]?.toString(Charsets.UTF_8) ?: ""))
+            assertEquals("android" in targets, "androidApp/src/com/example/aurora/CounterViewModel.kt" in p.rendered.files)
             assertTrue("CounterTest.kt" in p.rendered.files.keys.joinToString())
             assertFalse(out.exists())
         }
@@ -66,7 +69,16 @@ class StackRenderingTest {
             val module = if (kind == "kmp") "shared" else "androidApp"
             val main = "$module/src/com/example/aurora"
             val app = p.file("$main/App.kt")
-            assertTrue("controller.increment()" in app); assertTrue("controller.close()" in app)
+            assertTrue("viewModel(factory = counterViewModelFactory)" in app); assertTrue("collectAsStateWithLifecycle()" in app)
+            assertFalse("remember { CounterController() }" in app)
+            val viewModel = p.file("$main/CounterViewModel.kt")
+            assertTrue("controller.increment()" in viewModel); assertTrue("override fun onCleared() = controller.close()" in viewModel)
+            assertTrue("initializer { CounterViewModel(CounterController()) }" in viewModel)
+            val build = p.file("$module/module.yaml")
+            assertTrue("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0" in build)
+            assertTrue("androidx.lifecycle:lifecycle-runtime-compose:2.11.0" in build)
+            assertFalse("org.jetbrains.androidx.lifecycle" in build)
+            assertTrue("CounterViewModelTest.kt" in p.rendered.files.keys.joinToString())
             assertEquals(nav == "navigation3", "NavDisplay" in app)
             assertEquals(di == "koin", "io.insert-koin:koin-core" in p.file("$module/module.yaml"))
             if (nav == "navigation3") {
@@ -74,6 +86,14 @@ class StackRenderingTest {
                 assertTrue("routeSerializers" in app); assertTrue("backStack.size > 1" in app)
                 assertTrue("serialization:" in p.file("$module/module.yaml"))
             }
+        }
+    }
+    @Test fun baselineRecipeKeepsItsStatelessComposeCounterWithoutLifecycle() {
+        for (kind in listOf("android", "kmp")) {
+            val p = plan("kind" to kind)
+            val module = if (kind == "kmp") "shared" else "androidApp"
+            assertFalse("lifecycle" in p.file("$module/module.yaml"))
+            assertFalse(p.rendered.files.keys.any { it.endsWith("CounterViewModel.kt") })
         }
     }
     @Test fun everyComposePlatformSubsetRendersAndNewStacksReplayWithLocks() {

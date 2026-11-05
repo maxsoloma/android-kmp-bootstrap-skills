@@ -46,7 +46,7 @@ class DataConfigurationTest {
         val catalog = catalogDocument().getValue("stack_choices").jsonObject
         assertTrue(catalog.getValue("network").jsonArray.any { it.jsonObject.text("id") == "ktor" })
         val o = resolveSpec(spec("network" to "ktor", "storage" to "settings", "targets" to platforms), out).options!!
-        assertEquals(setOf("ktor", "settings", "coroutines"), selectedPins(o).keys)
+        assertEquals(setOf("ktor", "settings", "coroutines", "lifecycle"), selectedPins(o).keys)
         assertEquals("Darwin", networkAdapters(o.targets)["ios"])
         assertTrue("localStorage" in storageAdapters(o.targets).getValue("web"))
     }

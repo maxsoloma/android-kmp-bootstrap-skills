@@ -1,5 +1,5 @@
 #!/bin/sh
-# Runs the bootstrap-project CLI 3.4.0 from the sources in ../cli with the bundled
+# Runs the bootstrap-project CLI 3.5.0 from the sources in ../cli with the bundled
 # Kotlin Toolchain wrapper. No Java installation is required: a Java 25+
 # runtime that is already installed is reused, otherwise the wrapper provisions one.
 set -eu
@@ -37,7 +37,7 @@ esac
 # Each installation gets its own build directory: copies sharing one would recompile
 # each other's output, and a recompiling `run` writes to stdout.
 install_key=$(printf '%s' "$cli_dir" | cksum | cut -d ' ' -f 1)
-build_dir="${BOOTSTRAP_CACHE_DIR:-$cache_root/bootstrap-projects}/3.4.0/bootstrap-project-$install_key"
+build_dir="${BOOTSTRAP_CACHE_DIR:-$cache_root/bootstrap-projects}/3.5.0/bootstrap-project-$install_key"
 mkdir -p "$build_dir"
 
 # Run the pinned wrapper version even when the caller's directory is inside another

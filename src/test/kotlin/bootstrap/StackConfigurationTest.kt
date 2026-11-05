@@ -64,6 +64,7 @@ class StackConfigurationTest {
         val catalog = catalogDocument().getValue("stack_choices").jsonObject
         assertEquals("4.2.2", catalog.getValue("pins").jsonObject.text("koin"))
         assertEquals("1.2.0", catalog.getValue("pins").jsonObject.text("navigation3"))
+        assertEquals("2.11.0", catalog.getValue("pins").jsonObject.text("lifecycle"))
         assertTrue(catalog.getValue("ui").jsonArray.any { it.jsonObject.text("id") == "swiftui" })
         assertEquals("16.0", catalog.getValue("navigation").jsonArray.first { it.jsonObject.text("id") == "platform-native" }.jsonObject.text("ios_minimum"))
     }

@@ -5,6 +5,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -12,10 +14,9 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 
 @Composable
-fun App() {
-    val controller = remember { CounterController() }
-    DisposableEffect(controller) { onDispose { controller.close() } }
-    var count by remember { mutableIntStateOf(controller.count) }
+fun App(viewModel: CounterViewModel = viewModel(factory = counterViewModelFactory)) {
+    // Obtained above NavDisplay, so every destination shares the host-scoped ViewModel.
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val backStack = rememberNavBackStack(SavedStateConfiguration { serializersModule = routeSerializers }, HomeRoute)
     MaterialTheme {
         Scaffold { padding ->
@@ -27,15 +28,15 @@ fun App() {
                 entryProvider = entryProvider {
                     entry<HomeRoute> {
                         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                            Text("{{PROJECT_NAME}}: $count")
-                            Button(onClick = { count = controller.increment() }) { Text("Increment") }
+                            Text("{{PROJECT_NAME}}: ${state.count}")
+                            Button(onClick = viewModel::increment) { Text("Increment") }
                             Button(onClick = { backStack.add(DetailsRoute) }) { Text("Details") }
                         }
                     }
                     entry<DetailsRoute> {
                         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                            Text("Details: $count")
-                            Button(onClick = { count = controller.increment() }) { Text("Increment") }
+                            Text("Details: ${state.count}")
+                            Button(onClick = viewModel::increment) { Text("Increment") }
                             Button(onClick = { if (backStack.size > 1) backStack.removeAt(backStack.lastIndex) }) { Text("Back") }
                         }
                     }

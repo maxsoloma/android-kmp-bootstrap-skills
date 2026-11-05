@@ -25,7 +25,10 @@ class DataRenderingTest {
                 assertTrue("platformHttpClient" in actual); assertTrue("platformCounterStore" in actual)
             }
             val app = p.file("shared/src/com/example/aurora/App.kt")
-            assertTrue("controller.fetch" in app); assertTrue("Network error:" in app); assertTrue("Storage error:" in app)
+            assertTrue("viewModel::fetch" in app); assertTrue("Network error:" in app); assertTrue("Storage error:" in app)
+            val viewModel = p.file("shared/src/com/example/aurora/CounterViewModel.kt")
+            assertTrue("controller.fetch" in viewModel); assertTrue("val network: NetworkState" in viewModel)
+            assertTrue("store.clear()" in p.file("shared/test/com/example/aurora/CounterViewModelTest.kt"))
             assertTrue("ktor-client-core" in p.file("shared/module.yaml"))
             if ("android" in targets) {
                 assertTrue("android.permission.INTERNET" in p.file("androidApp/src/AndroidManifest.xml"))
@@ -46,6 +49,8 @@ class DataRenderingTest {
         val store = plan("storage" to "settings", "kind" to "android")
         assertFalse("ktor-client-core" in store.file("androidApp/module.yaml"))
         assertFalse("INTERNET" in store.file("androidApp/src/AndroidManifest.xml"))
+        assertFalse("NetworkState" in store.file("androidApp/src/com/example/aurora/CounterViewModel.kt"))
+        assertTrue("import org.junit.Test" in store.file("androidApp/test/com/example/aurora/CounterViewModelTest.kt"))
         assertTrue("SharedPreferencesSettings" in store.file("androidApp/src/com/example/aurora/PlatformData.kt"))
         assertTrue("test-dependencies:" in store.file("androidApp/module.yaml"))
         assertTrue("multiplatform-settings-test" in store.file("androidApp/module.yaml"))

@@ -6,8 +6,8 @@ source tag. The wrapper embeds the release distribution SHA-256. Other pins are
 in `supporting/toolchain.json` and selected components are exposed by catalog.
 
 Kotlin 2.4.21, Compose Multiplatform 1.12.2, Material 3 1.9.0, SDK 26/37/37.
-Koin 4.2.2, Navigation 3 1.2.0, serialization 1.12.0, coroutines 1.11.0, Ktor 3.6.0 and
-Settings 1.3.0 are included only when selected. Pin dependency changes explicitly.
+Koin 4.2.2, Navigation 3 1.2.0, serialization 1.12.0, coroutines 1.11.0, Ktor 3.6.0,
+Settings 1.3.0 and Lifecycle 2.11.0 are included only when selected. Pin dependency changes explicitly.
 
 Generated apps use `project.yaml`, `module.yaml`, `src` and `src@platform`.
 `./kotlin build` compiles apps/tests; `./kotlin test` executes tests. The wrapper
@@ -40,6 +40,16 @@ the shared library, as
 required by the AGP 9 KMP migration. Toolchain owns Android build tooling; do not
 add Gradle plugin DSL or retired Gradle files to this recipe. Use [verification](verification.md) to record concrete build evidence for each run.
 
+Reviewed 2026-11-05: Lifecycle 2.11.0 publishes `lifecycle-viewmodel-compose` and
+`lifecycle-runtime-compose` for Android, desktop JVM, iOS ARM64/simulator and Wasm,
+so Compose recipes with a controller depend on `androidx.lifecycle` directly. The
+Android KMP ViewModel guide restricts `org.jetbrains.androidx.lifecycle` ViewModel
+artifacts to Lifecycle below 2.11.0; the Compose Multiplatform page still shows the
+2.10.0 fork. Compose 1.12.2 pulls the fork's `lifecycle-runtime-compose` 2.9.6, whose
+non-Android variants depend on `androidx.lifecycle:lifecycle-runtime-compose`, so
+2.11.0 wins resolution. `koin-compose-viewmodel` 4.2.2 still depends on the fork's
+`lifecycle-viewmodel-compose` 2.9.6 and is not used.
+
 Sources:
 - https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.13.0
 - https://kotlinlang.org/docs/multiplatform/kotlin-toolchain.html
@@ -51,3 +61,7 @@ Sources:
 - https://kotlinlang.org/docs/multiplatform/compose-navigation-3.html
 - https://repo1.maven.org/maven2/org/jetbrains/androidx/navigation3/navigation3-ui/maven-metadata.xml
 - https://repo1.maven.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-json/maven-metadata.xml
+- https://developer.android.com/kotlin/multiplatform/viewmodel
+- https://developer.android.com/jetpack/androidx/releases/lifecycle
+- https://kotlinlang.org/docs/multiplatform/compose-viewmodel.html
+- https://dl.google.com/android/maven2/androidx/lifecycle/group-index.xml

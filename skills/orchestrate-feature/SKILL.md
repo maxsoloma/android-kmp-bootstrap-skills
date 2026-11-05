@@ -33,6 +33,10 @@ The CLI is a cooperative journal/admission helper; the current agent executes wo
    .github/skills). Preserve Kotlin Toolchain and the current DI style despite
    upstream Gradle examples; do not add compiler plugins or Kotzilla SDK unasked.
    Missing skills in an older app are a setup gap; never regenerate to install them.
+   For shared Compose ViewModels use `androidx.lifecycle` 2.11.0+ artifacts directly,
+   not `org.jetbrains.androidx.lifecycle`; pass a `viewModelFactory`/`initializer`
+   to `viewModel()` because non-JVM targets have no reflection. Do not add
+   `koin-compose-viewmodel` while its published version still depends on that fork.
 2. Inspect existing `.feature-runs/runs/*.json` and recover the run matching the actual
    task and branch, including active owners and artifacts. Do not pick the latest
    run just because it is active. Reconcile ambiguous prior effects before retries.

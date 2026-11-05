@@ -1,0 +1,39 @@
+package {{PACKAGE_BASE}}
+
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+
+class CounterViewModelTest {
+    @Test fun viewModelPublishesStateAndStoreClearClosesItsController() = runTest {
+        val controller = CounterController({ AppGraph(MemoryCounterStore()) }, StandardTestDispatcher(testScheduler))
+        val store = ViewModelStore()
+        try {
+            val factory = viewModelFactory { initializer { CounterViewModel(controller) } }
+            val viewModel = ViewModelProvider.create(store, factory)[CounterViewModel::class]
+            viewModel.increment()
+            assertEquals(1, viewModel.uiState.value.count)
+        } finally { store.clear() }
+        assertEquals(1, controller.increment())
+    }
+    @Test fun storageFailureIsPublishedWithoutClaimingSavedState() = runTest {
+        val failing = object : CounterStore {
+            override fun read() = 3
+            override fun write(value: Int) { error("disk full") }
+        }
+        val controller = CounterController({ AppGraph(failing) }, StandardTestDispatcher(testScheduler))
+        val store = ViewModelStore()
+        try {
+            val factory = viewModelFactory { initializer { CounterViewModel(controller) } }
+            val viewModel = ViewModelProvider.create(store, factory)[CounterViewModel::class]
+            viewModel.increment()
+            assertEquals(3, viewModel.uiState.value.count)
+            assertNotNull(viewModel.uiState.value.storageError)
+        } finally { store.clear() }
+    }
+}
