@@ -70,6 +70,8 @@ data class Options(
 ) {
     val hasData get() = (network != "none" || storage != "none")
     val customStack get() = (ui == "swiftui" || di != "manual" || navigation != "none" || hasData)
+    /** Compose recipes with a shared controller expose it through an androidx.lifecycle ViewModel. */
+    val composeViewModel get() = customStack && (ui != "swiftui" || "android" in targets)
     val tokens get() = linkedMapOf("PROJECT_NAME" to name, "PACKAGE_BASE" to pkg,
         "PACKAGE_PATH" to pkg.replace('.', '/'), "APP_ID" to appId, "MIN_SDK" to "$min",
         "TARGET_SDK" to "$target", "COMPILE_SDK" to "$compile", "IOS_DEPLOYMENT_TARGET" to ios,

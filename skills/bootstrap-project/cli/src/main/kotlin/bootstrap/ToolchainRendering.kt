@@ -34,6 +34,7 @@ fun configureToolchain(o: Options, files: MutableMap<String, ByteArray>) {
             deps += listOf("org.jetbrains.compose.runtime:runtime:${toolchain.text("compose_multiplatform")}", "org.jetbrains.compose.foundation:foundation:${toolchain.text("compose_multiplatform")}", "org.jetbrains.compose.material3:material3:${toolchain.text("compose_material3")}", "org.jetbrains.compose.ui:ui:${toolchain.text("compose_multiplatform")}")
             if (module == "shared") deps += "org.jetbrains.compose.components:components-resources:${toolchain.text("compose_multiplatform")}"
         }
+        if (compose && module == ui && o.composeViewModel) deps += listOf("androidx.lifecycle:lifecycle-viewmodel-compose:${componentPins.text("lifecycle")}", "androidx.lifecycle:lifecycle-runtime-compose:${componentPins.text("lifecycle")}")
         if (module == "desktopApp") deps += "\$compose.desktop.currentOs"
         if (module == "androidApp") deps += "androidx.activity:activity-compose:${toolchain.text("activity_compose")}"
         if (module == "androidApp") o.firebase?.services?.forEach { service ->

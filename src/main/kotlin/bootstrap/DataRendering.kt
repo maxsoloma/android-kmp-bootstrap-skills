@@ -81,19 +81,23 @@ internal class AppGraph(store: CounterStore = platformCounterStore()$clientParam
         it.replace("    <application", "    <uses-permission android:name=\"android.permission.INTERNET\" />\n    <application")
     }
     val uiMain = source(ui, if (ui == "shared") "commonMain" else "main")
-    if (!native || "android" in o.targets) edit("$uiMain/App.kt") { app ->
-        var result = app.replace("    var count by remember { mutableIntStateOf(controller.count) }", "    var count by remember { mutableIntStateOf(controller.count) }\n    var storageError by remember { mutableStateOf(controller.storageError) }")
-            .replace("count = controller.increment()", "count = controller.increment(); storageError = controller.storageError")
-            .replace("Button(onClick = { count", "Button(enabled = storageError == null, onClick = { count")
-        if (network) result = result.replace("    MaterialTheme {", "    var networkState by remember { mutableStateOf(NetworkState()) }\n    MaterialTheme {")
-        val widgets = "\n                storageError?.let { Text(\"Storage error: \" + it) }\n" + if (network) """
-                Button(enabled = !networkState.loading, onClick = { controller.fetch { networkState = it } }) { Text(if (networkState.loading) "Loading…" else "Fetch response") }
-                networkState.text?.let { Text(it) }
-                networkState.error?.let { Text("Network error: " + it) }
+    if (!native || "android" in o.targets) {
+        val viewModel = template("CounterViewModel")
+            .replace("    // NETWORK_STATE\n", if (network) "    val network: NetworkState = NetworkState(),\n" else "")
+            .replace("    // NETWORK_FETCH\n", if (network) "    fun fetch() = controller.fetch { network -> state.update { it.copy(network = network) } }\n" else "")
+        put("$uiMain/CounterViewModel.kt", viewModel)
+        if (ui == logic) put("${source(ui, if (kmp) "commonTest" else "test")}/CounterViewModelTest.kt", tested(template("CounterViewModelTest")))
+        edit("$uiMain/App.kt") { app ->
+            val result = app.replace("Button(onClick = viewModel::increment)", "Button(enabled = state.storageError == null, onClick = viewModel::increment)")
+            val widgets = "\n                state.storageError?.let { Text(\"Storage error: \" + it) }\n" + if (network) """
+                Button(enabled = !state.network.loading, onClick = viewModel::fetch) { Text(if (state.network.loading) "Loading…" else "Fetch response") }
+                state.network.text?.let { Text(it) }
+                state.network.error?.let { Text("Network error: " + it) }
 """ else ""
-        // Add controls to each generated screen, preserving its existing navigation owner.
-        result.replace(Regex("(?m)^([ \\t]*)Text\\(\\\"(?:${o.name}|Details:)[^\\n]*\\n")) { match ->
-            match.value + widgets.trim().lineSequence().joinToString("\n", postfix = "\n") { match.groupValues[1] + it.trim() }
+            // Add controls to each generated screen, preserving its existing navigation owner.
+            result.replace(Regex("(?m)^([ \\t]*)Text\\(\\\"(?:${o.name}|Details:)[^\\n]*\\n")) { match ->
+                match.value + widgets.trim().lineSequence().joinToString("\n", postfix = "\n") { match.groupValues[1] + it.trim() }
+            }
         }
     }
     if (native) edit("iosApp/src/ContentView.swift") { swift ->

@@ -38,6 +38,8 @@ internal class AppGraph {
     }
     if (!native || "android" in o.targets) {
         put("$ui/src/$pkg/App.kt", template(if (o.navigation == "none") "ComposeCounter" else "ComposeNavigation"))
+        put("$ui/src/$pkg/CounterViewModel.kt", template("CounterViewModel"))
+        if (ui == logic) put("$ui/test/$pkg/CounterViewModelTest.kt", template("CounterViewModelTest"))
     }
     if (o.navigation == "navigation3" || native && o.navigation == "platform-native" && "android" in o.targets) {
         put("$ui/src/$pkg/Routes.kt", template("Routes"))
@@ -46,8 +48,9 @@ internal class AppGraph {
     configureToolchain(o, files)
     val metadata = projectMetadata(o)
     put("bootstrap.json", encode(metadata))
+    val viewModelNote = "Compose obtains CounterViewModel (androidx.lifecycle ${componentPins.text("lifecycle")}, not the JetBrains fork) through `viewModel(factory = counterViewModelFactory)`; clearing its ViewModelStore closes the controller. Navigation shares one ViewModel above the back stack. Add screen ViewModels the same way: a factory with `initializer` is required because non-JVM targets have no reflection; do not add `org.jetbrains.androidx.lifecycle` or `koin-compose-viewmodel` (it still depends on that fork).\n"
     val summary = "\n## Selected stack\n\nUI: ${o.ui}; DI: ${o.di}; navigation: ${o.navigation}.\n" +
-        if (native) "Shared Kotlin logic has a JVM test target: `./kotlin test -m shared --platform jvm`. iOS owns SwiftUI state.\n" else "The Compose owner closes its controller on disposal. Navigation retains one owner above the back stack.\n"
+        if (native) "Shared Kotlin logic has a JVM test target: `./kotlin test -m shared --platform jvm`. iOS owns SwiftUI state.\n" + (if ("android" in o.targets) viewModelNote else "") else viewModelNote
     for (path in listOf("README.md", "AGENTS.md")) put(path, files.getValue(path).toString(Charsets.UTF_8) + summary)
     configureKoinAgents(o, files)
     return Rendered(files, metadata)
